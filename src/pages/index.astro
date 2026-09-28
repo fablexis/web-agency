@@ -1,0 +1,30 @@
+---
+import { site } from "../data/site";
+import markup from "../markup/home.html?raw";
+import "../styles/global.css";
+
+const year = new Date().getFullYear();
+const html = markup
+  .replaceAll("hola@vertice.studio", site.email)
+  .replaceAll("https://wa.me/", site.whatsapp)
+  .replaceAll("© 2026", `© ${year}`);
+---
+
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{site.title}</title>
+    <meta name="description" content={site.description} />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <Fragment set:html={html} />
+    <script src="../scripts/motion.js"></script>
+  </body>
+</html>

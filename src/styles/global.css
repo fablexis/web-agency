@@ -1,0 +1,39 @@
+* { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; overflow-x: hidden; }
+  body { background: #06070E; color: #EAECF5; font-family: 'Manrope', sans-serif; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+  ::selection { background: #45E0FF; color: #06070E; }
+  @keyframes auroraA { 0%,100% { transform: translate(-10%, -8%) scale(1); } 50% { transform: translate(8%, 6%) scale(1.25); } }
+  @keyframes auroraB { 0%,100% { transform: translate(10%, 6%) scale(1.1); } 50% { transform: translate(-8%, -8%) scale(1.35); } }
+  @keyframes floaty { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-18px); } }
+  @keyframes spinSlow { to { transform: rotate(360deg); } }
+  @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+  @keyframes pulseDot { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: .35; transform: scale(.7); } }
+  @keyframes gridDrift { from { background-position: 0 0; } to { background-position: 0 60px; } }
+  @keyframes shimmer { from { background-position: -200% 0; } to { background-position: 200% 0; } }
+  [data-revealed] { opacity: 1 !important; transform: none !important; filter: none !important; }
+  @keyframes travel { 0% { left: 0%; opacity: 0; } 4% { opacity: 1; } 96% { opacity: 1; } 100% { left: 100%; opacity: 0; } }
+  @keyframes glow1 { 0% { transform: scale(1.12); border-color: rgba(69,224,255,0.95); box-shadow: 0 0 26px 6px rgba(69,224,255,0.5), 0 10px 30px rgba(69,224,255,0.14); } 8% { transform: scale(1); border-color: rgba(69,224,255,0.32); box-shadow: 0 10px 30px rgba(69,224,255,0.14); } 92% { transform: scale(1); border-color: rgba(69,224,255,0.32); box-shadow: 0 10px 30px rgba(69,224,255,0.14); } 100% { transform: scale(1.12); border-color: rgba(69,224,255,0.95); box-shadow: 0 0 26px 6px rgba(69,224,255,0.5), 0 10px 30px rgba(69,224,255,0.14); } }
+  @keyframes glow2 { 0%, 26% { transform: scale(1); border-color: rgba(155,107,255,0.32); box-shadow: 0 10px 30px rgba(155,107,255,0.14); } 33% { transform: scale(1.12); border-color: rgba(155,107,255,0.95); box-shadow: 0 0 26px 6px rgba(155,107,255,0.5), 0 10px 30px rgba(155,107,255,0.14); } 41%, 100% { transform: scale(1); border-color: rgba(155,107,255,0.32); box-shadow: 0 10px 30px rgba(155,107,255,0.14); } }
+  @keyframes glow3 { 0%, 59% { transform: scale(1); border-color: rgba(91,134,255,0.34); box-shadow: 0 10px 30px rgba(91,134,255,0.14); } 66% { transform: scale(1.12); border-color: rgba(91,134,255,0.95); box-shadow: 0 0 26px 6px rgba(91,134,255,0.5), 0 10px 30px rgba(91,134,255,0.14); } 73%, 100% { transform: scale(1); border-color: rgba(91,134,255,0.34); box-shadow: 0 10px 30px rgba(91,134,255,0.14); } }
+  @keyframes glow4 { 0%, 90% { transform: scale(1); border-color: rgba(69,224,255,0.32); box-shadow: 0 10px 30px rgba(69,224,255,0.14); } 97% { transform: scale(1.12); border-color: rgba(69,224,255,0.95); box-shadow: 0 0 26px 6px rgba(69,224,255,0.5), 0 10px 30px rgba(69,224,255,0.14); } 100% { transform: scale(1); border-color: rgba(69,224,255,0.32); box-shadow: 0 10px 30px rgba(69,224,255,0.14); } }
+
+[style-hover] { transition: transform .28s cubic-bezier(.16,1,.3,1), filter .28s ease, background .28s ease, border-color .28s ease, box-shadow .28s ease; }
+@media (max-width: 860px) {
+  [style*="grid-column: span 2"] { grid-column: auto !important; }
+  #proceso-steps { grid-template-columns: 1fr 1fr !important; }
+  #proceso-line, #proceso-travel { display: none !important; }
+}
+@media (max-width: 560px) {
+  #proceso-steps { grid-template-columns: 1fr !important; }
+}
+nav { flex-wrap: wrap; row-gap: 12px; }
+nav > div,
+nav [data-navlinks] { flex-wrap: wrap; }
+@media (max-width: 720px) {
+  nav > div { width: 100%; justify-content: flex-start; gap: 14px 16px; }
+  nav [data-navlinks] { gap: 12px 16px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+  [data-reveal] { opacity: 1 !important; transform: none !important; }
+}
