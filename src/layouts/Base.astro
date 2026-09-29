@@ -1,6 +1,7 @@
 ---
 import { site, nav, ticker } from "../data/site";
 import "../styles/global.css";
+import wordmark from "../assets/brand/forklia-wordmark.svg?raw";
 
 interface Props {
   title?: string;
@@ -22,6 +23,7 @@ const tickerItems = [...ticker, ...ticker, ...ticker, ...ticker];
     <title>{title}</title>
     <meta name="description" content={description} />
     <meta name="theme-color" content="#06070E" />
+    <link rel="icon" type="image/svg+xml" href={`${base}favicon.svg`} />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -49,8 +51,7 @@ const tickerItems = [...ticker, ...ticker, ...ticker, ...ticker];
     <nav class="nav" id="nav">
       <div class="nav__in">
         <a href={base} class="brand" aria-label={`${site.name} — inicio`}>
-          <span class="brand__mark"><b>V</b></span>
-          <span class="brand__name">{site.name}</span>
+          <span class="brand__logo" set:html={wordmark} />
         </a>
         <div class="nav__links" data-navlinks>
           <span class="nav__pill" aria-hidden="true"></span>
@@ -75,7 +76,7 @@ const tickerItems = [...ticker, ...ticker, ...ticker, ...ticker];
       <div class="wrap">
         <div class="footer__top">
           <div>
-            <a href={base} class="brand"><span class="brand__mark"><b>V</b></span><span class="brand__name">{site.name}</span></a>
+            <a href={base} class="brand" aria-label={`${site.name} — inicio`}><span class="brand__logo brand__logo--lg" set:html={wordmark} /></a>
             <p>Estudio de producto digital. Diseño, ingeniería y growth para marcas que quieren crecer.</p>
           </div>
           <div>
@@ -102,9 +103,9 @@ const tickerItems = [...ticker, ...ticker, ...ticker, ...ticker];
             </ul>
           </div>
         </div>
-        <div class="footer__word" aria-hidden="true">Vértice</div>
+        <div class="footer__word" aria-hidden="true">Forklia</div>
         <div class="footer__bottom">
-          <span>© {year} Vértice Studio. Todos los derechos reservados.</span>
+          <span>© {year} Forklia. Todos los derechos reservados.</span>
           <span>Hecho con <svg width="13" height="13" viewBox="0 0 24 24" fill="#5EE3FF"><polygon points="13 2 4 14 11 14 10 22 19 9 12 9 13 2"></polygon></svg> para marcas que quieren crecer.</span>
         </div>
       </div>

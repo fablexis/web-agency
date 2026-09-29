@@ -90,6 +90,13 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .brand__mark::after { content: ""; position: absolute; inset: 2px; border-radius: 7px; background: var(--bg); }
 .brand__mark b { position: relative; z-index: 1; font-family: var(--display); font-weight: 700; font-size: 15px; color: var(--cyan); }
 .brand__name { font-family: var(--display); font-weight: 700; font-size: 19px; letter-spacing: -.5px; }
+.brand { color: #eef2f8; }
+.brand__logo { display: block; height: 24px; }
+.brand__logo svg { height: 100%; width: auto; overflow: visible; }
+.brand__logo--lg { height: 30px; }
+.fk-cell { transform-box: fill-box; transform-origin: center; animation: fkFork 5s var(--ease) infinite; filter: drop-shadow(0 0 3px rgba(56,189,248,.6)); }
+.brand:hover .fk-cell { animation-duration: 1.6s; }
+@keyframes fkFork { 0%, 55%, 100% { transform: translate(0, 0); } 65%, 80% { transform: translate(-1.5px, 1.5px); } }
 .nav__links { display: flex; gap: 4px; padding: 5px; border-radius: 999px; border: 1px solid var(--line); background: rgba(255,255,255,.02); position: relative; }
 .nav__links a { position: relative; z-index: 1; padding: 7px 15px; border-radius: 999px; color: var(--muted); text-decoration: none; font-size: 14px; font-weight: 500; transition: color .25s; }
 .nav__links a:hover, .nav__links a.is-active { color: var(--text); }

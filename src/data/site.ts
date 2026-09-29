@@ -1,8 +1,8 @@
 export const site = {
-  name: "Vértice",
+  name: "Forklia",
   email: "hola@vertice.studio",
   whatsapp: "https://wa.me/",
-  title: "Vértice — Agencia de desarrollo y growth digital",
+  title: "Forklia — Agencia de desarrollo y growth digital",
   description:
     "Diseñamos y desarrollamos sitios web, apps móviles y estrategias de posicionamiento.",
 };
@@ -50,7 +50,7 @@ export const faqs = [
 ];
 
 export const ticker = [
-  "Nuevo → Vértice Labs: prototipos funcionales en 10 días",
+  "Nuevo → Forklia Labs: prototipos funcionales en 10 días",
   "Agenda abierta para proyectos Q4",
   "Lighthouse 100 en el 92% de nuestros lanzamientos",
   "Ahora también apps con IA integrada",
