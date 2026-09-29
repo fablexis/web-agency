@@ -1,0 +1,22 @@
+---
+interface Props {
+  eyebrow: string;
+  title: string;
+  lead?: string;
+  violet?: boolean;
+}
+const { eyebrow, title, lead, violet = false } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/?$/, "/");
+---
+
+<header class="page-hero">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Ruta" data-reveal>
+      <a href={base}>Inicio</a><span>/</span><span aria-current="page">{eyebrow}</span>
+    </nav>
+    <div class={`eyebrow${violet ? " eyebrow--violet" : ""}`} data-reveal>{eyebrow}</div>
+    <h1 data-split set:html={title} />
+    {lead && <p class="lead" data-reveal style="--d:200ms">{lead}</p>}
+    <slot />
+  </div>
+</header>

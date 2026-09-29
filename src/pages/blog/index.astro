@@ -1,0 +1,32 @@
+---
+import Base from "../../layouts/Base.astro";
+import PageHero from "../../components/PageHero.astro";
+import PostCard from "../../components/PostCard.astro";
+import Cta from "../../components/Cta.astro";
+import { posts } from "../../data/site";
+
+const categories = ["Todos", ...new Set(posts.map((p) => p.category))];
+const [featured, ...rest] = posts;
+---
+
+<Base title="Blog — Vértice" description="Ideas, guías y aprendizajes sobre producto digital, diseño, SEO y growth.">
+  <PageHero
+    eyebrow="Blog"
+    title='Ideas, guías y <span class="grad-text">aprendizajes</span>'
+    lead="Lo que aprendemos construyendo productos digitales, contado sin humo. Contenido de ejemplo mientras publicamos los primeros artículos."
+  />
+
+  <section class="section" style="padding-top: 0;">
+    <div class="wrap">
+      <div class="filters" role="group" aria-label="Filtrar por categoría" data-filters data-reveal>
+        {categories.map((c, i) => <button type="button" class={i === 0 ? "is-on" : ""} data-filter={c} aria-pressed={i === 0 ? "true" : "false"}>{c}</button>)}
+      </div>
+      <div class="posts">
+        <PostCard post={featured} feature />
+        {rest.map((p, i) => <PostCard post={p} delay={(i % 3) * 90} />)}
+      </div>
+    </div>
+  </section>
+
+  <Cta title='Tienes un proyecto <span class="grad-text">en mente</span>?' />
+</Base>

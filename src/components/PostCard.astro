@@ -1,0 +1,21 @@
+---
+import { formatDate, type Post } from "../data/site";
+
+interface Props {
+  post: Post;
+  delay?: number;
+  feature?: boolean;
+}
+const { post: p, delay = 0, feature = false } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/?$/, "/");
+---
+
+<a href={`${base}blog/${p.slug}/`} class={`card post${feature ? " post--feature" : ""}`} data-reveal data-spotlight data-cat={p.category} style={`--d:${delay}ms; --h:${p.hue}`}>
+  <div class="post__cover"><div class="post__shape"></div><span>{p.category} · Imagen placeholder</span></div>
+  <div class="post__body">
+    <div class="post__meta"><span class="cat">{p.category}</span><span>{formatDate(p.date)}</span><span>· {p.readTime}</span></div>
+    <h3>{p.title}</h3>
+    <p>{p.excerpt}</p>
+    <div class="post__more">Leer artículo <span>→</span></div>
+  </div>
+</a>

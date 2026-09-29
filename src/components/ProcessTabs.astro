@@ -1,0 +1,69 @@
+---
+import { steps } from "../data/site";
+
+const spec = [
+  ["Definir objetivos de negocio", "KPI: +40% leads en 90 días"],
+  ["Mapear audiencia y journeys", "3 perfiles · 5 flujos clave"],
+  ["Auditar competencia y SEO", "142 keywords priorizadas"],
+  ["Arquitectura de información", "Sitemap v1 aprobado"],
+  ["Roadmap y alcance del MVP", "4 sprints · entrega continua"],
+];
+const growthBars = [12, 18, 16, 26, 30, 28, 42, 50, 48, 64, 72, 88];
+---
+
+<div class="proc" data-proc>
+  <div class="proc__tabs" role="tablist" aria-label="Etapas del proceso" data-reveal>
+    {steps.map((s, i) => (
+      <button class={`ptab${i === 0 ? " is-active" : ""}`} role="tab" aria-selected={i === 0 ? "true" : "false"} aria-controls={`pview-${i}`} id={`ptab-${i}`} style={`--c:${s.c}`}>
+        <span class="ptab__ic">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" set:html={s.icon}></svg>
+          <span class="ptab__n">{i + 1}</span>
+        </span>
+        <span>
+          <h3>{s.title}</h3>
+          <p>{s.text}</p>
+        </span>
+        <span class="ptab__bar"><i></i></span>
+      </button>
+    ))}
+  </div>
+  <div class="proc__panel" data-reveal style="--d:120ms">
+    <div class="window">
+      <div class="window__bar">
+        <div class="window__dots"><i></i><i></i><i></i></div>
+        <div class="win-tabs" id="win-tabs"><span class="is-on">spec.md</span><span>design.fig</span><span>terminal</span><span>analytics</span></div>
+      </div>
+    </div>
+    <div class="pview spec is-active" id="pview-0" role="tabpanel" aria-labelledby="ptab-0">
+      <h5>Spec · Proyecto tu-marca</h5>
+      <ul>{spec.map(([t, s]) => <li><i></i><span>{t}<small>{s}</small></span></li>)}</ul>
+      <span class="spec__run">▶ Ejecutar todas las tareas</span>
+    </div>
+    <div class="pview" id="pview-1" role="tabpanel" aria-labelledby="ptab-1">
+      <div class="cursor-fake" id="fake-cursor"><svg width="18" height="18" viewBox="0 0 24 24" fill="#B58CFF"><path d="M3 2l18 8-8 2.5L10 21z"></path></svg><span>Fabio</span></div>
+      <div class="wire" id="wire">
+        <div class="w-nav"></div><div class="w-hero"></div><div class="w-btn"></div>
+        <div class="w-card"></div><div class="w-card"></div><div class="w-card"></div>
+        <div class="w-text"></div><div class="w-text"></div>
+      </div>
+    </div>
+    <div class="pview term" id="pview-2" role="tabpanel" aria-labelledby="ptab-2">
+      <div class="ln"><span class="p">~/tu-marca $</span> vertice build</div>
+      <div class="ln m">→ Compilando 128 módulos…</div>
+      <div class="ln"><div class="progress"><i></i></div></div>
+      <div class="ln ok">✓ Build optimizado · 84 KB gzip</div>
+      <div class="ln"><span class="p">~/tu-marca $</span> vertice test</div>
+      <div class="ln ok">✓ 214 tests · 0 fallos · cobertura 96%</div>
+      <div class="ln"><span class="p">~/tu-marca $</span> vertice deploy --prod</div>
+      <div class="ln ok">✓ Publicado en <span class="u">tu-marca.com</span> en 38s</div>
+    </div>
+    <div class="pview growth" id="pview-3" role="tabpanel" aria-labelledby="ptab-3">
+      <div class="growth__kpis">
+        <div class="kpi"><span>Sesiones</span><strong>+214%</strong><small>▲ vs. año anterior</small></div>
+        <div class="kpi"><span>Leads</span><strong>1,284</strong><small>▲ 3.2x</small></div>
+        <div class="kpi"><span>Top 3 Google</span><strong>38</strong><small>▲ keywords</small></div>
+      </div>
+      <div class="growth__bars">{growthBars.map((h, i) => <i style={`--i:${i}`} data-h={h}></i>)}</div>
+    </div>
+  </div>
+</div>

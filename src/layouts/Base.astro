@@ -1,0 +1,115 @@
+---
+import { site, nav, ticker } from "../data/site";
+import "../styles/global.css";
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const { title = site.title, description = site.description } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/?$/, "/");
+const path = Astro.url.pathname.replace(/\/?$/, "/");
+const isActive = (h: string) => path.startsWith(base + h);
+const year = new Date().getFullYear();
+const tickerItems = [...ticker, ...ticker, ...ticker, ...ticker];
+---
+
+<html lang="es" class="no-js">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#06070E" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script is:inline>document.documentElement.classList.remove("no-js");</script>
+  </head>
+  <body>
+    <div id="scroll-progress"></div>
+    <div class="bg" aria-hidden="true">
+      <div class="bg__a"></div>
+      <div class="bg__b"></div>
+      <div class="bg__grid"></div>
+      <div class="bg__noise"></div>
+    </div>
+    <div id="cursor-glow" aria-hidden="true"></div>
+
+    <div class="ticker" aria-label="Novedades">
+      <div class="ticker__track">
+        {tickerItems.map((t, i) => <span aria-hidden={i >= ticker.length ? "true" : undefined}>{t}</span>)}
+      </div>
+    </div>
+
+    <nav class="nav" id="nav">
+      <div class="nav__in">
+        <a href={base} class="brand" aria-label={`${site.name} — inicio`}>
+          <span class="brand__mark"><b>V</b></span>
+          <span class="brand__name">{site.name}</span>
+        </a>
+        <div class="nav__links" data-navlinks>
+          <span class="nav__pill" aria-hidden="true"></span>
+          {nav.map((n) => <a href={base + n.href} class={isActive(n.href) ? "is-active" : undefined} aria-current={isActive(n.href) ? "page" : undefined}>{n.label}</a>)}
+        </div>
+        <div class="nav__right">
+          <a href="#contacto" class="btn btn--primary btn--sm" data-magnetic>Cotizar proyecto</a>
+          <button class="menu-btn" id="menu-btn" aria-label="Abrir menú" aria-expanded="false" aria-controls="drawer"><span></span><span></span></button>
+        </div>
+      </div>
+    </nav>
+    <div class="drawer" id="drawer">
+      {nav.map((n) => <a href={base + n.href}>{n.label}</a>)}
+      <a href="#contacto">Contacto</a>
+    </div>
+
+    <main>
+      <slot />
+    </main>
+
+    <footer class="footer">
+      <div class="wrap">
+        <div class="footer__top">
+          <div>
+            <a href={base} class="brand"><span class="brand__mark"><b>V</b></span><span class="brand__name">{site.name}</span></a>
+            <p>Estudio de producto digital. Diseño, ingeniería y growth para marcas que quieren crecer.</p>
+          </div>
+          <div>
+            <h5>Estudio</h5>
+            <ul>
+              <li><a href={`${base}servicios/`}>Servicios</a></li>
+              <li><a href={`${base}servicios/#proceso`}>Proceso</a></li>
+              <li><a href={`${base}casos/`}>Casos</a></li>
+              <li><a href={`${base}nosotros/`}>Nosotros</a></li>
+            </ul>
+          </div>
+          <div>
+            <h5>Recursos</h5>
+            <ul>
+              <li><a href={`${base}blog/`}>Blog</a></li>
+              <li><a href={`${base}servicios/#faq`}>Preguntas frecuentes</a></li>
+            </ul>
+          </div>
+          <div>
+            <h5>Contacto</h5>
+            <ul>
+              <li><a href={`mailto:${site.email}`}>{site.email}</a></li>
+              <li><a href={site.whatsapp}>WhatsApp</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="footer__word" aria-hidden="true">Vértice</div>
+        <div class="footer__bottom">
+          <span>© {year} Vértice Studio. Todos los derechos reservados.</span>
+          <span>Hecho con <svg width="13" height="13" viewBox="0 0 24 24" fill="#5EE3FF"><polygon points="13 2 4 14 11 14 10 22 19 9 12 9 13 2"></polygon></svg> para marcas que quieren crecer.</span>
+        </div>
+      </div>
+    </footer>
+
+    <script src="../scripts/motion.js"></script>
+  </body>
+</html>

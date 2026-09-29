@@ -1,0 +1,20 @@
+---
+import { testimonials } from "../data/site";
+---
+
+<div class="tmarquee" data-reveal>
+  {[0, 1].map((row) => {
+    const list = row === 0 ? testimonials : [...testimonials].reverse();
+    return (
+      <div class={`tmarquee__row${row ? " tmarquee__row--rev" : ""}`}>
+        {[...list, ...list].map((t, i) => (
+          <figure class="card tcard" data-spotlight aria-hidden={i >= list.length || row === 1 ? "true" : undefined}>
+            <div class="stars">★★★★★</div>
+            <p>“{t.q}”</p>
+            <footer><span class="av" style={`background:${t.g}`}>{t.i}</span><span><b>{t.n}</b><small>{t.r}</small></span></footer>
+          </figure>
+        ))}
+      </div>
+    );
+  })}
+</div>

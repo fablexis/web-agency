@@ -1,0 +1,19 @@
+---
+import { site, faqs } from "../data/site";
+---
+
+<div class="wrap faq">
+  <div>
+    <div class="eyebrow" data-reveal>FAQ</div>
+    <h2 class="h2" data-split>Preguntas frecuentes</h2>
+    <p class="lead" data-reveal style="margin-top: 18px;">¿No encuentras lo que buscas? Escríbenos a <a href={`mailto:${site.email}`} style="color: var(--cyan);">{site.email}</a>.</p>
+  </div>
+  <div class="faq__list">
+    {faqs.map((f, i) => (
+      <details data-reveal style={`--d:${i * 60}ms`} open={i === 0}>
+        <summary>{f.q}<i aria-hidden="true"></i></summary>
+        <div class="faq__a"><div><p>{f.a}</p></div></div>
+      </details>
+    ))}
+  </div>
+</div>

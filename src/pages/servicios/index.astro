@@ -1,0 +1,44 @@
+---
+import Base from "../../layouts/Base.astro";
+import PageHero from "../../components/PageHero.astro";
+import ServicesBento from "../../components/ServicesBento.astro";
+import ProcessTabs from "../../components/ProcessTabs.astro";
+import Faq from "../../components/Faq.astro";
+import Cta from "../../components/Cta.astro";
+import { tech } from "../../data/site";
+---
+
+<Base title="Servicios — Vértice" description="Desarrollo web, apps móviles, SEO y estrategia digital.">
+  <PageHero
+    eyebrow="Servicios"
+    title='Diseño, ingeniería y growth <span class="grad-text">bajo un mismo techo</span>'
+    lead="Todo lo que tu marca necesita para lanzar, escalar y posicionarse, con un equipo que entiende tanto el código como el negocio."
+  />
+
+  <section class="section" style="padding-top: 0;">
+    <div class="wrap"><ServicesBento more /></div>
+  </section>
+
+  <div class="marquee" aria-label="Tecnologías">
+    <div class="marquee__track">
+      {[...tech, ...tech].map((t, i) => <span aria-hidden={i >= tech.length ? "true" : undefined}>{t}</span>)}
+    </div>
+  </div>
+
+  <section id="proceso" class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <div class="eyebrow eyebrow--violet" data-reveal>Proceso</div>
+        <h2 class="h2" data-split>Del brief al lanzamiento, con estructura</h2>
+        <p class="lead" data-reveal style="--d:120ms">Convertimos ideas en especificaciones, especificaciones en diseño y diseño en producto en producción. Cada paso es visible, medible y tuyo.</p>
+      </div>
+      <ProcessTabs />
+    </div>
+  </section>
+
+  <section id="faq" class="section" style="padding-top: 0;">
+    <Faq />
+  </section>
+
+  <Cta />
+</Base>

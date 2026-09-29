@@ -1,0 +1,44 @@
+---
+import Base from "../../layouts/Base.astro";
+import PageHero from "../../components/PageHero.astro";
+import CaseCards from "../../components/CaseCards.astro";
+import Testimonials from "../../components/Testimonials.astro";
+import Cta from "../../components/Cta.astro";
+---
+
+<Base title="Casos de éxito — Vértice" description="Resultados reales de proyectos web, móviles y de posicionamiento.">
+  <PageHero
+    eyebrow="Casos"
+    title='Resultados que <span class="grad-text">hablan por sí solos</span>'
+    lead="Una muestra de proyectos donde diseño, tecnología y estrategia se tradujeron en crecimiento medible."
+  />
+
+  <section class="section" style="padding-top: 0;">
+    <div class="wrap">
+      <div class="band" data-reveal>
+        <div class="band__grid">
+          <div><strong class="grad-text"><span data-count="240" data-suffix="%">0</span></strong><span>Aumento de conversiones</span></div>
+          <div><strong class="grad-text">#<span data-count="1">0</span></strong><span>Rankings en Google logrados</span></div>
+          <div><strong class="grad-text"><span data-count="1.8" data-dec="1" data-suffix="s">0</span></strong><span>Tiempo de carga promedio</span></div>
+          <div><strong class="grad-text"><span data-count="40" data-suffix="+">0</span></strong><span>Clientes activos</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top: 0;">
+    <div class="wrap"><CaseCards /></div>
+  </section>
+
+  <section class="section" style="padding-top: 0;">
+    <div class="wrap">
+      <div class="section-head section-head--center">
+        <div class="eyebrow eyebrow--violet eyebrow--center" data-reveal>Testimonios</div>
+        <h2 class="h2" data-split>Lo que dicen nuestros clientes</h2>
+      </div>
+    </div>
+    <Testimonials />
+  </section>
+
+  <Cta title='Quieres resultados <span class="grad-text">como estos</span>?' />
+</Base>

@@ -1,0 +1,75 @@
+---
+import Base from "../../layouts/Base.astro";
+import PageHero from "../../components/PageHero.astro";
+import Cta from "../../components/Cta.astro";
+import { founders } from "../../data/site";
+
+const base = import.meta.env.BASE_URL.replace(/\/?$/, "/");
+
+const manifesto =
+  "Creemos que un gran producto digital nace cuando ingeniería y creatividad se sientan en la misma mesa desde el primer día. Por eso Vértice es pequeño a propósito: hablas directamente con quienes diseñan, construyen y hacen crecer lo que imaginas.";
+
+const values = [
+  ["Obsesión por el detalle", "Cada píxel y cada milisegundo cuentan."],
+  ["Transparencia total", "Avances visibles, precios cerrados, sin sorpresas."],
+  ["Negocio primero", "Diseñamos para métricas, no solo para premios."],
+  ["Socios a largo plazo", "Lanzar es el inicio, no la meta."],
+];
+---
+
+<Base title="Nosotros — Vértice" description="Conoce a Fabian Pernía y Fabio Pernía, fundadores de Vértice.">
+  <PageHero
+    eyebrow="Nosotros"
+    violet
+    title='Las personas detrás de <span class="grad-text">Vértice</span>'
+    lead="Un estudio de producto digital fundado por dos perfiles complementarios: ingeniería de punta a punta y dirección creativa con visión comercial."
+  />
+
+  <section class="section" style="padding-top: 0;">
+    <div class="wrap">
+      <div class="about">
+        {founders.map((f, i) => (
+          <article class="card founder" data-reveal data-spotlight style={`--d:${i * 120}ms; --fc:${f.accent === "cyan" ? "#45E0FF" : "#9B6BFF"}`}>
+            <div class="founder__photo">
+              {f.photo ? (
+                <img src={base + f.photo} alt={`Retrato de ${f.name}`} width="880" height="1172" loading="lazy" decoding="async" />
+              ) : (
+                <div class="founder__ph"><b>{f.initials}</b><small>Foto próximamente</small></div>
+              )}
+            </div>
+            <div class="founder__body">
+              <div class="founder__role">{f.role}</div>
+              <h3>{f.name}</h3>
+              <p>{f.bio}</p>
+              <div class="tags">{f.skills.map((s) => <span class="tag">{s}</span>)}</div>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top: 0;">
+    <div class="wrap">
+      <p class="manifesto" data-manifesto>
+        {manifesto.split(" ").map((w) => <span>{w} </span>)}
+      </p>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top: 0;">
+    <div class="wrap">
+      <div class="section-head">
+        <div class="eyebrow" data-reveal>Cómo trabajamos</div>
+        <h2 class="h2" data-split>Principios que no negociamos</h2>
+      </div>
+      <div class="values">
+        {values.map(([t, d], i) => (
+          <div class="card value" data-reveal data-spotlight style={`--d:${i * 80}ms`}><b>0{i + 1}</b><h4>{t}</h4><p>{d}</p></div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <Cta title='Construyamos algo <span class="grad-text">juntos</span>?' text="Agenda una llamada con los fundadores y cuéntanos qué quieres lograr." />
+</Base>

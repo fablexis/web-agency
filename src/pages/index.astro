@@ -1,30 +1,231 @@
 ---
-import { site } from "../data/site";
-import markup from "../markup/home.html?raw";
-import "../styles/global.css";
+import Base from "../layouts/Base.astro";
+import ServicesBento from "../components/ServicesBento.astro";
+import CaseCards from "../components/CaseCards.astro";
+import PostCard from "../components/PostCard.astro";
+import Cta from "../components/Cta.astro";
+import { tech, posts } from "../data/site";
 
-const year = new Date().getFullYear();
-const html = markup
-  .replaceAll("hola@vertice.studio", site.email)
-  .replaceAll("https://wa.me/", site.whatsapp)
-  .replaceAll("© 2026", `© ${year}`);
+const base = import.meta.env.BASE_URL.replace(/\/?$/, "/");
+const sparks = [30, 45, 38, 60, 52, 74, 66, 88, 80, 96];
 ---
 
-<html lang="es">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{site.title}</title>
-    <meta name="description" content={site.description} />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap"
-      rel="stylesheet"
-    />
-  </head>
-  <body>
-    <Fragment set:html={html} />
-    <script src="../scripts/motion.js"></script>
-  </body>
-</html>
+<Base>
+  <!-- ═════════════ HERO ═════════════ -->
+  <header class="hero" id="top">
+    <a href={`${base}nosotros/`} class="badge" data-reveal>
+      <span class="badge__tag"><span class="dot"></span>Nuevo</span>
+      Conoce al equipo detrás de Vértice →
+    </a>
+    <h1 data-split>Construimos productos digitales que <span class="grad-text">crecen contigo</span></h1>
+    <p class="lead" data-reveal style="--d:200ms">
+      Diseñamos y desarrollamos sitios web, apps móviles y estrategias de posicionamiento que llevan a tu marca a lo más alto de los buscadores y al corazón de tus clientes.
+    </p>
+    <div class="hero__ctas" data-reveal style="--d:300ms">
+      <a href="#contacto" class="btn btn--primary" data-magnetic>Iniciar proyecto <span class="arrow">→</span></a>
+      <a href={`${base}casos/`} class="btn btn--ghost" data-magnetic>Ver casos de éxito</a>
+    </div>
+    <div data-reveal style="--d:380ms">
+      <div class="cli">
+        <span class="cli__prompt">$</span>
+        <span class="cli__cmd" data-type-loop='["vertice init tu-marca","vertice design --bold","vertice deploy --prod","vertice grow --seo"]'></span>
+        <button type="button" data-copy aria-label="Copiar comando">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="12" height="12" rx="2"></rect><path d="M5 15V5a2 2 0 0 1 2-2h10"></path></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="stage" data-reveal style="--d:450ms">
+      <div class="stage__glow"></div>
+      <div class="float-chip chip-a" data-parallax="-0.08">
+        <div><span class="float-chip__ic ic-green">✓</span><span>Deploy exitoso<small>prod · hace 2s</small></span></div>
+      </div>
+      <div class="float-chip chip-b" data-parallax="0.1">
+        <div><span class="float-chip__ic ic-cyan">↑</span><span>Lighthouse 100<small>perf · a11y · seo</small></span></div>
+      </div>
+      <div class="float-chip chip-c" data-parallax="-0.05">
+        <div><span class="float-chip__ic ic-violet">★</span><span>Nuevo lead calificado<small>desde Google · orgánico</small></span></div>
+      </div>
+      <div class="stage__tilt" id="hero-tilt">
+        <div class="window" data-inview>
+          <div class="window__bar">
+            <div class="window__dots"><i></i><i></i><i></i></div>
+            <div class="window__url"><b>●</b> app.orbit.io/overview</div>
+          </div>
+          <div class="dash">
+            <aside class="dash__side">
+              <div class="dash__logo"><i></i>Orbit</div>
+              <div class="dash__item is-on"><i></i>Overview</div>
+              <div class="dash__item"><i></i>Clientes <em>12</em></div>
+              <div class="dash__item"><i></i>Campañas</div>
+              <div class="dash__item"><i></i>Contenido</div>
+              <div class="dash__item"><i></i>Integraciones</div>
+              <div class="dash__item"><i></i>Ajustes</div>
+            </aside>
+            <div class="dash__main">
+              <div class="dash__top">
+                <h4>Buenos días, equipo 👋</h4>
+                <small><span class="dot dot--green"></span>En vivo</small>
+              </div>
+              <div class="kpi"><span>Visitantes</span><strong data-count="48210">0</strong><small>▲ 32.4%</small></div>
+              <div class="kpi"><span>Conversión</span><strong><span data-count="6.8" data-dec="1">0</span>%</strong><small>▲ 2.1 pts</small></div>
+              <div class="kpi"><span>Ingresos</span><strong>$<span data-count="92">0</span>K</strong><small>▲ 18%</small></div>
+              <div class="chart">
+                <header><span>Tráfico orgánico · 12 meses</span><span class="mono">+214%</span></header>
+                <svg viewBox="0 0 400 150" preserveAspectRatio="none" aria-hidden="true">
+                  <defs>
+                    <linearGradient id="lg" x1="0" x2="1"><stop offset="0" stop-color="#45E0FF" /><stop offset="1" stop-color="#9B6BFF" /></linearGradient>
+                    <linearGradient id="ag" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="rgba(69,224,255,.28)" /><stop offset="1" stop-color="rgba(69,224,255,0)" /></linearGradient>
+                  </defs>
+                  <path class="area" d="M0 130 C40 125 60 118 90 112 S150 110 180 92 S240 88 270 64 S330 50 360 30 L400 18 L400 150 L0 150Z"></path>
+                  <path class="line" d="M0 130 C40 125 60 118 90 112 S150 110 180 92 S240 88 270 64 S330 50 360 30 L400 18"></path>
+                </svg>
+              </div>
+              <div class="feed">
+                <header><span>Actividad</span><span class="dot"></span></header>
+                <div class="feed__list" id="feed"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="stats" data-reveal>
+      <div class="stat"><strong class="grad-text"><span data-count="120" data-suffix="+">0</span></strong><span>Proyectos entregados</span></div>
+      <div class="sep"></div>
+      <div class="stat"><strong class="grad-text"><span data-count="3" data-suffix="x">0</span></strong><span>Tráfico orgánico promedio</span></div>
+      <div class="sep"></div>
+      <div class="stat"><strong class="grad-text"><span data-count="98" data-suffix="%">0</span></strong><span>Clientes que repiten</span></div>
+    </div>
+  </header>
+
+  <div class="marquee" style="margin-top: clamp(64px, 10vh, 110px);" aria-label="Tecnologías">
+    <div class="marquee__track">
+      {[...tech, ...tech].map((t, i) => <span aria-hidden={i >= tech.length ? "true" : undefined}>{t}</span>)}
+    </div>
+  </div>
+
+  <!-- ═════════════ SERVICIOS ═════════════ -->
+  <section id="servicios" class="section">
+    <div class="wrap">
+      <div class="section-head section-head--row">
+        <div style="max-width: 640px;">
+          <div class="eyebrow" data-reveal>Servicios</div>
+          <h2 class="h2" data-split>Todo lo que tu marca necesita para dominar lo digital</h2>
+        </div>
+        <a href={`${base}servicios/`} class="link-arrow" data-reveal>Servicios y proceso <span>→</span></a>
+      </div>
+      <ServicesBento />
+    </div>
+  </section>
+
+  <!-- ═════════════ APPS (scrolly estilo The Tie) ═════════════ -->
+  <section class="scrolly" id="apps" data-scrolly>
+    <div class="scrolly__sticky">
+      <div class="scrolly__grid">
+        <div class="scrolly__steps">
+          <div class="eyebrow" style="position:absolute; top:-56px;">Apps · Producto</div>
+          <div class="sstep is-active">
+            <h3>Interfaces que se <span class="grad-text">sienten vivas</span></h3>
+            <p>Diseñamos apps con ritmo: estados claros, transiciones con intención y detalles que hacen que tus usuarios vuelvan cada día.</p>
+          </div>
+          <div class="sstep">
+            <h3>Tiempo real, <span class="grad-text">sin fricción</span></h3>
+            <p>Mensajería, notificaciones y colaboración en vivo. Arquitecturas que responden en milisegundos, en cualquier dispositivo.</p>
+          </div>
+          <div class="sstep">
+            <h3>Datos que <span class="grad-text">cuentan historias</span></h3>
+            <p>Dashboards y analítica integrados para que cada decisión de producto esté respaldada por lo que tus usuarios realmente hacen.</p>
+          </div>
+          <div class="scrolly__dots"><i class="is-on"></i><i></i><i></i></div>
+        </div>
+
+        <div class="phone-wrap">
+          <div class="phone" id="phone">
+            <div class="phone__screen">
+              <div class="phone__notch"></div>
+              <div class="phone__status"><span>9:41</span><span>●●● 100%</span></div>
+              <div class="screen is-active" data-screen="0">
+                <h6>Mensajes</h6>
+                <div class="search">⌕  Buscar personas, equipos…</div>
+                <div class="convo"><span class="av av--on" style="background:linear-gradient(120deg,#45E0FF,#9B6BFF)">NS</span><span><b>Nova Studio</b><small>¡El prototipo quedó increíble! 🚀</small></span><em>3</em></div>
+                <div class="convo"><span class="av av--on" style="background:linear-gradient(120deg,#9B6BFF,#3B6BFF)">LR</span><span><b>Lucía R.</b><small>Te comparto el brief actualizado</small></span><em>1</em></div>
+                <div class="convo"><span class="av" style="background:linear-gradient(120deg,#4BE3A0,#45E0FF)">EQ</span><span><b>Equipo Growth</b><small>Métricas de la semana listas 📈</small></span></div>
+                <div class="convo"><span class="av" style="background:linear-gradient(120deg,#3B6BFF,#45E0FF)">MK</span><span><b>Marco K.</b><small>¿Agendamos demo el jueves?</small></span></div>
+                <div class="convo"><span class="av av--on" style="background:linear-gradient(120deg,#B58CFF,#45E0FF)">AI</span><span><b>Asistente</b><small>Resumí 14 mensajes nuevos</small></span></div>
+              </div>
+              <div class="screen" data-screen="1">
+                <div class="chat-head"><span class="av av--on" style="background:linear-gradient(120deg,#45E0FF,#9B6BFF)">NS</span><span><b>Nova Studio</b><small>● en línea</small></span></div>
+                <div class="chat" id="chat"></div>
+                <div class="composer"><span>Escribe un mensaje…</span><i>↑</i></div>
+              </div>
+              <div class="screen" data-screen="2">
+                <h6>Resumen</h6>
+                <div class="ring">
+                  <svg viewBox="0 0 150 150" aria-hidden="true"><defs><linearGradient id="rg"><stop offset="0" stop-color="#45E0FF" /><stop offset="1" stop-color="#9B6BFF" /></linearGradient></defs><circle class="track" cx="75" cy="75" r="64"></circle><circle class="val" cx="75" cy="75" r="64"></circle></svg>
+                  <div><strong>78%</strong><small>retención D30</small></div>
+                </div>
+                <div class="mini-stats">
+                  <div><b>24.8K</b><small>usuarios activos</small></div>
+                  <div><b>4.9★</b><small>App Store</small></div>
+                </div>
+                <div class="spark">{sparks.map((h, i) => <i style={`--i:${i};--h:${h}%`}></i>)}</div>
+              </div>
+              <div class="tabbar"><i class="is-on"></i><i></i><i></i><i></i></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="side-cards">
+          <div class="scard">
+            <header><span class="av av--on" style="background:linear-gradient(120deg,#9B6BFF,#45E0FF)">NS</span><span><b>Nova Studio ✓</b><small>Perfil verificado</small></span></header>
+            <p>Equipo de 12 · Plan Pro · Activo hace 1 min</p>
+            <div class="pill-row"><span>Diseño</span><span>Producto</span><span>Brand</span></div>
+          </div>
+          <div class="scard">
+            <header><span class="float-chip__ic ic-cyan">🔔</span><span><b>Nueva mención</b><small>#lanzamiento · ahora</small></span></header>
+            <p>“@equipo el build de producción ya está listo para revisión.”</p>
+          </div>
+          <div class="scard">
+            <header><span class="float-chip__ic ic-green">⚡</span><span><b>Rendimiento</b><small>p95 · últimas 24h</small></span></header>
+            <p>60 fps constantes · 120 ms de latencia media</p>
+            <div class="meter" style="--w:92%"><i></i></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═════════════ CASOS ═════════════ -->
+  <section id="casos" class="section">
+    <div class="wrap">
+      <div class="section-head section-head--row">
+        <div style="max-width: 580px;">
+          <div class="eyebrow" data-reveal>Casos de éxito</div>
+          <h2 class="h2" data-split>Resultados que hablan por sí solos</h2>
+        </div>
+        <a href={`${base}casos/`} class="link-arrow" data-reveal>Todos los casos <span>→</span></a>
+      </div>
+      <CaseCards limit={3} />
+    </div>
+  </section>
+
+  <!-- ═════════════ BLOG ═════════════ -->
+  <section id="blog" class="section" style="padding-top: 0;">
+    <div class="wrap">
+      <div class="section-head section-head--row">
+        <div style="max-width: 580px;">
+          <div class="eyebrow" data-reveal>Blog</div>
+          <h2 class="h2" data-split>Ideas, guías y aprendizajes</h2>
+        </div>
+        <a href={`${base}blog/`} class="link-arrow" data-reveal>Ver todos los artículos <span>→</span></a>
+      </div>
+      <div class="posts">
+        {posts.slice(0, 3).map((p, i) => <PostCard post={p} delay={i * 90} />)}
+      </div>
+    </div>
+  </section>
+
+  <Cta />
+</Base>
