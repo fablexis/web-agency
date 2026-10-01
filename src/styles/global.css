@@ -1360,8 +1360,35 @@ a.svc { text-decoration: none; color: inherit; }
 .hero2__l2.is-code { font-family: var(--mono); font-weight: 500; font-size: .62em; letter-spacing: -.02em; line-height: 1.6; background: none; -webkit-text-fill-color: #7fe7ff; color: #7fe7ff; }
 .hero2__l2.is-code::after { content: ""; display: inline-block; width: .5em; height: .9em; margin-left: .06em; vertical-align: -.08em; background: var(--cyan); animation: blink .6s steps(1) infinite; }
 .hero2__l2 .tl-ch { display: inline-block; white-space: pre; background-image: var(--grad-text); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
-.tl-ch.is-flip { animation: compileIn .5s cubic-bezier(.3, 1.4, .5, 1) both; animation-delay: calc(var(--i) * 22ms); }
+.tl-ch.is-flip { animation: compileIn .75s cubic-bezier(.3, 1.4, .5, 1) both; animation-delay: calc(var(--i) * 50ms); }
 @keyframes compileIn { 0% { transform: translateY(.35em) rotateX(90deg); opacity: 0; filter: blur(4px); } 60% { opacity: 1; } 100% { transform: none; opacity: 1; filter: none; } }
 .hero2__h1.is-compiled .h1-tag { animation: tagPulse .8s ease 1; }
 @keyframes tagPulse { 50% { opacity: 1; color: var(--cyan); } }
 @media (max-width: 640px) { .h1-tag { display: none; } .hero2__h1 { padding: 0; } }
+
+/* Hero: levitating <h1> tags + floating code */
+.h1-tag { animation: levitate 4.5s ease-in-out infinite; opacity: .45; }
+.h1-tag--end { animation-delay: -2.2s; }
+.hero2__h1.is-compiled .h1-tag { animation: levitate 4.5s ease-in-out infinite, tagPulse .9s ease 1; }
+.hero2__h1.is-compiled .h1-tag--end { animation-delay: -2.2s, 0s; }
+@keyframes levitate { 0%, 100% { transform: translateY(0) rotate(-2deg); } 50% { transform: translateY(-10px) rotate(2deg); } }
+.hero2 { overflow: hidden; }
+.hero2__float { position: absolute; inset: 0 0 auto; height: min(760px, 100%); pointer-events: none; z-index: 0; }
+.hero2__in { position: relative; z-index: 1; }
+.fcode { position: absolute; font-family: var(--mono); font-size: 13px; white-space: nowrap; padding: 5px 10px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, .06); background: rgba(255, 255, 255, .02); color: rgba(127, 231, 255, .32); backdrop-filter: blur(2px); animation: levitate 7s ease-in-out infinite; }
+.fcode:nth-child(3n) { color: rgba(199, 146, 234, .32); }
+.fcode:nth-child(4n) { color: rgba(195, 232, 141, .28); }
+.f1 { left: 6%; top: 15%; animation-duration: 6.5s; }
+.f2 { left: 13%; top: 41%; animation-duration: 8s; animation-delay: -2s; font-size: 12px; }
+.f3 { left: 4%; top: 66%; animation-duration: 7.5s; animation-delay: -4s; font-size: 18px; }
+.f4 { left: 17%; top: 84%; animation-duration: 9s; animation-delay: -1s; font-size: 11.5px; opacity: .8; }
+.f5 { right: 7%; top: 13%; animation-duration: 7s; animation-delay: -3s; }
+.f6 { right: 15%; top: 35%; animation-duration: 8.5s; animation-delay: -5s; font-size: 15px; }
+.f7 { right: 4%; top: 55%; animation-duration: 6.8s; animation-delay: -1.5s; }
+.f8 { right: 13%; top: 78%; animation-duration: 9.5s; animation-delay: -6s; font-size: 12px; }
+.f9 { left: 27%; top: 6%; animation-duration: 8s; animation-delay: -3.5s; font-size: 12px; opacity: .7; }
+.f10 { right: 27%; top: 5%; animation-duration: 7.2s; animation-delay: -2.5s; font-size: 12px; opacity: .7; }
+.f11 { left: 2%; top: 92%; animation-duration: 10s; animation-delay: -4.5s; font-size: 11px; opacity: .6; }
+.f12 { right: 3%; top: 92%; animation-duration: 8.8s; animation-delay: -7s; font-size: 11px; opacity: .7; }
+@media (max-width: 1100px) { .f2, .f6, .f9, .f10, .f11, .f12 { display: none; } }
+@media (max-width: 640px) { .hero2__float { display: none; } }

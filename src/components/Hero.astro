@@ -84,6 +84,13 @@ const scenes = [
 ---
 
 <header class="hero2" id="top">
+  <div class="hero2__float" aria-hidden="true">
+    {[
+      ["<App />", "f1"], ["useState(idea)", "f2"], ["</>", "f3"], ["git push origin main", "f4"],
+      ["fetch('/api/launch')", "f5"], ["{ ...brand }", "f6"], ["<View>", "f7"], ["npm run build", "f8"],
+      [".map(build)", "f9"], ["=> deploy()", "f10"], ["@media (max-width: 640px)", "f11"], ["200 OK", "f12"],
+    ].map(([t, k]) => <span class={`fcode ${k}`} data-depth={k.length % 3 + 1}>{t}</span>)}
+  </div>
   <div class="hero2__in">
     <a href={href("case", lang, "lyapp")} class="badge" data-reveal>
       <span class="badge__tag"><span class="dot"></span>{c.badge}</span>{c.badgeText} →
@@ -92,7 +99,7 @@ const scenes = [
     <h1 class="hero2__h1" data-hero-h1>
       <span class="h1-tag" aria-hidden="true">&lt;h1&gt;</span>
       <span class="hero2__l1" data-type>{c.h1a}</span>
-      <span class="hero2__l2 grad-text" data-compile data-code={c.code}>{c.h1b}</span>
+      <span class="hero2__l2 grad-text" data-compile data-src={c.code}>{c.h1b}</span>
       <span class="h1-tag h1-tag--end" aria-hidden="true">&lt;/h1&gt;</span>
     </h1>
     <p class="lead" data-reveal style="--d:300ms">{c.lead}</p>

@@ -38,7 +38,7 @@ const heroCmd = $("[data-hero-cmd]");
 const h1 = $("[data-hero-h1]");
 if (h1 && !reduced) {
   const l1 = $("[data-type]", h1), l2 = $("[data-compile]", h1);
-  const t1 = l1.textContent, t2 = l2.textContent, code = l2.dataset.code;
+  const t1 = l1.textContent, t2 = l2.textContent, code = l2.dataset.src;
   const full = heroCmd?.dataset.text ?? "";
   const letters = (el, text) => {
     el.textContent = "";
@@ -51,12 +51,12 @@ if (h1 && !reduced) {
   h1.classList.add("is-typing");
   setTimeout(async () => {
     // command line types in parallel
-    if (heroCmd) (async () => { for (let i = 1; i <= full.length; i++) { heroCmd.textContent = full.slice(0, i); await wait(11); } })();
+    if (heroCmd) (async () => { for (let i = 1; i <= full.length; i++) { heroCmd.textContent = full.slice(0, i); await wait(24); } })();
     // line 1: typed with a block caret
-    for (const s of l1s) { s.classList.add("is-on", "is-cur"); await wait(34); s.classList.remove("is-cur"); }
+    for (const s of l1s) { s.classList.add("is-on", "is-cur"); await wait(75); s.classList.remove("is-cur"); }
     // line 2: written as code first…
-    for (let i = 1; i <= code.length; i++) { l2.textContent = code.slice(0, i); await wait(17); }
-    await wait(170);
+    for (let i = 1; i <= code.length; i++) { l2.textContent = code.slice(0, i); await wait(45); }
+    await wait(550);
     // …then compiled letter by letter into the headline
     l2.classList.remove("is-code");
     const l2s = letters(l2, t2);
@@ -69,7 +69,7 @@ if (h1 && !reduced) {
     });
     h1.classList.remove("is-typing");
     h1.classList.add("is-compiled");
-    await wait(l2s.length * 22 + 520);
+    await wait(l2s.length * 50 + 800);
     l2.textContent = t2;
     l1.textContent = t1;
   }, noLoader() ? 150 : 1400);
@@ -322,3 +322,20 @@ $$("[data-ascii]").forEach((fig) => {
   }
   addEventListener("resize", () => { if (started) { sample(); draw(); } }, { passive: true });
 });
+
+/* ───────── Hero: floating code ornaments drift with the pointer ───────── */
+const floatLayer = $(".hero2__float");
+if (floatLayer && !reduced && matchMedia("(pointer: fine)").matches) {
+  const items = $$(".fcode", floatLayer);
+  let tx = 0, ty = 0, cx = 0, cy = 0, raf = 0;
+  const loop = () => {
+    cx += (tx - cx) * 0.06; cy += (ty - cy) * 0.06;
+    items.forEach((el) => { const d = +el.dataset.depth; el.style.translate = `${cx * d * 10}px ${cy * d * 8}px`; });
+    raf = Math.abs(tx - cx) + Math.abs(ty - cy) > 0.001 ? requestAnimationFrame(loop) : 0;
+  };
+  addEventListener("pointermove", (e) => {
+    if (scrollY > innerHeight) return;
+    tx = e.clientX / innerWidth - 0.5; ty = e.clientY / innerHeight - 0.5;
+    if (!raf) raf = requestAnimationFrame(loop);
+  }, { passive: true });
+}
