@@ -1,0 +1,137 @@
+---
+import Base from "../layouts/Base.astro";
+import Hero from "../components/Hero.astro";
+import ServicesBento from "../components/ServicesBento.astro";
+import Testimonials from "../components/Testimonials.astro";
+import AndyEffect from "../components/AndyEffect.astro";
+import BuddyEffect from "../components/BuddyEffect.astro";
+import LyappScrolly from "../components/LyappScrolly.astro";
+import BuildingCard from "../components/BuildingCard.astro";
+import PostCard from "../components/PostCard.astro";
+import Cta from "../components/Cta.astro";
+import { site, tech, posts } from "../data/site";
+import { projects, upcoming } from "../data/projects";
+import { href, route, loc, type Lang } from "../i18n";
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const other: Lang = lang === "en" ? "es" : "en";
+const andy = loc(projects.find((p) => p.slug === "simply-andy")!, lang);
+const buddy = loc(projects.find((p) => p.slug === "your-english-buddy")!, lang);
+const up = loc(upcoming, lang) as { name: string; category: string; note: string }[];
+const c = {
+  en: {
+    tEyebrow: "// git log --reviews", tTitle: "Real people, real products",
+    mEyebrow: "// modules()", mTitle: "Four modules to grow your brand", mAll: "Explore every module",
+    pEyebrow: "// deploys/", pTitle: "Shipped projects, each with its own pulse", pLead: "Play with them: every project shows up with an effect from its own world.", pAll: "All deploys",
+    andyH: 'a brand you can <span class="andy-grad">play</span> with', andyL: ["7-color palette with names and roles", "Logo on 3 approved backgrounds", "Email signature generator"], try: "try the colors →",
+    buddyH: 'English for <span class="buddy-grad">real life</span>', buddyL: ["Journey to a diagnostic class", "Real student stories", "Direct WhatsApp conversion"],
+    view: "View case", bEyebrow: "// iterating++", bTitle: "What we learn while building", bAll: "All notes", upcoming: "Upcoming projects", techs: "Tech we use",
+  },
+  es: {
+    tEyebrow: "// git log --reseñas", tTitle: "Personas reales, productos reales",
+    mEyebrow: "// módulos()", mTitle: "Cuatro módulos para hacer crecer tu marca", mAll: "Explorar cada módulo",
+    pEyebrow: "// deploys/", pTitle: "Proyectos en producción, cada uno con su propio pulso", pLead: "Interactúa con ellos: cada proyecto se presenta con un efecto de su propio mundo.", pAll: "Todos los deploys",
+    andyH: 'una marca con la que se puede <span class="andy-grad">jugar</span>', andyL: ["Paleta de 7 colores con nombre y rol", "Logo en 3 fondos aprobados", "Generador de firma de correo"], try: "prueba los colores →",
+    buddyH: 'inglés para la <span class="buddy-grad">vida real</span>', buddyL: ["Recorrido hacia la clase diagnóstica", "Historias reales de estudiantes", "Conversión directa por WhatsApp"],
+    view: "Ver el caso", bEyebrow: "// iterando++", bTitle: "Lo que aprendemos construyendo", bAll: "Todas las notas", upcoming: "Próximos proyectos", techs: "Tecnologías que usamos",
+  },
+}[lang];
+const schema = [{
+  "@type": "ItemList",
+  name: lang === "en" ? "Forklia projects" : "Proyectos de Forklia",
+  itemListElement: projects.map((p, i) => ({ "@type": "ListItem", position: i + 1, url: new URL(route("case", lang, p.slug), site.url).href, name: p.name })),
+}];
+---
+
+<Base lang={lang} alt={route("home", other)} schema={schema} fonts="&family=Playfair+Display:wght@500;600&family=Archivo:wght@700&family=DM+Mono">
+  <Hero lang={lang} />
+
+  <div class="marquee" style="margin-top: clamp(64px, 10vh, 110px);" aria-label={c.techs}>
+    <div class="marquee__track">
+      {[...tech, ...tech].map((t, i) => <span aria-hidden={i >= tech.length ? "true" : undefined}>{t}</span>)}
+    </div>
+  </div>
+
+  <section class="section" id="testimonios" aria-labelledby="t-title">
+    <div class="wrap">
+      <div class="section-head">
+        <div class="eyebrow eyebrow--violet" data-reveal>{c.tEyebrow}</div>
+        <h2 class="h2" id="t-title" data-split>{c.tTitle}</h2>
+      </div>
+      <Testimonials lang={lang} />
+    </div>
+  </section>
+
+  <section id="modulos" class="section" style="padding-top: 0;" aria-labelledby="s-title">
+    <div class="wrap">
+      <div class="section-head section-head--row">
+        <div style="max-width: 640px;">
+          <div class="eyebrow" data-reveal>{c.mEyebrow}</div>
+          <h2 class="h2" id="s-title" data-split>{c.mTitle}</h2>
+        </div>
+        <a href={href("services", lang)} class="link-arrow" data-reveal>{c.mAll} <span>→</span></a>
+      </div>
+      <ServicesBento lang={lang} />
+    </div>
+  </section>
+
+  <section id="proyectos" class="section" style="padding-bottom: 0;" aria-labelledby="p-title">
+    <div class="wrap">
+      <div class="section-head section-head--row">
+        <div style="max-width: 640px;">
+          <div class="eyebrow" data-reveal>{c.pEyebrow}</div>
+          <h2 class="h2" id="p-title" data-split>{c.pTitle}</h2>
+          <p class="lead" data-reveal style="--d:120ms">{c.pLead}</p>
+        </div>
+        <a href={href("work", lang)} class="link-arrow" data-reveal>{c.pAll} <span>→</span></a>
+      </div>
+
+      <article class="feat" aria-labelledby="feat-andy">
+        <div class="feat__copy" data-reveal>
+          <div class="proj-tag"><span class="proj-tag__sq" style="--sq:#864C24"></span><span>{andy.category}</span><em>{andy.status}</em></div>
+          <h3 id="feat-andy">{andy.name}: <Fragment set:html={c.andyH} /></h3>
+          <p>{andy.summary}</p>
+          <ul class="feat__list">{c.andyL.map((x) => <li>{x}</li>)}</ul>
+          <div class="feat__ctas">
+            <a href={href("case", lang, andy.slug)} class="btn btn--ghost btn--sm" data-magnetic>{c.view} <span class="arrow">→</span></a>
+            <span class="feat__try">{c.try}</span>
+          </div>
+        </div>
+        <div data-reveal style="--d:120ms"><AndyEffect lang={lang} /></div>
+      </article>
+
+      <article class="feat feat--rev" aria-labelledby="feat-buddy">
+        <div class="feat__copy" data-reveal>
+          <div class="proj-tag"><span class="proj-tag__sq" style="--sq:#185C60"></span><span>{buddy.category}</span><em>{buddy.status}</em></div>
+          <h3 id="feat-buddy">{buddy.name}: <Fragment set:html={c.buddyH} /></h3>
+          <p>{buddy.summary}</p>
+          <ul class="feat__list">{c.buddyL.map((x) => <li>{x}</li>)}</ul>
+          <div class="feat__ctas"><a href={href("case", lang, buddy.slug)} class="btn btn--ghost btn--sm" data-magnetic>{c.view} <span class="arrow">→</span></a></div>
+        </div>
+        <div data-reveal style="--d:120ms"><BuddyEffect lang={lang} /></div>
+      </article>
+    </div>
+  </section>
+
+  <LyappScrolly lang={lang} />
+
+  <section class="section" style="padding-top: clamp(24px, 4vh, 48px);" aria-label={c.upcoming}>
+    <div class="wrap"><div class="upcoming">{up.map((u, i) => <BuildingCard lang={lang} name={u.name} category={u.category} note={u.note} delay={i * 100} />)}</div></div>
+  </section>
+
+  <section id="bitacora" class="section" style="padding-top: 0;" aria-labelledby="b-title">
+    <div class="wrap">
+      <div class="section-head section-head--row">
+        <div style="max-width: 580px;">
+          <div class="eyebrow" data-reveal>{c.bEyebrow}</div>
+          <h2 class="h2" id="b-title" data-split>{c.bTitle}</h2>
+        </div>
+        <a href={href("blog", lang)} class="link-arrow" data-reveal>{c.bAll} <span>→</span></a>
+      </div>
+      <div class="posts">{posts.slice(0, 3).map((p, i) => <PostCard post={p} lang={lang} delay={i * 90} />)}</div>
+    </div>
+  </section>
+
+  <Cta lang={lang} />
+</Base>

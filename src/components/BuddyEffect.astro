@@ -1,4 +1,11 @@
 ---
+import type { Lang } from "../i18n";
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const L = {
+  en: { tr: "translate", lvl: "level", up: "levelUp", conf: "with confidence", file2: "diagnostic-class.ts", chipA: "Personalized", chipB: "diagnostic class", prog: "Level progress" },
+  es: { tr: "traducir", lvl: "nivel", up: "subir", conf: "con confianza", file2: "clase-diagnostica.ts", chipA: "Clase diagnóstica", chipB: "personalizada", prog: "Progreso de nivel" },
+}[lang];
 const pairs = [
   ["¿Te provoca un café?", "Fancy a coffee?"],
   ["Retomemos este tema luego", "Let's circle back"],
@@ -13,20 +20,20 @@ const levels = ["A1", "A2", "B1", "B2", "C1"];
   <div class="window fx-buddy__win">
     <div class="window__bar">
       <div class="window__dots"><i></i><i></i><i></i></div>
-      <div class="win-tabs"><span class="is-on">speak-first.ts</span><span>clase-diagnostica.ts</span></div>
+      <div class="win-tabs"><span class="is-on">speak-first.ts</span><span>{L.file2}</span></div>
     </div>
     <div class="fx-buddy__code">
-      <div class="ln"><em>1</em><span class="k">import</span> {"{ confianza }"} <span class="k">from</span> <span class="s">"your-english-buddy"</span>;</div>
+      <div class="ln"><em>1</em><span class="k">import</span> {lang === "en" ? "{ confidence }" : "{ confianza }"} <span class="k">from</span> <span class="s">"your-english-buddy"</span>;</div>
       <div class="ln"><em>2</em></div>
-      <div class="ln"><em>3</em><span class="f">traducir</span>(<span class="es" data-es>"{pairs[0][0]}"</span>)</div>
+      <div class="ln"><em>3</em><span class="f">{L.tr}</span>(<span class="es" data-es>"{pairs[0][0]}"</span>)</div>
       <div class="ln"><em>4</em><span class="c">// →</span> <span class="en" data-en>"{pairs[0][1]}"</span><span class="caret"></span></div>
       <div class="ln"><em>5</em></div>
-      <div class="ln"><em>6</em><span class="f">nivel</span>.<span class="f">subir</span>(<span class="s">"con confianza"</span>);</div>
+      <div class="ln"><em>6</em><span class="f">{L.lvl}</span>.<span class="f">{L.up}</span>(<span class="s">"{L.conf}"</span>);</div>
     </div>
-    <div class="fx-buddy__levels" aria-label="Progreso de nivel">
+    <div class="fx-buddy__levels" aria-label={L.prog}>
       {levels.map((l, i) => <span class={i < 2 ? "is-on" : undefined}>{l}</span>)}
       <i class="fx-buddy__bar"><b style="width:30%"></b></i>
     </div>
   </div>
-  <div class="fx-buddy__chip"><span>💬</span>Clase diagnóstica <b>personalizada</b></div>
+  <div class="fx-buddy__chip"><span>💬</span>{L.chipA} <b>{L.chipB}</b></div>
 </div>

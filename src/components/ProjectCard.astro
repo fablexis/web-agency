@@ -1,22 +1,24 @@
 ---
 import type { Project } from "../data/projects";
+import { ui, href, loc, base, type Lang } from "../i18n";
 
 interface Props {
   project: Project;
+  lang: Lang;
   delay?: number;
 }
-const { project: p, delay = 0 } = Astro.props;
-const base = import.meta.env.BASE_URL.replace(/\/?$/, "/");
+const { lang, delay = 0 } = Astro.props;
+const p = loc(Astro.props.project, lang) as any;
 const img = p.images[0];
 ---
 
-<a href={`${base}proyectos/${p.slug}/`} class="card pcard" data-reveal data-spotlight data-tilt style={`--d:${delay}ms; --pa:${p.accent}`}>
+<a href={href("case", lang, p.slug)} class="card pcard" data-reveal data-spotlight data-tilt style={`--d:${delay}ms; --pa:${p.accent}`}>
   <div class={`pcard__art pcard__art--${img.kind}`} style={`--p1:${p.palette[0]};--p2:${p.palette[1]};--p3:${p.palette[2] ?? p.palette[0]}`}>
     {img.kind === "desktop" ? (
       <div class="pcard__browser"><span><i></i><i></i><i></i></span><img src={base + img.src} alt={img.alt} width="1280" height="800" loading="lazy" decoding="async" /></div>
     ) : (
       <div class="pcard__phones">
-        {p.images.slice(0, 3).map((im, i) => <img src={base + im.src} alt={im.alt} width="600" height="1298" loading="lazy" decoding="async" />)}
+        {p.images.slice(0, 3).map((im: any) => <img src={base + im.src} alt={im.alt} width="600" height="1298" loading="lazy" decoding="async" />)}
       </div>
     )}
     <span class={`pcard__status${p.live ? " is-live" : ""}`}><span class="dot"></span>{p.status}</span>
@@ -25,6 +27,6 @@ const img = p.images[0];
     <div class="case__cat">{p.category}</div>
     <h3>{p.name}</h3>
     <p>{p.summary}</p>
-    <span class="post__more">Ver el caso <span>→</span></span>
+    <span class="post__more">{ui[lang].viewCase} <span>→</span></span>
   </div>
 </a>

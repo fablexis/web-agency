@@ -1,16 +1,19 @@
 ---
+import { href, type Lang } from "../i18n";
+
 interface Props {
+  lang: Lang;
   name: string;
   category: string;
   note: string;
   delay?: number;
 }
-const { name, category, note, delay = 0 } = Astro.props;
-const base = import.meta.env.BASE_URL.replace(/\/?$/, "/");
+const { lang, name, category, note, delay = 0 } = Astro.props;
 const blocks = Array.from({ length: 24 }, (_, i) => i);
+const copy = { en: { p: "This slot is still compiling. It could be yours.", c: "Start a project" }, es: { p: "Este espacio se está compilando. Podría ser el tuyo.", c: "Iniciar proyecto" } }[lang];
 ---
 
-<a href={`${base}cotizar/`} class="card build" data-reveal data-spotlight style={`--d:${delay}ms`}>
+<a href={href("start", lang)} class="card build" data-reveal data-spotlight style={`--d:${delay}ms`}>
   <div class="build__art" aria-hidden="true">
     <div class="build__grid">{blocks.map((i) => <i style={`--i:${i};--x:${i % 6};--y:${Math.floor(i / 6)}`}></i>)}</div>
     <span class="build__status"><span class="dot"></span>{note}</span>
@@ -18,7 +21,7 @@ const blocks = Array.from({ length: 24 }, (_, i) => i);
   <div class="build__body">
     <div class="case__cat">{category}</div>
     <h3>{name}</h3>
-    <p>Este espacio se está compilando. Podría ser el tuyo.</p>
-    <span class="post__more">Iniciar proyecto <span>→</span></span>
+    <p>{copy.p}</p>
+    <span class="post__more">{copy.c} <span>→</span></span>
   </div>
 </a>

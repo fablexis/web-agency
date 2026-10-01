@@ -1,0 +1,47 @@
+---
+import Base from "../layouts/Base.astro";
+import PostCard from "../components/PostCard.astro";
+import Cta from "../components/Cta.astro";
+import { site, posts, formatDate, type Post } from "../data/site";
+import { href, route, loc, type Lang } from "../i18n";
+
+interface Props { lang: Lang; post: Post }
+const { lang, post } = Astro.props;
+const other: Lang = lang === "en" ? "es" : "en";
+const p = loc(post, lang) as any;
+const related = posts.filter((x) => x !== post).slice(0, 3);
+const c = {
+  en: { back: "← Back to iterating++", read: "read", by: "By", cover: "Cover image · placeholder", intro: "This is a sample article. The real content will go here once it's published: an introduction that frames the problem and why it matters for your business.", section: "Content section", end: "Wrap-up", more: "Keep reading", crumb: "iterating++" },
+  es: { back: "← Volver a iterando++", read: "de lectura", by: "Por", cover: "Imagen de portada · placeholder", intro: "Este es un artículo de ejemplo. Aquí irá el contenido real cuando se publique: una introducción que plantee el problema y por qué importa para tu negocio.", section: "Sección de contenido", end: "Conclusión", more: "Sigue leyendo", crumb: "iterando++" },
+}[lang];
+---
+
+<Base lang={lang} alt={route("post", other, post.slug[other])} title={`${p.title} | Forklia`} description={p.excerpt} type="article" noindex={post.placeholder}
+  breadcrumbs={[{ name: c.crumb, path: route("blog", lang) }, { name: p.title, path: route("post", lang, p.slug) }]}
+  schema={[{ "@type": "BlogPosting", headline: p.title, description: p.excerpt, datePublished: p.date, author: { "@type": "Person", name: p.author }, publisher: { "@id": new URL("#organization", site.url).href }, inLanguage: lang }]}>
+  <article class="section">
+    <div class="wrap article">
+      <a href={href("blog", lang)} class="back" data-reveal>{c.back}</a>
+      <div class="post__meta" style="margin-top: 28px;" data-reveal><span class="cat">{p.category}</span><span>{formatDate(p.date, lang)}</span><span>· {p.readTime} {c.read}</span></div>
+      <h1 data-split>{p.title}</h1>
+      <p class="lead" data-reveal>{p.excerpt}</p>
+      <div class="post__meta" style="margin-top: 22px;" data-reveal>{c.by} {p.author}</div>
+      <div class="post__cover" style={`--h:${p.hue}; aspect-ratio: 16/8;`} data-reveal><div class="post__shape"></div><span>{c.cover}</span></div>
+      <div class="article__body" data-reveal>
+        <p>{c.intro}</p>
+        <div class="ph-line" style="width: 96%"></div><div class="ph-line" style="width: 88%"></div><div class="ph-line" style="width: 92%"></div>
+        <h2>{c.section}</h2>
+        <div class="ph-line" style="width: 94%"></div><div class="ph-line" style="width: 80%"></div><div class="ph-line" style="width: 90%"></div><div class="ph-line" style="width: 60%"></div>
+        <h2>{c.end}</h2>
+        <div class="ph-line" style="width: 86%"></div><div class="ph-line" style="width: 70%"></div>
+      </div>
+    </div>
+  </article>
+  <section class="section" style="padding-top: 0;">
+    <div class="wrap">
+      <div class="section-head"><h2 class="h2" data-split>{c.more}</h2></div>
+      <div class="posts">{related.map((r, i) => <PostCard post={r} lang={lang} delay={i * 90} />)}</div>
+    </div>
+  </section>
+  <Cta lang={lang} />
+</Base>

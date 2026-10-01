@@ -1,7 +1,14 @@
 ---
+import type { Lang } from "../i18n";
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const L = {
+  en: { white: "White", label: "signature.html · made with the brand kit", approved: "approved combo", dot: "Dot color", bgs: "Approved logo backgrounds", dotIn: "Dot in" },
+  es: { white: "Blanco", label: "firma.html · hecha con el brand kit", approved: "combinación aprobada", dot: "Color del punto", bgs: "Fondos aprobados del logo", dotIn: "Punto en" },
+}[lang];
 const combos = [
   { name: "Índigo", bg: "#1F2C44", fg: "#E9E2D0", dot: "#864C24", ugc: "#E9E2D0" },
-  { name: "Blanco", bg: "#FFFFFF", fg: "#1F2C44", dot: "#864C24", ugc: "#51091B" },
+  { name: L.white, bg: "#FFFFFF", fg: "#1F2C44", dot: "#864C24", ugc: "#51091B" },
   { name: "Bordó", bg: "#51091B", fg: "#E9E2D0", dot: "#864C24", ugc: "#E9E2D0" },
 ];
 const colors = [
@@ -26,23 +33,23 @@ const c = combos[0];
       </div>
       <div class="andy-sig__links"><span>Portfolio</span><span>TikTok</span><span>Instagram</span></div>
     </div>
-    <span class="fx-andy__label">firma.html · hecha con el brand kit</span>
+    <span class="fx-andy__label">{L.label}</span>
   </div>
   <div class="fx-andy__panel">
     <div class="fx-andy__file"><i></i>brand-kit.css</div>
-    <pre class="fx-andy__code"><span class="c">/* combinación aprobada: <b data-k="name">{c.name}</b> */</span>
+    <pre class="fx-andy__code"><span class="c">/* {L.approved}: <b data-k="name">{c.name}</b> */</span>
 <span class="k">.logo</span> {"{"}
   background: <b data-k="bg">{c.bg}</b>;
   color: <b data-k="fg">{c.fg}</b>;
   --punto: <b data-k="dot">{c.dot}</b>;
 {"}"}</pre>
-    <div class="fx-andy__combos" role="group" aria-label="Fondos aprobados del logo">
+    <div class="fx-andy__combos" role="group" aria-label={L.bgs}>
       {combos.map((k, i) => (
         <button type="button" data-combo={i} class={i === 0 ? "is-on" : undefined} style={`--sw:${k.bg}`}>{k.name}</button>
       ))}
     </div>
-    <div class="fx-andy__dots" role="group" aria-label="Color del punto">
-      {colors.map(([n, hex]) => <button type="button" data-dot={hex} style={`--sw:${hex}`} aria-label={`Punto en ${n}`} title={n}></button>)}
+    <div class="fx-andy__dots" role="group" aria-label={L.dot}>
+      {colors.map(([n, hex]) => <button type="button" data-dot={hex} style={`--sw:${hex}`} aria-label={`${L.dotIn} ${n}`} title={n}></button>)}
     </div>
   </div>
 </div>

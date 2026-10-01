@@ -1,29 +1,66 @@
 ---
-const base = import.meta.env.BASE_URL.replace(/\/?$/, "/");
-const week = [
-  ["Sáb", 13.5], ["Dom", 12.8], ["Lun", 15.0], ["Mar", 14.4], ["Mié", 13.7], ["Jue", 13.1], ["Vie", 12.5],
-] as const;
-const steps = [
-  { t: "Su sueño,", g: "de un vistazo", p: "Un toque inicia la siesta o la noche. El temporizador sigue vivo en la pantalla de bloqueo y en la Dynamic Island." },
-  { t: "¿Es normal", g: "para su edad?", p: "El resumen semanal compara cada noche con los rangos típicos por edad de la American Academy of Pediatrics." },
-  { t: "Patrones que", g: "se te escaparían", p: "El Coach lee los registros y te cuenta qué cambió esta semana. La IA solo responde si tú la autorizas." },
-  { t: "Un PDF para", g: "el pediatra", p: "Tomas, sueño, vacunas y medicación en un reporte listo para compartir. Todo vive en tu teléfono: sin cuentas ni nube." },
-];
+import { href, base, type Lang } from "../i18n";
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const L = {
+  en: {
+    aria: "Interactive Lyapp demo", tag: "Lyapp · iOS app", live: "Live on the App Store", full: "See the full case",
+    steps: [
+      { t: "Their sleep,", g: "at a glance", p: "One tap starts a nap or the night. The timer stays alive on the Lock Screen and in the Dynamic Island." },
+      { t: "Is this normal", g: "for their age?", p: "The weekly summary compares every night with typical ranges by age from the American Academy of Pediatrics." },
+      { t: "Patterns you", g: "would miss", p: "The Coach reads your logs and tells you what changed this week. The AI only answers if you allow it." },
+      { t: "A PDF for", g: "the pediatrician", p: "Feeds, sleep, vaccines and medication in a report ready to share. Everything lives on your phone: no accounts, no cloud." },
+    ],
+    week: ["Sat", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri"],
+    hello: "Good afternoon", baby: "Lua · 14 months", feed: "Last feed 0m ago:", feedB: "20 min · breast", today: "Today: 2 naps · 5 feeds · 1 solid",
+    sleepToday: "SLEEP · TODAY", night: "NIGHT", naps: "NAPS", typical: "typical 11–14 h", next: "☾ Next sleep ~6:52 PM", start: "▶ Start sleep timer",
+    tiles: [["Feed", "0m ago"], ["Calendar", "9-month check"]],
+    summary: "Summary", week2: "Week of Sep 12–18", daily: "DAILY TOTAL", avg: "avg", inRange: "✓ In range", norm: "VS. 14-MONTH NORM", normP: "Babies at 14 months typically sleep", normB: "11–14 hours", normE: "Lua is in that range.",
+    back: "‹ Home", backS: "‹ Summary", coach: "Coach", hi: "Good evening, Lua.", hiS: "Slept 10h 30m: 2 short stirs. 5 feeds logged today.", noticed: "THINGS I NOTICED", news: "4 new",
+    ins: [["☾ A few more stirs overnight", "3 of the last 7 nights had two or more."], ["▦ Something on the calendar", "9-month check in 2 days, 10:30 AM."], ["◷ You're finding a nap rhythm", "Naps start within a 15-minute window."]],
+    report: "Report", reportS: "To share with the pediatrician", rows: [["12h 30m today", "Sleep"], ["310 ml · 5 feeds", "Feed"], ["9-month well-baby check", "Next event · Sep 20"], ["PDF report", "Share your logs"]], pdf: "lua-report-sep.pdf",
+    cards: [["Live Activity", "Dynamic Island · live", "Nap in progress:"], ["AAP range", "14 months · 11–14 h", "Weekly average 13.6 h, inside the typical range."], ["Privacy by design", "local data"]],
+    zero: ["0 accounts", "0 cloud", "0 ads"],
+  },
+  es: {
+    aria: "Demo interactiva de Lyapp", tag: "Lyapp · App iOS", live: "Disponible en App Store", full: "Ver el caso completo",
+    steps: [
+      { t: "Su sueño,", g: "de un vistazo", p: "Un toque inicia la siesta o la noche. El temporizador sigue vivo en la pantalla de bloqueo y en la Dynamic Island." },
+      { t: "¿Es normal", g: "para su edad?", p: "El resumen semanal compara cada noche con los rangos típicos por edad de la American Academy of Pediatrics." },
+      { t: "Patrones que", g: "se te escaparían", p: "El Coach lee los registros y te cuenta qué cambió esta semana. La IA solo responde si tú la autorizas." },
+      { t: "Un PDF para", g: "el pediatra", p: "Tomas, sueño, vacunas y medicación en un reporte listo para compartir. Todo vive en tu teléfono: sin cuentas ni nube." },
+    ],
+    week: ["Sáb", "Dom", "Lun", "Mar", "Mié", "Jue", "Vie"],
+    hello: "Buenas tardes", baby: "Lua · 14 meses", feed: "Última toma hace 0 min:", feedB: "20 min · pecho", today: "Hoy: 2 siestas · 5 tomas · 1 sólido",
+    sleepToday: "SUEÑO · HOY", night: "NOCHE", naps: "SIESTAS", typical: "típico 11–14 h", next: "☾ Próximo sueño ~6:52 PM", start: "▶ Iniciar temporizador",
+    tiles: [["Tomas", "hace 0 min"], ["Calendario", "Control 9 meses"]],
+    summary: "Resumen", week2: "Semana del 12 al 18 sep", daily: "TOTAL DIARIO", avg: "prom.", inRange: "✓ En rango", norm: "VS. NORMA A LOS 14 MESES", normP: "Los bebés de 14 meses suelen dormir", normB: "11–14 h", normE: "Lua está en rango.",
+    back: "‹ Inicio", backS: "‹ Resumen", coach: "Coach", hi: "Buenas noches, Lua.", hiS: "Durmió 10h 30m: 2 despertares cortos. 5 tomas hoy.", noticed: "COSAS QUE NOTÉ", news: "4 nuevas",
+    ins: [["☾ Algunos despertares más", "3 de las últimas 7 noches tuvieron dos o más."], ["▦ Algo en el calendario", "Control de 9 meses en 2 días, 10:30 AM."], ["◷ Encontrando un ritmo de siestas", "Empiezan en una ventana de 15 minutos."]],
+    report: "Reporte", reportS: "Para compartir con el pediatra", rows: [["12h 30m hoy", "Sueño"], ["310 ml · 5 tomas", "Alimentación"], ["Control de 9 meses", "Próxima cita · 20 sep"], ["Reporte PDF", "Comparte tus registros"]], pdf: "lua-reporte-sep.pdf",
+    cards: [["Live Activity", "Dynamic Island · en vivo", "Siesta en curso:"], ["Rango AAP", "14 meses · 11–14 h", "Promedio semanal 13.6 h, dentro del rango típico."], ["Privacidad por diseño", "datos locales"]],
+    zero: ["0 cuentas", "0 nube", "0 anuncios"],
+  },
+}[lang];
+const hours = [13.5, 12.8, 15.0, 14.4, 13.7, 13.1, 12.5];
+const rowCls = ["ly-row--blue", "ly-row--peach", "ly-row--blue", "ly-row--cream"];
+const rowIc = ["☾", "🍼", "▦", "⇪"];
 ---
 
-<section class="scrolly scrolly--ly" id="lyapp-demo" data-scrolly aria-label="Demo interactiva de Lyapp">
+<section class="scrolly scrolly--ly" id="lyapp-demo" data-scrolly aria-label={L.aria}>
   <div class="scrolly__sticky">
     <div class="scrolly__grid">
       <div class="scrolly__steps">
-        <div class="proj-tag"><img src={`${base}projects/lyapp-icon.webp`} alt="" width="28" height="28" loading="lazy" /><span>Lyapp · App iOS</span><em>Disponible en App Store</em></div>
-        {steps.map((s, i) => (
+        <div class="proj-tag"><img src={`${base}projects/lyapp-icon.webp`} alt="" width="28" height="28" loading="lazy" /><span>{L.tag}</span><em>{L.live}</em></div>
+        {L.steps.map((s, i) => (
           <div class={`sstep${i === 0 ? " is-active" : ""}`}>
             <h3>{s.t} <span class="ly-grad">{s.g}</span></h3>
             <p>{s.p}</p>
-            <a href={`${base}proyectos/lyapp/`} class="link-arrow">Ver el caso completo <span>→</span></a>
+            <a href={href("case", lang, "lyapp")} class="link-arrow">{L.full} <span>→</span></a>
           </div>
         ))}
-        <div class="scrolly__dots">{steps.map((_, i) => <i class={i === 0 ? "is-on" : undefined}></i>)}</div>
+        <div class="scrolly__dots">{L.steps.map((_, i) => <i class={i === 0 ? "is-on" : undefined}></i>)}</div>
       </div>
 
       <div class="phone-wrap">
@@ -33,52 +70,47 @@ const steps = [
             <div class="phone__status"><span>5:55</span><span>●●● 100%</span></div>
 
             <div class="screen ly is-active" data-screen="0">
-              <div class="ly-hello"><span class="ly-av">L</span><span><small>Buenas tardes</small><b>Lua · 14 meses</b></span></div>
-              <div class="ly-card ly-feed"><span class="ly-ic">✧</span><span>Última toma hace 0 min: <b>20 min · pecho</b><small>Hoy: 2 siestas · 5 tomas · 1 sólido</small></span></div>
+              <div class="ly-hello"><span class="ly-av">L</span><span><small>{L.hello}</small><b>{L.baby}</b></span></div>
+              <div class="ly-card ly-feed"><span class="ly-ic">✧</span><span>{L.feed} <b>{L.feedB}</b><small>{L.today}</small></span></div>
               <div class="ly-card ly-sleep">
-                <div class="ly-ring"><svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="42" class="tr"></circle><circle cx="50" cy="50" r="42" class="vl"></circle></svg><div><b>12.5h</b><small>típico 11–14 h</small></div></div>
-                <div class="ly-sleep__meta"><small>SUEÑO · HOY</small><div><span><small>NOCHE</small><b class="ly-blue">10h 30m</b></span><span><small>SIESTAS</small><b class="ly-coral">2h</b></span></div><em>☾ Próximo sueño ~6:52 PM</em></div>
-                <button class="ly-btn" type="button" tabindex="-1">▶ Iniciar temporizador</button>
+                <div class="ly-ring"><svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="42" class="tr"></circle><circle cx="50" cy="50" r="42" class="vl"></circle></svg><div><b>12.5h</b><small>{L.typical}</small></div></div>
+                <div class="ly-sleep__meta"><small>{L.sleepToday}</small><div><span><small>{L.night}</small><b class="ly-blue">10h 30m</b></span><span><small>{L.naps}</small><b class="ly-coral">2h</b></span></div><em>{L.next}</em></div>
+                <button class="ly-btn" type="button" tabindex="-1">{L.start}</button>
               </div>
               <div class="ly-tiles">
-                <div><span class="ly-ic ly-ic--peach">🍼</span><b>Tomas</b><small class="ly-coral">hace 0 min</small></div>
-                <div><span class="ly-ic ly-ic--blue">▦</span><b>Calendario</b><small class="ly-blue">Control 9 meses</small></div>
+                <div><span class="ly-ic ly-ic--peach">🍼</span><b>{L.tiles[0][0]}</b><small class="ly-coral">{L.tiles[0][1]}</small></div>
+                <div><span class="ly-ic ly-ic--blue">▦</span><b>{L.tiles[1][0]}</b><small class="ly-blue">{L.tiles[1][1]}</small></div>
               </div>
             </div>
 
             <div class="screen ly" data-screen="1">
-              <small class="ly-back">‹ Resumen</small>
-              <h6 class="ly-title">Resumen</h6>
-              <small class="ly-sub">Semana del 12 al 18 sep</small>
+              <small class="ly-back">{L.backS}</small>
+              <h6 class="ly-title">{L.summary}</h6>
+              <small class="ly-sub">{L.week2}</small>
               <div class="ly-card ly-week">
-                <div class="ly-week__top"><span><small>TOTAL DIARIO</small><b>13.6h</b> <small>prom.</small></span><em>✓ En rango</em></div>
+                <div class="ly-week__top"><span><small>{L.daily}</small><b>13.6h</b> <small>{L.avg}</small></span><em>{L.inRange}</em></div>
                 <div class="ly-bars">
                   <span class="ly-band"></span>
-                  {week.map(([d, h], i) => <i style={`--h:${(h / 16) * 100}%;--i:${i}`} class={i === 6 ? "is-today" : undefined}><small>{h}</small><em>{d}</em></i>)}
+                  {L.week.map((d, i) => <i style={`--h:${(hours[i] / 16) * 100}%;--i:${i}`} class={i === 6 ? "is-today" : undefined}><small>{hours[i]}</small><em>{d}</em></i>)}
                 </div>
               </div>
-              <div class="ly-card ly-norm"><small>VS. NORMA A LOS 14 MESES</small><div class="ly-norm__bar"><i></i><b></b></div><p>Los bebés de 14 meses suelen dormir <b>11–14 h</b>. Lua está en rango.</p></div>
+              <div class="ly-card ly-norm"><small>{L.norm}</small><div class="ly-norm__bar"><i></i><b></b></div><p>{L.normP} <b>{L.normB}</b>. {L.normE}</p></div>
             </div>
 
             <div class="screen ly" data-screen="2">
-              <small class="ly-back">‹ Inicio</small>
-              <h6 class="ly-title">Coach</h6>
-              <div class="ly-card ly-coach-hi"><span class="ly-ic">✧</span><span><b>Buenas noches, Lua.</b><small>Durmió 10h 30m: 2 despertares cortos. 5 tomas hoy.</small></span></div>
-              <small class="ly-section">COSAS QUE NOTÉ <em>4 nuevas</em></small>
-              <div class="ly-insight ly-insight--blue"><b>☾ Algunos despertares más</b><small>3 de las últimas 7 noches tuvieron dos o más.</small></div>
-              <div class="ly-insight ly-insight--blue"><b>▦ Algo en el calendario</b><small>Control de 9 meses en 2 días, 10:30 AM.</small></div>
-              <div class="ly-insight ly-insight--green"><b>◷ Encontrando un ritmo de siestas</b><small>Empiezan en una ventana de 15 minutos.</small></div>
+              <small class="ly-back">{L.back}</small>
+              <h6 class="ly-title">{L.coach}</h6>
+              <div class="ly-card ly-coach-hi"><span class="ly-ic">✧</span><span><b>{L.hi}</b><small>{L.hiS}</small></span></div>
+              <small class="ly-section">{L.noticed} <em>{L.news}</em></small>
+              {L.ins.map(([a, b], i) => <div class={`ly-insight ly-insight--${i < 2 ? "blue" : "green"}`}><b>{a}</b><small>{b}</small></div>)}
             </div>
 
             <div class="screen ly" data-screen="3">
-              <small class="ly-back">‹ Inicio</small>
-              <h6 class="ly-title">Reporte</h6>
-              <small class="ly-sub">Para compartir con el pediatra</small>
-              <div class="ly-row ly-row--blue"><span>☾</span><b>12h 30m hoy</b><small>Sueño</small></div>
-              <div class="ly-row ly-row--peach"><span>🍼</span><b>310 ml · 5 tomas</b><small>Alimentación</small></div>
-              <div class="ly-row ly-row--blue"><span>▦</span><b>Control de 9 meses</b><small>Próxima cita · 20 sep</small></div>
-              <div class="ly-row ly-row--cream"><span>⇪</span><b>Reporte PDF</b><small>Comparte tus registros</small></div>
-              <div class="ly-pdf"><i></i><i></i><i></i><b>lua-reporte-sep.pdf</b></div>
+              <small class="ly-back">{L.back}</small>
+              <h6 class="ly-title">{L.report}</h6>
+              <small class="ly-sub">{L.reportS}</small>
+              {L.rows.map(([a, b], i) => <div class={`ly-row ${rowCls[i]}`}><span>{rowIc[i]}</span><b>{a}</b><small>{b}</small></div>)}
+              <div class="ly-pdf"><i></i><i></i><i></i><b>{L.pdf}</b></div>
             </div>
 
             <div class="tabbar tabbar--ly"><i class="is-on"></i><i></i><i></i><i></i></div>
@@ -88,17 +120,17 @@ const steps = [
 
       <div class="side-cards">
         <div class="scard">
-          <header><span class="float-chip__ic ic-violet">◉</span><span><b>Live Activity</b><small>Dynamic Island · en vivo</small></span></header>
-          <p>Siesta en curso: <b class="mono" data-timer>0:00</b></p>
+          <header><span class="float-chip__ic ic-violet">◉</span><span><b>{L.cards[0][0]}</b><small>{L.cards[0][1]}</small></span></header>
+          <p>{L.cards[0][2]} <b class="mono" data-timer>0:00</b></p>
         </div>
         <div class="scard">
-          <header><span class="float-chip__ic ic-green">✓</span><span><b>Rango AAP</b><small>14 meses · 11–14 h</small></span></header>
-          <p>Promedio semanal 13.6 h, dentro del rango típico.</p>
+          <header><span class="float-chip__ic ic-green">✓</span><span><b>{L.cards[1][0]}</b><small>{L.cards[1][1]}</small></span></header>
+          <p>{L.cards[1][2]}</p>
           <div class="meter" style="--w:78%"><i></i></div>
         </div>
         <div class="scard">
-          <header><span class="float-chip__ic ic-cyan">🔒</span><span><b>Privacidad por diseño</b><small>datos locales</small></span></header>
-          <div class="pill-row"><span>0 cuentas</span><span>0 nube</span><span>0 anuncios</span></div>
+          <header><span class="float-chip__ic ic-cyan">🔒</span><span><b>{L.cards[2][0]}</b><small>{L.cards[2][1]}</small></span></header>
+          <div class="pill-row">{L.zero.map((z) => <span>{z}</span>)}</div>
         </div>
       </div>
     </div>

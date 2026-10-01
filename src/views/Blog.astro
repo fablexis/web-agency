@@ -1,0 +1,36 @@
+---
+import Base from "../layouts/Base.astro";
+import PageHero from "../components/PageHero.astro";
+import PostCard from "../components/PostCard.astro";
+import Cta from "../components/Cta.astro";
+import { posts } from "../data/site";
+import { route, type Lang } from "../i18n";
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const other: Lang = lang === "en" ? "es" : "en";
+const all = lang === "en" ? "All" : "Todos";
+const categories = [all, ...new Set(posts.map((p) => p.category[lang]))];
+const [featured, ...rest] = posts;
+const c = {
+  en: { title: "iterating++: guides on apps, web, SEO and brand | Forklia", desc: "Forklia's changelog of lessons: what we learn building apps, websites, SEO strategies and brand systems. Practical guides, no hype.", h1: 'The changelog of <span class="grad-text">what we learn</span>', lead: "Lessons from building digital products, minus the hype. Sample content while we publish the first notes.", filter: "Filter by category", ctaT: 'Got a project <span class="grad-text">in mind</span>?' },
+  es: { title: "iterando++: guías de apps, webs, SEO y marca | Forklia", desc: "La bitácora de Forklia: lo que aprendemos construyendo apps, sitios web, estrategias SEO y sistemas de marca. Guías prácticas, sin humo.", h1: 'El changelog de <span class="grad-text">lo que aprendemos</span>', lead: "Lo que aprendemos construyendo productos digitales, contado sin humo. Contenido de ejemplo mientras publicamos las primeras notas.", filter: "Filtrar por categoría", ctaT: '¿Tienes un proyecto <span class="grad-text">en mente</span>?' },
+}[lang];
+const crumb = lang === "en" ? "iterating++" : "iterando++";
+---
+
+<Base lang={lang} alt={route("blog", other)} title={c.title} description={c.desc} breadcrumbs={[{ name: crumb, path: route("blog", lang) }]}>
+  <PageHero lang={lang} eyebrow={`// ${crumb}`} crumb={crumb} title={c.h1} lead={c.lead} />
+  <section class="section" style="padding-top: 0;">
+    <div class="wrap">
+      <div class="filters" role="group" aria-label={c.filter} data-filters data-reveal>
+        {categories.map((cat, i) => <button type="button" class={i === 0 ? "is-on" : ""} data-filter={i === 0 ? "Todos" : cat} aria-pressed={i === 0 ? "true" : "false"}>{cat}</button>)}
+      </div>
+      <div class="posts">
+        <PostCard post={featured} lang={lang} feature />
+        {rest.map((p, i) => <PostCard post={p} lang={lang} delay={(i % 3) * 90} />)}
+      </div>
+    </div>
+  </section>
+  <Cta lang={lang} title={c.ctaT} />
+</Base>

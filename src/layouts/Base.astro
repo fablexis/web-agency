@@ -1,11 +1,15 @@
 ---
-import { site, nav } from "../data/site";
+import { site } from "../data/site";
 import { projects } from "../data/projects";
 import { services } from "../data/services";
+import { ui, nav, href, route, base, loc, type Lang } from "../i18n";
+import { logoSvg, letters, fCells, fork } from "../lib/logo";
 import "../styles/global.css";
-import wordmark from "../assets/brand/forklia-wordmark.svg?raw";
 
 interface Props {
+  lang: Lang;
+  /** Base-relative path of this page in the other language. */
+  alt: string;
   title?: string;
   description?: string;
   image?: string;
@@ -17,24 +21,20 @@ interface Props {
   fonts?: string;
 }
 
-const {
-  title = site.title,
-  description = site.description,
-  image = "og.png",
-  imageAlt = "Forklia — estudio de apps, webs, SEO y sistemas de marca",
-  type = "website",
-  noindex = false,
-  schema = [],
-  breadcrumbs,
-  fonts = "",
-} = Astro.props;
+const { lang, alt, title, description, image, imageAlt, type = "website", noindex = false, schema = [], breadcrumbs, fonts = "" } = Astro.props;
+const t = ui[lang];
+const other: Lang = lang === "en" ? "es" : "en";
+const pageTitle = title ?? site.title[lang];
+const pageDesc = description ?? site.description[lang];
+const ogFile = image ?? (lang === "es" ? "og-es.png" : "og.png");
+const ogAlt = imageAlt ?? site.title[lang];
 
-const base = import.meta.env.BASE_URL.replace(/\/?$/, "/");
 const path = Astro.url.pathname.replace(/\/?$/, "/");
 const abs = (p: string) => new URL(p.replace(/^\//, ""), site.url).href;
 const canonical = new URL(path, Astro.site).href;
-const ogImage = /^https?:/.test(image) ? image : abs(image);
-const isActive = (h: string) => path.startsWith(base + h);
+const altUrl = abs(alt);
+const ogImage = /^https?:/.test(ogFile) ? ogFile : abs(ogFile);
+const isActive = (key: Parameters<typeof route>[0]) => path.startsWith(base + route(key, lang)) && route(key, lang) !== route("home", lang);
 const year = new Date().getFullYear();
 
 const orgId = abs("#organization");
@@ -47,78 +47,76 @@ const graph: Record<string, unknown>[] = [
     url: site.url,
     logo: { "@type": "ImageObject", url: abs("brand/forklia-logo.png"), width: 512, height: 512 },
     email: site.email,
-    description: site.description,
+    description: site.description.en,
     areaServed: "Worldwide",
-    knowsLanguage: ["es", "en"],
+    knowsLanguage: ["en", "es"],
     founder: [
       { "@type": "Person", name: "Fabian Pernía", jobTitle: "Co-founder · Full Stack Engineer" },
       { "@type": "Person", name: "Fabio Pernía", jobTitle: "Co-founder · Creative Director & Head of Sales" },
     ],
   },
-  { "@type": "WebSite", "@id": abs("#website"), url: site.url, name: site.name, inLanguage: "es", publisher: { "@id": orgId } },
+  { "@type": "WebSite", "@id": abs("#website"), url: site.url, name: site.name, inLanguage: ["en", "es"], publisher: { "@id": orgId } },
   ...(breadcrumbs
-    ? [
-        {
-          "@type": "BreadcrumbList",
-          itemListElement: [{ name: "Inicio", path: "" }, ...breadcrumbs].map((b, i) => ({
-            "@type": "ListItem",
-            position: i + 1,
-            name: b.name,
-            item: abs(b.path),
-          })),
-        },
-      ]
+    ? [{
+        "@type": "BreadcrumbList",
+        itemListElement: [{ name: t.home, path: route("home", lang) }, ...breadcrumbs].map((b, i) => ({ "@type": "ListItem", position: i + 1, name: b.name, item: abs(b.path) })),
+      }]
     : []),
   ...schema,
 ];
 const jsonLd = JSON.stringify({ "@context": "https://schema.org", "@graph": graph });
-
 const fontHref = `https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Manrope:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700${fonts}&display=swap`;
 
+const navItems = nav.map((n) => ({ ...n, tokens: n.tokens[lang], hint: n.hint[lang], url: href(n.key, lang), active: isActive(n.key) }));
+const plain = (key: string) => navItems.find((n) => n.key === key)!.tokens.map((x) => x.t).join("");
+const G = t.paletteGroups;
+const lyapp = projects.find((p) => p.slug === "lyapp")!;
 const palette = [
-  ...nav.map((n) => ({ group: "Páginas", label: n.label, hint: n.hint, href: base + n.href })),
-  { group: "Páginas", label: "Iniciar proyecto", hint: "cotizar", href: `${base}cotizar/` },
-  ...services.map((s) => ({ group: "Superpoderes", label: s.name, hint: s.file, href: `${base}soluciones/#${s.id}` })),
-  ...projects.map((p) => ({ group: "En producción", label: p.name, hint: p.category, href: `${base}proyectos/${p.slug}/` })),
-  { group: "Acciones", label: "Copiar correo", hint: site.email, href: `copy:${site.email}` },
-  { group: "Acciones", label: "Escribir por WhatsApp", hint: "wa.me", href: site.whatsapp },
-];
-
-const fCells = [
-  [0, 0], [0, 1], [0, 2], [0, 3], [0, 4],
-  [1, 0], [2, 0], [3, 0],
-  [1, 2],
+  { group: G.popular, pop: true, label: t.start, hint: "start()", href: href("start", lang) },
+  { group: G.popular, pop: true, label: lyapp.name, hint: loc(lyapp.category, lang), href: href("case", lang, "lyapp") },
+  { group: G.popular, pop: true, label: t.faqLabel, hint: "faq", href: `${href("services", lang)}#faq` },
+  { group: G.popular, pop: true, label: loc(services[0].name, lang), hint: services[0].file, href: `${href("services", lang)}#apps` },
+  { group: G.popular, pop: true, label: t.copyEmail, hint: site.email, href: `copy:${site.email}` },
+  ...navItems.map((n) => ({ group: G.pages, pop: false, label: plain(n.key), hint: n.hint, href: n.url })),
+  { group: G.pages, pop: false, label: t.start, hint: "start()", href: href("start", lang) },
+  ...services.map((s) => ({ group: G.modules, pop: false, label: loc(s.name, lang), hint: s.file, href: `${href("services", lang)}#${s.id}` })),
+  ...projects.map((p) => ({ group: G.deploys, pop: false, label: p.name, hint: loc(p.category, lang), href: href("case", lang, p.slug) })),
+  { group: G.actions, pop: false, label: t.copyEmail, hint: site.email, href: `copy:${site.email}` },
+  { group: G.actions, pop: false, label: t.whatsapp, hint: "wa.me", href: site.whatsapp },
+  { group: G.actions, pop: false, label: t.switchTo, hint: other.toUpperCase(), href: base + alt },
 ];
 const dropOrder = [[0, 4], [0, 3], [0, 2], [0, 1], [0, 0], [1, 0], [2, 0], [3, 0], [1, 2]];
 ---
 
-<html lang="es" class="no-js">
+<html lang={t.htmlLang} class="no-js">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{title}</title>
-    <meta name="description" content={description} />
+    <title>{pageTitle}</title>
+    <meta name="description" content={pageDesc} />
     <link rel="canonical" href={canonical} />
+    <link rel="alternate" hreflang={lang} href={canonical} />
+    <link rel="alternate" hreflang={other} href={altUrl} />
+    <link rel="alternate" hreflang="x-default" href={lang === "en" ? canonical : altUrl} />
     {noindex && <meta name="robots" content="noindex, follow" />}
     <meta name="theme-color" content="#06070E" />
     <meta name="author" content="Forklia" />
     <link rel="icon" type="image/svg+xml" href={`${base}favicon.svg`} />
     <link rel="apple-touch-icon" href={`${base}brand/forklia-logo.png`} />
     <link rel="sitemap" href={`${base}sitemap.xml`} />
-
     <meta property="og:type" content={type} />
     <meta property="og:site_name" content={site.name} />
-    <meta property="og:locale" content="es_ES" />
-    <meta property="og:title" content={title} />
-    <meta property="og:description" content={description} />
+    <meta property="og:locale" content={t.locale} />
+    <meta property="og:locale:alternate" content={ui[other].locale} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={pageDesc} />
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={ogImage} />
-    <meta property="og:image:alt" content={imageAlt} />
+    <meta property="og:image:alt" content={ogAlt} />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content={title} />
-    <meta name="twitter:description" content={description} />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={pageDesc} />
     <meta name="twitter:image" content={ogImage} />
-
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href={fontHref} rel="stylesheet" />
@@ -140,60 +138,60 @@ const dropOrder = [[0, 4], [0, 3], [0, 2], [0, 1], [0, 0], [1, 0], [2, 0], [3, 0
         {dropOrder.map(([c, r], i) => <i style={`--c:${c};--r:${r};--i:${i}`}></i>)}
         <i class="is-fork" style="--c:2.23;--r:1.77;--i:9"></i>
       </div>
-      <div class="loader__txt"><span>compilando forklia</span><b id="loader-pct">0%</b></div>
+      <div class="loader__txt"><span>{t.loader}</span><b id="loader-pct">0%</b></div>
     </div>
 
-    <a class="skip" href="#main">Saltar al contenido</a>
+    <a class="skip" href="#main">{t.skip}</a>
     <div id="scroll-progress"></div>
-    <div class="bg" aria-hidden="true">
-      <div class="bg__a"></div>
-      <div class="bg__b"></div>
-      <div class="bg__grid"></div>
-      <div class="bg__noise"></div>
-    </div>
+    <div class="bg" aria-hidden="true"><div class="bg__a"></div><div class="bg__b"></div><div class="bg__grid"></div><div class="bg__noise"></div></div>
     <div id="cursor-glow" aria-hidden="true"></div>
 
     <header class="nav" id="nav">
       <div class="nav__in">
-        <a href={base} class="brand" aria-label={`${site.name} — inicio`}>
-          <span class="brand__logo" set:html={wordmark} />
-        </a>
-        <nav class="nav__links" data-navlinks aria-label="Principal">
+        <a href={href("home", lang)} class="brand brand--anim" aria-label={`${site.name} — ${t.home}`} set:html={logoSvg("fk-nav")} />
+        <nav class="nav__links" data-navlinks aria-label="Main">
           <span class="nav__pill" aria-hidden="true"></span>
-          {nav.map((n) => (
-            <a href={base + n.href} data-hint={`./${n.hint}`} class={isActive(n.href) ? "is-active" : undefined} aria-current={isActive(n.href) ? "page" : undefined}>{n.label}</a>
+          {navItems.map((n) => (
+            <a href={n.url} data-hint={n.hint} class={n.active ? "is-active" : undefined} aria-current={n.active ? "page" : undefined}>
+              {n.tokens.map((tk) => <span class={`tk tk--${tk.c}`}>{tk.t}</span>)}
+            </a>
           ))}
         </nav>
         <div class="nav__right">
-          <button class="kbd-btn" type="button" data-palette-open aria-label="Abrir paleta de comandos">
+          <div class="lang" role="group" aria-label="Language">
+            <a href={lang === "en" ? undefined : base + alt} class={lang === "en" ? "is-on" : undefined} aria-current={lang === "en" ? "true" : undefined} hreflang="en" lang="en" title={lang === "en" ? undefined : ui.es.switchLabel}>EN</a>
+            <a href={lang === "es" ? undefined : base + alt} class={lang === "es" ? "is-on" : undefined} aria-current={lang === "es" ? "true" : undefined} hreflang="es" lang="es" title={lang === "es" ? undefined : ui.en.switchLabel}>ES</a>
+          </div>
+          <button class="kbd-btn" type="button" data-palette-open aria-label={t.paletteOpen}>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.5" y2="16.5"></line></svg>
             <kbd>⌘K</kbd>
           </button>
-          <a href={`${base}cotizar/`} class="btn btn--primary btn--sm" data-magnetic>Iniciar proyecto</a>
-          <button class="menu-btn" id="menu-btn" aria-label="Abrir menú" aria-expanded="false" aria-controls="drawer"><span></span><span></span></button>
+          <a href={href("start", lang)} class="btn btn--primary btn--sm nav__cta" data-magnetic><span class="tk tk--p">{"<"}</span>{t.start}<span class="tk tk--p">{" />"}</span></a>
+          <button class="menu-btn" id="menu-btn" aria-label={t.menuOpen} aria-expanded="false" aria-controls="drawer"><span></span><span></span></button>
         </div>
       </div>
     </header>
     <div class="drawer" id="drawer">
-      {nav.map((n) => <a href={base + n.href}><small>./{n.hint}</small>{n.label}</a>)}
-      <a href={`${base}cotizar/`}><small>./cotizar</small>Iniciar proyecto</a>
+      {navItems.map((n) => <a href={n.url}><small>{n.hint}</small>{n.tokens.map((tk) => <span class={`tk tk--${tk.c}`}>{tk.t}</span>)}</a>)}
+      <a href={href("start", lang)}><small>// start()</small>{t.start}</a>
+      <a href={base + alt} hreflang={other}><small>// lang</small>{t.switchTo}</a>
     </div>
 
-    <div class="palette" id="palette" role="dialog" aria-modal="true" aria-label="Paleta de comandos" hidden>
+    <div class="palette" id="palette" role="dialog" aria-modal="true" aria-label={t.paletteOpen} hidden>
       <div class="palette__box">
         <div class="palette__input">
           <span>›</span>
-          <input type="text" placeholder="Busca una página, proyecto o acción…" aria-label="Buscar" autocomplete="off" spellcheck="false" />
+          <input type="text" placeholder={t.palettePlaceholder} aria-label={t.palettePlaceholder} autocomplete="off" spellcheck="false" />
           <kbd>esc</kbd>
         </div>
         <ul class="palette__list" role="listbox">
           {palette.map((it) => (
-            <li role="option" data-href={it.href} data-group={it.group} data-search={`${it.label} ${it.hint} ${it.group}`.toLowerCase()}>
+            <li role="option" data-href={it.href} data-pop={it.pop ? "1" : undefined} data-search={`${it.label} ${it.hint} ${it.group}`.toLowerCase()}>
               <small>{it.group}</small><b>{it.label}</b><span>{it.hint}</span>
             </li>
           ))}
         </ul>
-        <div class="palette__foot"><span><kbd>↑</kbd><kbd>↓</kbd> navegar</span><span><kbd>↵</kbd> abrir</span></div>
+        <div class="palette__foot"><span><kbd>↑</kbd><kbd>↓</kbd> {t.paletteNav}</span><span><kbd>↵</kbd> {t.paletteOpenHint}</span></div>
       </div>
     </div>
 
@@ -204,63 +202,67 @@ const dropOrder = [[0, 4], [0, 3], [0, 2], [0, 1], [0, 0], [1, 0], [2, 0], [3, 0
     <footer class="footer">
       <div class="wrap">
         <div class="footer__top">
-          <div>
-            <a href={base} class="brand" aria-label={`${site.name} — inicio`}><span class="brand__logo brand__logo--lg" set:html={wordmark} /></a>
-            <p>Estudio de producto digital. Apps, webs, SEO y sistemas de marca para marcas de cualquier país.</p>
-            <div class="socials">
+          <div class="footer__intro">
+            <p class="footer__blurb">{t.footerBlurb}</p>
+            <div class="socials" aria-label={t.followUs}>
               {site.socials.map((s) => (
-                <a href={s.href} aria-label={`${s.label} de Forklia`} rel="noopener" target="_blank">
-                  {s.icon === "linkedin" && <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5ZM3 9.75h4V21H3V9.75Zm6.5 0h3.84v1.54h.05c.53-1 1.84-2.06 3.79-2.06 4.05 0 4.8 2.67 4.8 6.13V21h-4v-5.02c0-1.2-.02-2.74-1.67-2.74-1.67 0-1.93 1.3-1.93 2.65V21h-4V9.75Z"></path></svg>}
-                  {s.icon === "instagram" && <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="17.5" cy="6.5" r="1" fill="currentColor"></circle></svg>}
-                  {s.icon === "tiktok" && <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M16.6 5.82A4.28 4.28 0 0 1 15.54 3h-3.09v12.4a2.59 2.59 0 0 1-2.59 2.5 2.59 2.59 0 0 1-2.59-2.59 2.59 2.59 0 0 1 3.37-2.47V9.68a5.68 5.68 0 0 0-.78-.05A5.69 5.69 0 0 0 4.17 15.3 5.69 5.69 0 0 0 9.86 21a5.69 5.69 0 0 0 5.68-5.69V9.01a7.35 7.35 0 0 0 4.29 1.37V7.3a4.28 4.28 0 0 1-3.23-1.48Z"></path></svg>}
+                <a href={s.href} rel="noopener" target="_blank" aria-label={`${s.label} — ${s.handle}`}>
+                  <span class="socials__ic">
+                    {s.icon === "linkedin" && <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5ZM3 9.75h4V21H3V9.75Zm6.5 0h3.84v1.54h.05c.53-1 1.84-2.06 3.79-2.06 4.05 0 4.8 2.67 4.8 6.13V21h-4v-5.02c0-1.2-.02-2.74-1.67-2.74-1.67 0-1.93 1.3-1.93 2.65V21h-4V9.75Z"></path></svg>}
+                    {s.icon === "instagram" && <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="17.5" cy="6.5" r="1" fill="currentColor"></circle></svg>}
+                    {s.icon === "tiktok" && <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M16.6 5.82A4.28 4.28 0 0 1 15.54 3h-3.09v12.4a2.59 2.59 0 0 1-2.59 2.5 2.59 2.59 0 0 1-2.59-2.59 2.59 2.59 0 0 1 3.37-2.47V9.68a5.68 5.68 0 0 0-.78-.05A5.69 5.69 0 0 0 4.17 15.3 5.69 5.69 0 0 0 9.86 21a5.69 5.69 0 0 0 5.68-5.69V9.01a7.35 7.35 0 0 0 4.29 1.37V7.3a4.28 4.28 0 0 1-3.23-1.48Z"></path></svg>}
+                  </span>
+                  <span class="socials__txt"><b>{s.label}</b><small>{s.handle}</small></span>
+                  <span class="socials__go" aria-hidden="true">↗</span>
                 </a>
               ))}
             </div>
           </div>
           <div>
-            <h5>// estudio</h5>
+            <h2 class="footer__h">{t.footerCols.studio}</h2>
             <ul>
-              <li><a href={`${base}soluciones/`}>Superpoderes</a></li>
-              <li><a href={`${base}proyectos/`}>En producción</a></li>
-              <li><a href={`${base}nosotros/`}>Mentes detrás</a></li>
-              <li><a href={`${base}soluciones/#proceso`}>Proceso</a></li>
+              {navItems.slice(0, 3).map((n) => <li><a href={n.url}>{plain(n.key)}</a></li>)}
+              <li><a href={`${href("services", lang)}#proceso`}>{t.process}</a></li>
             </ul>
           </div>
           <div>
-            <h5>// recursos</h5>
+            <h2 class="footer__h">{t.footerCols.resources}</h2>
             <ul>
-              <li><a href={`${base}blog/`}>Bitácora</a></li>
-              <li><a href={`${base}soluciones/#faq`}>Preguntas frecuentes</a></li>
-              <li><a href={`${base}cotizar/`}>Iniciar proyecto</a></li>
+              <li><a href={href("blog", lang)}>{plain("blog")}</a></li>
+              <li><a href={`${href("services", lang)}#faq`}>{t.faq}</a></li>
+              <li><a href={href("start", lang)}>{t.start}</a></li>
             </ul>
           </div>
           <div>
-            <h5>// contacto</h5>
+            <h2 class="footer__h">{t.footerCols.contact}</h2>
             <ul>
               <li><a href={`mailto:${site.email}`}>{site.email}</a></li>
               <li><a href={site.whatsapp}>WhatsApp</a></li>
+              <li><a href={base + alt} hreflang={other}>{t.switchTo}</a></li>
             </ul>
           </div>
         </div>
 
-        <div class="fplay" id="fplay">
-          <div class="fplay__hint"><span>// juega con la F</span><span class="fplay__keys">mueve el cursor · haz clic para soltar los módulos</span></div>
-          <div class="fplay__word" aria-hidden="true">
+        <div class="fplay" id="fplay" aria-hidden="true">
+          <div class="fplay__word">
             <div class="fplay__f">
-              {fCells.map(([c, r]) => <i style={`--c:${c};--r:${r}`}></i>)}
-              <i class="is-fork" style="--c:2.23;--r:1.77"></i>
+              {fCells.map(([c, r], i) => <i style={`--c:${c};--r:${r};--i:${i}`}></i>)}
+              <i class="is-fork" style={`--c:${(fork.x / 6.5).toFixed(3)};--r:${(fork.y / 6.5).toFixed(3)};--i:9`}></i>
             </div>
-            <svg class="fplay__rest" viewBox="27 0 114 32" set:html={wordmark.replace(/^<svg[^>]*>|<\/svg>$/g, "").replace(/<path class="fk-cell"[^>]*\/>/, "")}></svg>
+            <svg class="fplay__rest" viewBox="27 0 114 32">
+              {letters.map((l, i) => <path class="fplay__l" style={`--i:${i}`} d={l.d}></path>)}
+            </svg>
           </div>
         </div>
 
         <div class="footer__bottom">
-          <span>© {year} Forklia. Todos los derechos reservados.</span>
-          <span class="mono">git commit -m "hecho con cariño desde cualquier zona horaria"</span>
+          <span>© {year} Forklia. {t.rights}</span>
+          <span class="mono">{t.commit}</span>
         </div>
       </div>
     </footer>
 
     <script src="../scripts/motion.js"></script>
+    <script src="../scripts/fx.js"></script>
   </body>
 </html>

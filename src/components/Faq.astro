@@ -1,16 +1,25 @@
 ---
 import { site, faqs } from "../data/site";
+import { loc, type Lang } from "../i18n";
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const list = loc(faqs, lang) as { q: string; a: string }[];
+const copy = {
+  en: { title: "Frequently asked questions", lead: "Can't find what you're looking for? Write to" },
+  es: { title: "Preguntas frecuentes", lead: "¿No encuentras lo que buscas? Escríbenos a" },
+}[lang];
 ---
 
 <div class="wrap faq">
   <div>
-    <div class="eyebrow" data-reveal>FAQ</div>
-    <h2 class="h2" data-split>Preguntas frecuentes</h2>
-    <p class="lead" data-reveal style="margin-top: 18px;">¿No encuentras lo que buscas? Escríbenos a <a href={`mailto:${site.email}`} style="color: var(--cyan);">{site.email}</a>.</p>
+    <div class="eyebrow" data-reveal>// faq</div>
+    <h2 class="h2" data-split>{copy.title}</h2>
+    <p class="lead" data-reveal style="margin-top: 18px;">{copy.lead} <a href={`mailto:${site.email}`} style="color: var(--cyan);">{site.email}</a>.</p>
   </div>
   <div class="faq__list">
-    {faqs.map((f, i) => (
-      <details data-reveal style={`--d:${i * 60}ms`} open={i === 0}>
+    {list.map((f, i) => (
+      <details data-reveal style={`--d:${i * 50}ms`} open={i === 0}>
         <summary>{f.q}<i aria-hidden="true"></i></summary>
         <div class="faq__a"><div><p>{f.a}</p></div></div>
       </details>

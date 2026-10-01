@@ -1,0 +1,70 @@
+---
+import Base from "../layouts/Base.astro";
+import PageHero from "../components/PageHero.astro";
+import Cta from "../components/Cta.astro";
+import { site, founders } from "../data/site";
+import { route, loc, base, type Lang } from "../i18n";
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const other: Lang = lang === "en" ? "es" : "en";
+const people = loc(founders, lang) as any[];
+const c = {
+  en: {
+    title: "git blame: the people behind Forklia's code | Forklia",
+    desc: "Meet Fabian Pernía, Full Stack Engineer, and Fabio Pernía, Creative Director and Head of Sales: the founders of Forklia, a remote app, web and brand studio.",
+    eyebrow: "// git blame", crumb: "git blame",
+    h1: 'The minds behind <span class="grad-text">the code</span>',
+    lead: "A product studio founded by two complementary profiles: end-to-end engineering and creative direction with a commercial eye.",
+    manifesto: "We believe great digital products are born when engineering and creativity share the same table from day one. That's why Forklia is small on purpose: you talk directly with the people who design, build and grow what you imagine.",
+    how: "// how we work", howT: "Principles we don't compromise on",
+    values: [["Obsessed with detail", "Every pixel and every millisecond counts."], ["Full transparency", "Visible progress, fixed prices, no surprises."], ["Business first", "We design for metrics, not just awards."], ["Long-term partners", "Launch is the start, not the finish line."]],
+    ctaT: 'Shall we build something <span class="grad-text">together</span>?', ctaText: "Book a call with the founders and tell us what you want to achieve.",
+    photo: "Black and white portrait of",
+  },
+  es: {
+    title: "git blame: las mentes detrás del código de Forklia | Forklia",
+    desc: "Conoce a Fabian Pernía, Full Stack Engineer, y Fabio Pernía, Creative Director y Head of Sales: los fundadores de Forklia, un estudio remoto de apps, webs y marcas.",
+    eyebrow: "// git blame", crumb: "git blame",
+    h1: 'Las mentes detrás <span class="grad-text">del código</span>',
+    lead: "Un estudio de producto digital fundado por dos perfiles complementarios: ingeniería de punta a punta y dirección creativa con visión comercial.",
+    manifesto: "Creemos que un gran producto digital nace cuando ingeniería y creatividad se sientan en la misma mesa desde el primer día. Por eso Forklia es pequeño a propósito: hablas directamente con quienes diseñan, construyen y hacen crecer lo que imaginas.",
+    how: "// cómo trabajamos", howT: "Principios que no negociamos",
+    values: [["Obsesión por el detalle", "Cada píxel y cada milisegundo cuentan."], ["Transparencia total", "Avances visibles, precios cerrados, sin sorpresas."], ["Negocio primero", "Diseñamos para métricas, no solo para premios."], ["Socios a largo plazo", "Lanzar es el inicio, no la meta."]],
+    ctaT: '¿Construimos algo <span class="grad-text">juntos</span>?', ctaText: "Agenda una llamada con los fundadores y cuéntanos qué quieres lograr.",
+    photo: "Retrato en blanco y negro de",
+  },
+}[lang];
+const schema = [{ "@type": "AboutPage", name: c.title, url: new URL(route("about", lang), site.url).href, mainEntity: people.map((f) => ({ "@type": "Person", name: f.name, jobTitle: f.jobTitle, image: new URL(f.photo, site.url).href, worksFor: { "@id": new URL("#organization", site.url).href } })) }];
+---
+
+<Base lang={lang} alt={route("about", other)} title={c.title} description={c.desc} type="profile" breadcrumbs={[{ name: c.crumb, path: route("about", lang) }]} schema={schema}>
+  <PageHero lang={lang} eyebrow={c.eyebrow} crumb={c.crumb} title={c.h1} lead={c.lead} violet />
+  <section class="section" style="padding-top: 0;">
+    <div class="wrap">
+      <div class="about">
+        {people.map((f, i) => (
+          <article class="card founder" data-reveal data-spotlight style={`--d:${i * 120}ms; --fc:${f.accent === "cyan" ? "#45E0FF" : "#9B6BFF"}`}>
+            <div class="founder__photo"><img src={base + f.photo} alt={`${c.photo} ${f.name}, ${f.jobTitle} — Forklia`} width="880" height="1172" loading="lazy" decoding="async" /></div>
+            <div class="founder__body">
+              <div class="founder__role">{f.role}</div>
+              <h2 class="founder__name">{f.name}</h2>
+              <p>{f.bio}</p>
+              <div class="tags">{f.skills.map((s: string) => <span class="tag">{s}</span>)}</div>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+  <section class="section" style="padding-top: 0;">
+    <div class="wrap"><p class="manifesto" data-manifesto>{c.manifesto.split(" ").map((w) => <span>{w} </span>)}</p></div>
+  </section>
+  <section class="section" style="padding-top: 0;">
+    <div class="wrap">
+      <div class="section-head"><div class="eyebrow" data-reveal>{c.how}</div><h2 class="h2" data-split>{c.howT}</h2></div>
+      <div class="values">{c.values.map(([t, d], i) => <div class="card value" data-reveal data-spotlight style={`--d:${i * 80}ms`}><b>0{i + 1}</b><h3>{t}</h3><p>{d}</p></div>)}</div>
+    </div>
+  </section>
+  <Cta lang={lang} title={c.ctaT} text={c.ctaText} />
+</Base>

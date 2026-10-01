@@ -1,37 +1,44 @@
 ---
 import { testimonials } from "../data/site";
+import { href, loc, type Lang } from "../i18n";
+import { avatarSvg } from "../lib/avatar";
 
-const base = import.meta.env.BASE_URL.replace(/\/?$/, "/");
-const featured = testimonials.find((t) => t.real);
-const rest = testimonials.filter((t) => !t.real);
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const list = testimonials.map((t) => ({ ...loc(t, lang), avatar: avatarSvg(t.seed, t.colors, 56), mini: avatarSvg(t.seed, t.colors, 26) }));
+const c = {
+  en: { cmd: "git log --oneline --reviews", real: "verified client", see: "See her project", aria: "Testimonials" },
+  es: { cmd: "git log --oneline --reseñas", real: "cliente verificado", see: "Ver su proyecto", aria: "Testimonios" },
+}[lang];
 ---
 
-<div class="tgrid">
-  {featured && (
-    <figure class="card tfeat" data-reveal data-spotlight>
-      <div class="tfeat__mark" aria-hidden="true">“</div>
-      <blockquote><p>{featured.q}</p></blockquote>
-      <figcaption>
-        <span class="av" style={`background:${featured.g}`}>{featured.i}</span>
-        <span><b>{featured.n}</b><small>{featured.r}</small></span>
-        {featured.project && <a href={`${base}proyectos/${featured.project}/`} class="link-arrow">Ver su proyecto <span>→</span></a>}
-      </figcaption>
-    </figure>
-  )}
-  <div class="tmarquee" data-reveal style="--d:120ms">
-    {[0, 1].map((row) => {
-      const list = row === 0 ? rest : [...rest].reverse();
-      return (
-        <div class={`tmarquee__row${row ? " tmarquee__row--rev" : ""}`}>
-          {[...list, ...list].map((t, i) => (
-            <figure class="card tcard" data-spotlight aria-hidden={i >= list.length || row === 1 ? "true" : undefined}>
-              <div class="stars" aria-label="5 de 5">★★★★★</div>
-              <p>“{t.q}”</p>
-              <footer><span class="av" style={`background:${t.g}`}>{t.i}</span><span><b>{t.n}</b><small>{t.r}</small></span></footer>
-            </figure>
-          ))}
-        </div>
-      );
-    })}
+<div class="tlog" data-tlog>
+  <div class="tlog__stage">
+    {list.map((t, i) => (
+      <figure class={`tlog__q${i === 0 ? " is-active" : ""}`} id={`tq-${i}`} role="tabpanel" aria-labelledby={`tt-${i}`} hidden={i !== 0 ? true : undefined}>
+        <blockquote><p data-decode>“{t.q}”</p></blockquote>
+        <figcaption>
+          <span class="tlog__av" set:html={t.avatar} />
+          <span class="tlog__who"><b>{t.n}</b><small>{t.r}</small></span>
+          {t.real && t.project && <a class="link-arrow" href={href("case", lang, t.project)}>{c.see} <span>→</span></a>}
+        </figcaption>
+      </figure>
+    ))}
+  </div>
+  <div class="tlog__side">
+    <div class="tlog__cmd"><span class="tk tk--p">$</span> {c.cmd}</div>
+    <div class="tlog__list" role="tablist" aria-label={c.aria}>
+      {list.map((t, i) => (
+        <button type="button" role="tab" id={`tt-${i}`} aria-controls={`tq-${i}`} aria-selected={i === 0 ? "true" : "false"} class={i === 0 ? "is-active" : undefined}>
+          <span class="tlog__node" aria-hidden="true"></span>
+          <code class="tlog__sha">{t.sha}</code>
+          <span class="tlog__mini" set:html={t.mini} />
+          <span class="tlog__name">{t.n}<small>{t.r}</small></span>
+          {i === 0 && <em class="tlog__head">HEAD</em>}
+          {t.real && <em class="tlog__real">{c.real}</em>}
+          <i class="tlog__prog" aria-hidden="true"><b></b></i>
+        </button>
+      ))}
+    </div>
   </div>
 </div>

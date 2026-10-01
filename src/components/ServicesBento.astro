@@ -1,8 +1,10 @@
 ---
 import { services } from "../data/services";
+import { href, loc, type Lang } from "../i18n";
 
-const base = import.meta.env.BASE_URL.replace(/\/?$/, "/");
-const by = Object.fromEntries(services.map((s) => [s.id, s]));
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const by = Object.fromEntries(services.map((s) => [s.id, loc(s, lang)]));
 const layout = [
   { id: "web", size: "wide" },
   { id: "apps", size: "narrow" },
@@ -10,29 +12,30 @@ const layout = [
   { id: "branding", size: "half" },
 ];
 const brandSwatches = ["#45E0FF", "#9B6BFF", "#3B6BFF", "#4BE3A0", "#E9E2D0", "#864C24", "#E8805A", "#185C60"];
+const more = { en: "import", es: "import" }[lang];
 ---
 
 <div class="bento">
   {layout.map(({ id, size }, i) => {
     const s = by[id];
     return (
-      <a href={`${base}soluciones/#${s.id}`} class={`card svc svc--${size}`} data-reveal data-spotlight style={`--d:${(i % 2) * 80}ms`}>
+      <a href={`${href("services", lang)}#${s.id}`} class={`card svc svc--${size}`} data-reveal data-spotlight style={`--d:${(i % 2) * 80}ms`}>
         <div class="svc__head">
           <div class={`svc__ic ic-${s.tone}`}><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" set:html={s.icon}></svg></div>
           <span class="svc__file">{s.file}</span>
         </div>
         <h3>{s.name}</h3>
         <p>{s.lead}</p>
-        <div class="tags">{s.stack.slice(0, 3).map((t) => <span class="tag">{t}</span>)}</div>
+        <span class="svc__more"><span class="tk tk--kw">{more}</span> {s.id} <span class="arr">→</span></span>
         <div class="svc__viz" aria-hidden="true">
           {s.viz === "code" && <div class="code" data-code></div>}
           {s.viz === "phone" && <div class="mini-phone"><i></i><i></i><i></i><i></i><i></i></div>}
           {s.viz === "ranks" && (
             <div class="ranks" data-ranks>
-              <div class="rank"><b>1</b>competidor-a.com</div>
-              <div class="rank"><b>2</b>competidor-b.com</div>
-              <div class="rank"><b>3</b>directorio.com</div>
-              <div class="rank is-you"><b>4</b>tu-marca.com</div>
+              <div class="rank"><b>1</b>competitor-a.com</div>
+              <div class="rank"><b>2</b>competitor-b.com</div>
+              <div class="rank"><b>3</b>directory.com</div>
+              <div class="rank is-you"><b>4</b>your-brand.com</div>
             </div>
           )}
           {s.viz === "palette" && (
@@ -42,7 +45,6 @@ const brandSwatches = ["#45E0FF", "#9B6BFF", "#3B6BFF", "#4BE3A0", "#E9E2D0", "#
             </div>
           )}
         </div>
-        <span class="svc__more">Explorar {s.name.toLowerCase()} <span>→</span></span>
       </a>
     );
   })}

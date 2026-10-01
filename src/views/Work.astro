@@ -1,0 +1,37 @@
+---
+import Base from "../layouts/Base.astro";
+import PageHero from "../components/PageHero.astro";
+import ProjectCard from "../components/ProjectCard.astro";
+import BuildingCard from "../components/BuildingCard.astro";
+import Cta from "../components/Cta.astro";
+import { site } from "../data/site";
+import { projects, upcoming, serviceNames } from "../data/projects";
+import { route, loc, type Lang } from "../i18n";
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const other: Lang = lang === "en" ? "es" : "en";
+const filters = ["all", ...new Set(projects.flatMap((p) => p.services))];
+const up = loc(upcoming, lang) as any[];
+const c = {
+  en: { title: "Deploys: shipped apps, websites and brands | Forklia", desc: "Lyapp on the App Store, the Simply Andy brand system and the Your English Buddy website: what we built in each project and the impact it had.", eyebrow: "// deploys/", crumb: "deploys/", h1: 'Real projects, <span class="grad-text">real code</span>', lead: "An app live on the App Store, a brand system its owner uses daily and an education site ready to grow. Some are still in staging: this is what the work looks like while it's cooking.", all: "All", filter: "Filter by module", ctaT: 'Want the next one to <span class="grad-text">be yours</span>?' },
+  es: { title: "Deploys: apps, webs y marcas en producción | Forklia", desc: "Lyapp en la App Store, el sistema de marca de Simply Andy y el sitio de Your English Buddy: qué construimos en cada proyecto y qué impacto tuvo.", eyebrow: "// deploys/", crumb: "deploys/", h1: 'Proyectos reales, <span class="grad-text">código real</span>', lead: "Una app publicada en la App Store, un sistema de marca que su dueña usa a diario y un sitio educativo listo para crecer. Algunos siguen en su entorno de prueba: así se ve el trabajo mientras se cocina.", all: "Todos", filter: "Filtrar por módulo", ctaT: '¿Quieres que el próximo <span class="grad-text">sea el tuyo</span>?' },
+}[lang];
+const schema = [{ "@type": "CollectionPage", name: c.title, url: new URL(route("work", lang), site.url).href, hasPart: projects.map((p) => ({ "@type": "CreativeWork", name: p.name, url: new URL(route("case", lang, p.slug), site.url).href })) }];
+---
+
+<Base lang={lang} alt={route("work", other)} title={c.title} description={c.desc} breadcrumbs={[{ name: c.crumb, path: route("work", lang) }]} schema={schema}>
+  <PageHero lang={lang} eyebrow={c.eyebrow} crumb={c.crumb} title={c.h1} lead={c.lead} />
+  <section class="section" style="padding-top: 0;">
+    <div class="wrap">
+      <div class="filters" role="group" aria-label={c.filter} data-filters data-reveal>
+        {filters.map((f, i) => <button type="button" class={i === 0 ? "is-on" : ""} data-filter={f === "all" ? "todos" : f} aria-pressed={i === 0 ? "true" : "false"}>{f === "all" ? c.all : serviceNames[f][lang]}</button>)}
+      </div>
+      <div class="pgrid">
+        {projects.map((p, i) => <div class="pgrid__item" data-cat={p.services.join(" ")}><ProjectCard project={p} lang={lang} delay={(i % 2) * 100} /></div>)}
+        {up.map((u, i) => <div class="pgrid__item" data-cat="upcoming"><BuildingCard lang={lang} name={u.name} category={u.category} note={u.note} delay={i * 100} /></div>)}
+      </div>
+    </div>
+  </section>
+  <Cta lang={lang} title={c.ctaT} />
+</Base>

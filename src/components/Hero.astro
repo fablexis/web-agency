@@ -1,0 +1,154 @@
+---
+import { ui, href, type Lang } from "../i18n";
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const t = ui[lang];
+
+const c = {
+  en: {
+    badge: "New", badgeText: "Lyapp is live on the App Store",
+    cmd: "forklia build --from idea --to product",
+    h1a: "Ideas in.", h1b: "Products out.",
+    lead: "Forklia is a remote studio that designs and codes apps, websites, SEO and brand systems for teams anywhere in the world.",
+    see: "See shipped work",
+    chips: [["Build passed", "prod · 2s ago"], ["Lighthouse 100", "perf · a11y · seo"], ["Shipped to App Store", "Lyapp · v1.1"]],
+    compiling: "compiling…", compiled: "compiled in", hot: "hot reload",
+    scenes: [
+      { file: "App.swift", label: "mobile app", title: "Sleep · today", btn: "Start timer", tiles: ["Feeds", "Calendar"] },
+      { file: "Landing.tsx", label: "website", title: "Ship faster", sub: "Your product, live in weeks.", plans: ["Starter", "Pro", "Scale"] },
+      { file: "brand.css", label: "brand system", word: "your-brand", btn: "Get started" },
+    ],
+  },
+  es: {
+    badge: "Nuevo", badgeText: "Lyapp ya está en la App Store",
+    cmd: "forklia build --desde idea --hasta producto",
+    h1a: "Entra una idea.", h1b: "Sale un producto.",
+    lead: "Forklia es un estudio remoto que diseña y programa apps, sitios web, SEO y sistemas de marca para equipos de cualquier país.",
+    see: "Ver proyectos reales",
+    chips: [["Build exitoso", "prod · hace 2s"], ["Lighthouse 100", "perf · a11y · seo"], ["Publicada en App Store", "Lyapp · v1.1"]],
+    compiling: "compilando…", compiled: "compilado en", hot: "hot reload",
+    scenes: [
+      { file: "App.swift", label: "app móvil", title: "Sueño · hoy", btn: "Iniciar temporizador", tiles: ["Tomas", "Calendario"] },
+      { file: "Landing.tsx", label: "sitio web", title: "Lanza más rápido", sub: "Tu producto, en vivo en semanas.", plans: ["Starter", "Pro", "Scale"] },
+      { file: "brand.css", label: "sistema de marca", word: "tu-marca", btn: "Empezar" },
+    ],
+  },
+}[lang];
+
+const s = c.scenes;
+const scenes = [
+  {
+    file: s[0].file,
+    label: s[0].label,
+    code: [
+      `<span class="k">struct</span> <span class="f">Today</span>: <span class="t">View</span> {`,
+      `  <span class="k">var</span> body: <span class="k">some</span> <span class="t">View</span> {`,
+      `    <span class="f">SleepRing</span>(hours: <span class="n">12.5</span>)`,
+      `    <span class="f">Button</span>(<span class="s">"${s[0].btn}"</span>) { timer.<span class="f">start</span>() }`,
+      `    <span class="f">Grid</span>([.<span class="v">feeds</span>, .<span class="v">calendar</span>])`,
+      `  }`,
+      `}`,
+    ],
+    steps: [0, 0, 1, 2, 3, 3, 3],
+  },
+  {
+    file: s[1].file,
+    label: s[1].label,
+    code: [
+      `<span class="k">export default function</span> <span class="f">Landing</span>() {`,
+      `  <span class="k">return</span> &lt;<span class="t">Page</span> theme=<span class="s">"dark"</span>&gt;`,
+      `    &lt;<span class="t">Hero</span> title=<span class="s">"${s[1].title}"</span> /&gt;`,
+      `    &lt;<span class="t">Pricing</span> plans={<span class="n">3</span>} /&gt;`,
+      `    &lt;<span class="t">Cta</span> href=<span class="s">"/start"</span> /&gt;`,
+      `  &lt;/<span class="t">Page</span>&gt;`,
+      `}`,
+    ],
+    steps: [0, 1, 2, 3, 4, 4, 4],
+  },
+  {
+    file: s[2].file,
+    label: s[2].label,
+    code: [
+      `<span class="t">:root</span> {`,
+      `  <span class="v">--accent</span>: <span class="n">#45E0FF</span>;`,
+      `  <span class="v">--ink</span>: <span class="n">#9B6BFF</span>;`,
+      `  <span class="v">--radius</span>: <span class="n">14px</span>;`,
+      `  <span class="v">--type</span>: <span class="s">"Space Grotesk"</span>;`,
+      `}`,
+      `<span class="t">.btn</span> { <span class="k">background</span>: <span class="f">var</span>(<span class="v">--accent</span>); }`,
+    ],
+    steps: [0, 1, 2, 3, 4, 4, 5],
+  },
+];
+---
+
+<header class="hero2" id="top">
+  <div class="hero2__in">
+    <a href={href("case", lang, "lyapp")} class="badge" data-reveal>
+      <span class="badge__tag"><span class="dot"></span>{c.badge}</span>{c.badgeText} →
+    </a>
+    <div class="hero2__cmd" aria-hidden="true"><span class="tk tk--p">$</span> <span data-hero-cmd data-text={c.cmd}>{c.cmd}</span><i class="hero2__caret"></i></div>
+    <h1 class="hero2__h1" data-hero-h1>
+      <span class="hero2__l1" data-scramble>{c.h1a}</span>
+      <span class="hero2__l2 grad-text" data-scramble>{c.h1b}</span>
+    </h1>
+    <p class="lead" data-reveal style="--d:300ms">{c.lead}</p>
+    <div class="hero__ctas" data-reveal style="--d:380ms">
+      <a href={href("start", lang)} class="btn btn--primary" data-magnetic>{t.start} <span class="arrow">→</span></a>
+      <a href="#proyectos" class="btn btn--ghost" data-magnetic>{c.see}</a>
+    </div>
+  </div>
+
+  <div class="stage" data-reveal style="--d:450ms">
+    <div class="stage__glow"></div>
+    {c.chips.map(([a, b], i) => (
+      <div class={`float-chip chip-${"abc"[i]}`} data-parallax={["-0.08", "0.1", "-0.05"][i]}>
+        <div><span class={`float-chip__ic ${["ic-green", "ic-cyan", "ic-violet"][i]}`}>{["✓", "↑", "★"][i]}</span><span>{a}<small>{b}</small></span></div>
+      </div>
+    ))}
+    <div class="stage__tilt" id="hero-tilt">
+      <div class="live window" data-live data-scenes={JSON.stringify(scenes)} data-i18n={JSON.stringify({ compiling: c.compiling, compiled: c.compiled, hot: c.hot })} aria-hidden="true">
+        <div class="window__bar">
+          <div class="window__dots"><i></i><i></i><i></i></div>
+          <div class="win-tabs" data-live-tabs>{scenes.map((sc, i) => <span class={i === 0 ? "is-on" : undefined}>{sc.file}</span>)}</div>
+          <span class="live__status" data-live-status><i></i>{c.compiling}</span>
+        </div>
+        <div class="live__body">
+          <pre class="live__code" data-live-code></pre>
+          <div class="live__preview" data-live-preview>
+            <div class="live__scene" data-scene="0">
+              <div class="pv-phone">
+                <div class="pv-island"></div>
+                <div class="pv-step" data-step="0"><small>{s[0].title}</small></div>
+                <div class="pv-step pv-ring" data-step="1"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="40"></circle><circle cx="50" cy="50" r="40"></circle></svg><b>12.5h</b></div>
+                <div class="pv-step pv-btn" data-step="2">▶ {s[0].btn}</div>
+                <div class="pv-step pv-tiles" data-step="3"><span>🍼 {s[0].tiles[0]}</span><span>▦ {s[0].tiles[1]}</span></div>
+              </div>
+            </div>
+            <div class="live__scene" data-scene="1">
+              <div class="pv-site">
+                <div class="pv-step pv-nav" data-step="1"><i></i><span></span><span></span><span></span></div>
+                <div class="pv-step pv-hero" data-step="2"><b>{s[1].title}</b><small>{s[1].sub}</small></div>
+                <div class="pv-step pv-plans" data-step="3">{s[1].plans.map((p, i) => <span class={i === 1 ? "is-pro" : undefined}><b>{p}</b><i></i><i></i></span>)}</div>
+                <div class="pv-step pv-cta" data-step="4">{t.start} →</div>
+              </div>
+            </div>
+            <div class="live__scene" data-scene="2">
+              <div class="pv-brand">
+                <div class="pv-sw">
+                  <span class="pv-step" data-step="1" style="--sw:#45E0FF"></span>
+                  <span class="pv-step" data-step="2" style="--sw:#9B6BFF"></span>
+                  <span class="pv-step" data-step="3" style="--sw:#3B6BFF"></span>
+                </div>
+                <div class="pv-step pv-word" data-step="4">{s[2].word}<i></i></div>
+                <div class="pv-step pv-bbtn" data-step="5">{s[2].btn}</div>
+              </div>
+            </div>
+            <div class="live__wipe" data-live-wipe></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>

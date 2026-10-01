@@ -1,0 +1,155 @@
+---
+import Base from "../layouts/Base.astro";
+import PageHero from "../components/PageHero.astro";
+import ProcessTabs from "../components/ProcessTabs.astro";
+import Faq from "../components/Faq.astro";
+import Cta from "../components/Cta.astro";
+import { site, faqs } from "../data/site";
+import { services } from "../data/services";
+import { projects } from "../data/projects";
+import { href, route, loc, base, ui, type Lang } from "../i18n";
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const other: Lang = lang === "en" ? "es" : "en";
+const list = loc(services, lang) as any[];
+const pageUrl = new URL(route("services", lang), site.url).href;
+const brandSwatches = ["#45E0FF", "#9B6BFF", "#3B6BFF", "#4BE3A0", "#E9E2D0", "#864C24", "#E8805A", "#185C60"];
+const c = {
+  en: {
+    title: "Modules: apps, websites, SEO & brand systems | Forklia",
+    desc: "Mobile apps, websites, SEO and GEO, and interactive brand systems for teams anywhere in the world. What each module includes, timelines and stack.",
+    eyebrow: "// modules()", crumb: "modules()",
+    h1: 'Four modules, <span class="grad-text">one team</span>',
+    lead: "Import one or combine them. Every module ships with clear deliverables, a proven stack and a real project behind it.",
+    explorer: "EXPLORER · modules/", includes: "What's included", forWho: "Ideal for", timeline: "Typical timeline",
+    realCase: "Real case shipped with this module", seeCase: "View the case", quote: "Quote", process: "// process",
+    processT: "From brief to launch, with structure", processL: "We turn ideas into specs, specs into design and design into a product in production. Every step is visible, measurable and yours.",
+    noCase: "Every project we ship includes this module: structured data, sitemaps and technical SEO come standard.",
+  },
+  es: {
+    title: "Módulos: apps, webs, SEO y sistemas de marca | Forklia",
+    desc: "Apps móviles, sitios web, SEO y GEO, y sistemas de marca interactivos para equipos de cualquier país. Qué incluye cada módulo, plazos y stack.",
+    eyebrow: "// módulos()", crumb: "módulos()",
+    h1: 'Cuatro módulos, <span class="grad-text">un mismo equipo</span>',
+    lead: "Importa uno o combínalos. Cada módulo tiene entregables claros, un stack probado y un proyecto real que lo respalda.",
+    explorer: "EXPLORADOR · módulos/", includes: "Qué incluye", forWho: "Ideal para", timeline: "Plazo típico",
+    realCase: "Caso real hecho con este módulo", seeCase: "Ver el caso", quote: "Cotizar", process: "// proceso",
+    processT: "Del brief al lanzamiento, con estructura", processL: "Convertimos ideas en especificaciones, especificaciones en diseño y diseño en producto en producción. Cada paso es visible, medible y tuyo.",
+    noCase: "Todos los proyectos que lanzamos incluyen este módulo: datos estructurados, sitemaps y SEO técnico vienen de serie.",
+  },
+}[lang];
+const schema = [
+  ...list.map((s) => ({ "@type": "Service", "@id": `${pageUrl}#${s.id}`, name: s.name, description: s.lead, provider: { "@id": new URL("#organization", site.url).href }, areaServed: "Worldwide", availableLanguage: ["en", "es"], url: `${pageUrl}#${s.id}` })),
+  { "@type": "FAQPage", mainEntity: (loc(faqs, lang) as any[]).map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })) },
+];
+---
+
+<Base lang={lang} alt={route("services", other)} title={c.title} description={c.desc} breadcrumbs={[{ name: c.crumb, path: route("services", lang) }]} schema={schema}>
+  <PageHero lang={lang} eyebrow={c.eyebrow} crumb={c.crumb} title={c.h1} lead={c.lead} />
+
+  <section class="section" style="padding-top: 0;">
+    <div class="wrap sol">
+      <div class="sol__body">
+        {list.map((s) => {
+          const proj = s.project ? (loc(projects.find((p) => p.slug === s.project)!, lang) as any) : null;
+          return (
+            <section class="svc-sec" id={s.id} aria-labelledby={`${s.id}-t`}>
+              <header class="svc-sec__head" data-reveal>
+                <span class="svc-sec__file"><span class={`sol__dot ic-${s.tone}`}></span>{s.file}</span>
+                <h2 id={`${s.id}-t`}><small>{s.name}</small>{s.title}</h2>
+                <p class="lead">{s.lead}</p>
+              </header>
+
+              <div class="svc-sec__grid">
+                <div class="card svc-sec__inc" data-reveal data-spotlight>
+                  <h3>{c.includes}</h3>
+                  <ul class="checks">{s.includes.map((x: string) => <li>{x}</li>)}</ul>
+                </div>
+                <div class="card svc-sec__viz" data-reveal data-spotlight style="--d:80ms" aria-hidden="true">
+                  {s.viz === "code" && <div class="code" data-code></div>}
+                  {s.viz === "phone" && <div class="mini-phone mini-phone--big"><i></i><i></i><i></i><i></i><i></i></div>}
+                  {s.viz === "ranks" && (
+                    <div class="ranks" data-ranks>
+                      <div class="rank"><b>1</b>competitor-a.com</div>
+                      <div class="rank"><b>2</b>competitor-b.com</div>
+                      <div class="rank"><b>3</b>directory.com</div>
+                      <div class="rank is-you"><b>4</b>your-brand.com</div>
+                    </div>
+                  )}
+                  {s.viz === "palette" && (
+                    <div class="swatches" data-swatches>
+                      {brandSwatches.map((sw) => <i style={`--sw:${sw}`} data-hex={sw}></i>)}
+                      <code class="swatches__token">--brand-accent: <b>#45E0FF</b>;</code>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              <div class="svc-sec__meta" data-reveal>
+                <div><small>{c.forWho}</small><p>{s.forWho}</p></div>
+                <div><small>{c.timeline}</small><p>{s.timeline}</p></div>
+                {s.outcomes.map((o: any) => <div><small>{o.label}</small><p class="svc-sec__num">{o.value}</p></div>)}
+              </div>
+              <div class="tags svc-sec__stack" data-reveal>{s.stack.map((t: string) => <span class="tag">{t}</span>)}</div>
+
+              {proj ? (
+                <a href={href("case", lang, proj.slug)} class="realcase" data-reveal data-spotlight style={`--pa:${proj.accent}`}>
+                  <div class="realcase__shot">
+                    {proj.images[0].kind === "desktop"
+                      ? <img src={base + proj.images[0].src} alt={proj.images[0].alt} width="1280" height="800" loading="lazy" decoding="async" />
+                      : <div class="realcase__phones">{proj.images.slice(0, 2).map((im: any) => <img src={base + im.src} alt={im.alt} width="600" height="1298" loading="lazy" decoding="async" />)}</div>}
+                  </div>
+                  <div class="realcase__body">
+                    <span class="realcase__kicker"><span class="tk tk--kw">import</span> {"{ "}{proj.slug}{" }"} <span class="tk tk--kw">from</span> <span class="tk tk--s">"deploys"</span></span>
+                    <small>{c.realCase}</small>
+                    <b class="realcase__name">{proj.name}</b>
+                    <span class={`pcard__status${proj.live ? " is-live" : ""}`}><span class="dot"></span>{proj.status}</span>
+                    <div class="realcase__nums">{proj.numbers.slice(0, 3).map((n: any) => <span><strong>{n.value}</strong>{n.label}</span>)}</div>
+                    <span class="btn btn--primary btn--sm realcase__btn">{c.seeCase} <span class="arrow">→</span></span>
+                  </div>
+                </a>
+              ) : (
+                <div class="realcase realcase--none" data-reveal><span class="tk tk--c">// {c.noCase}</span></div>
+              )}
+
+              <div class="svc-sec__foot" data-reveal>
+                <a href={`${href("start", lang)}?m=${s.id}`} class="btn btn--ghost btn--sm" data-magnetic>{c.quote} {s.name.toLowerCase()} <span class="arrow">→</span></a>
+              </div>
+            </section>
+          );
+        })}
+      </div>
+
+      <aside class="sol__nav" aria-label={c.crumb}>
+        <div class="sol__explorer">
+          <div class="sol__explorer-head">{c.explorer}</div>
+          {list.map((s, i) => (
+            <a href={`#${s.id}`} data-spy={s.id} class={i === 0 ? "is-active" : undefined}>
+              <span class={`sol__dot ic-${s.tone}`}></span>
+              <span class="sol__file">{s.file}</span>
+              <span class="sol__name">{s.name}</span>
+            </a>
+          ))}
+          <div class="sol__progress"><i></i></div>
+        </div>
+        <a href={href("start", lang)} class="btn btn--primary btn--sm sol__cta">{ui[lang].start} <span class="arrow">→</span></a>
+      </aside>
+    </div>
+  </section>
+
+  <section id="proceso" class="section" style="padding-top: 0;">
+    <div class="wrap">
+      <div class="section-head">
+        <div class="eyebrow eyebrow--violet" data-reveal>{c.process}</div>
+        <h2 class="h2" data-split>{c.processT}</h2>
+        <p class="lead" data-reveal style="--d:120ms">{c.processL}</p>
+      </div>
+      <ProcessTabs lang={lang} />
+    </div>
+  </section>
+
+  <section id="faq" class="section" style="padding-top: 0;"><Faq lang={lang} /></section>
+
+  <Cta lang={lang} />
+</Base>

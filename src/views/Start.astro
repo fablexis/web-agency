@@ -1,0 +1,155 @@
+---
+import Base from "../layouts/Base.astro";
+import { site } from "../data/site";
+import { services } from "../data/services";
+import { href, route, loc, type Lang } from "../i18n";
+import { fCells, fork } from "../lib/logo";
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const other: Lang = lang === "en" ? "es" : "en";
+const mods = loc(services, lang) as any[];
+const c = {
+  en: {
+    title: "Start a project: quote your app, website or brand | Forklia",
+    desc: "Tell us about your project in five fields and get a proposal with scope, timeline and a fixed price in under 48 hours, wherever you are.",
+    crumb: "start()", eyebrow: "// start()", h1: 'Let\'s compile your <span class="grad-text">idea</span>',
+    lead: "Five fields, one click. We reply within 24 business hours with next steps, in English or Spanish.",
+    top: "// fill in the blanks — only the budget is optional",
+    name: "name", nameH: "how should we call you?", namePh: "Your name",
+    email: "email", emailH: "where we'll reply", emailPh: "you@company.com",
+    modules: "modules", modulesH: "pick one or more",
+    idea: "idea", ideaH: "what do you want to build?", ideaPh: "Tell us what you want to build, for whom, and what problem it solves…",
+    budget: "budget", budgetH: "optional · USD",
+    budgets: ["< 3k", "3k – 8k", "8k – 20k", "20k +", "not sure"],
+    run: "▶ Run send()", reset: "Clear",
+    build: "building forklia", term: "TERMINAL", watching: "› watching for changes…",
+    doneT: "✓ Proposal ready", doneP: "We opened your email app with everything pre-filled. If it didn't open, send it from here:",
+    mail: "Open in my email", wa: "Send via WhatsApp", copy: "Copy summary",
+    steps: [["01", "We reply", "Within 24 business hours, in English or Spanish."], ["02", "Discovery call", "30 minutes on video, at a time that works in your country."], ["03", "Fixed proposal", "Scope, timeline and price in under 48 hours."]],
+  },
+  es: {
+    title: "Iniciar proyecto: cotiza tu app, web o marca | Forklia",
+    desc: "Cuéntanos tu proyecto en cinco campos y recibe una propuesta con alcance, plazos y precio cerrado en menos de 48 horas, estés en el país que estés.",
+    crumb: "start()", eyebrow: "// start()", h1: 'Compilemos tu <span class="grad-text">idea</span>',
+    lead: "Cinco campos, un clic. Respondemos en menos de 24 horas hábiles con los siguientes pasos, en español o inglés.",
+    top: "// completa los espacios — solo el presupuesto es opcional",
+    name: "nombre", nameH: "¿cómo te llamas?", namePh: "Tu nombre",
+    email: "email", emailH: "donde te responderemos", emailPh: "tu@empresa.com",
+    modules: "módulos", modulesH: "elige uno o más",
+    idea: "idea", ideaH: "¿qué quieres construir?", ideaPh: "Cuéntanos qué quieres construir, para quién y qué problema resuelve…",
+    budget: "presupuesto", budgetH: "opcional · USD",
+    budgets: ["< 3k", "3k – 8k", "8k – 20k", "20k +", "aún no sé"],
+    run: "▶ Ejecutar enviar()", reset: "Limpiar",
+    build: "compilando forklia", term: "TERMINAL", watching: "› esperando cambios…",
+    doneT: "✓ Propuesta lista", doneP: "Abrimos tu correo con todo prellenado. Si no se abrió, envíala desde aquí:",
+    mail: "Abrir en mi correo", wa: "Enviar por WhatsApp", copy: "Copiar resumen",
+    steps: [["01", "Te respondemos", "En menos de 24 horas hábiles, en español o inglés."], ["02", "Llamada de descubrimiento", "30 minutos por videollamada, en el horario de tu país."], ["03", "Propuesta cerrada", "Alcance, plazos y precio en menos de 48 horas."]],
+  },
+}[lang];
+const fn = lang === "en" ? "send" : "enviar";
+---
+
+<Base lang={lang} alt={route("start", other)} title={c.title} description={c.desc} breadcrumbs={[{ name: c.crumb, path: route("start", lang) }]}>
+  <section class="quote-page">
+    <div class="wrap">
+      <nav class="crumbs" aria-label="Breadcrumb" data-reveal><a href={href("home", lang)}>~</a><span>/</span><span aria-current="page">{c.crumb}</span></nav>
+      <div class="quote-head">
+        <div><div class="eyebrow" data-reveal>{c.eyebrow}</div><h1 data-split set:html={c.h1} /></div>
+        <p class="lead" data-reveal style="--d:160ms">{c.lead}</p>
+      </div>
+
+      <div class="vsc vsc--lite" data-vsc data-reveal style="--d:200ms" data-email={site.email} data-wa={site.whatsapp} data-lang={lang}>
+        <div class="vsc__title">
+          <div class="window__dots"><i></i><i></i><i></i></div>
+          <span>project.ts</span>
+          <kbd class="vsc__hot">⌘ ↵ {fn}</kbd>
+        </div>
+
+        <div class="vsc__body">
+          <form class="vsc__editor" id="quote-form" novalidate>
+            <div class="cl c">{c.top}</div>
+            <div class="cl"><span class="k">const</span>&nbsp;<span class="v">project</span>&nbsp;=&nbsp;{"{"}</div>
+
+            <div class="cl cl--in" data-field="name">
+              <label for="f-name"><span class="p">{c.name}</span>:</label>
+              <span class="s">"</span><input id="f-name" name="name" required autocomplete="name" placeholder={c.namePh} /><span class="s">",</span>
+              <span class="hint">// {c.nameH}</span>
+            </div>
+            <div class="cl cl--in" data-field="email">
+              <label for="f-email"><span class="p">{c.email}</span>:</label>
+              <span class="s">"</span><input id="f-email" name="email" type="email" required autocomplete="email" placeholder={c.emailPh} /><span class="s">",</span>
+              <span class="hint">// {c.emailH}</span>
+            </div>
+            <div class="cl cl--in cl--wrap" data-field="modules">
+              <span id="l-mods"><span class="p">{c.modules}</span>: [</span>
+              <span class="chips" role="group" aria-labelledby="l-mods">
+                {mods.map((s) => <label class="chip"><input type="checkbox" name="modules" value={s.id} data-label={s.name} /><span>{s.id}</span></label>)}
+              </span>
+              <span>],</span>
+              <span class="hint">// {c.modulesH}</span>
+            </div>
+            <div class="cl cl--in cl--wrap" data-field="idea">
+              <label for="f-idea"><span class="p">{c.idea}</span>: <span class="s">`</span></label>
+              <span class="hint">// {c.ideaH}</span>
+              <textarea id="f-idea" name="idea" rows="3" required minlength="20" placeholder={c.ideaPh}></textarea>
+              <span class="s">`,</span>
+            </div>
+            <div class="cl cl--in cl--wrap" data-field="budget">
+              <span id="l-budget"><span class="p">{c.budget}</span>:</span>
+              <span class="chips" role="radiogroup" aria-labelledby="l-budget">
+                {c.budgets.map((b) => <label class="chip"><input type="radio" name="budget" value={b} /><span>"{b}"</span></label>)}
+              </span>
+              <span class="hint">// {c.budgetH}</span>
+            </div>
+            <div class="cl">{"};"}</div>
+            <div class="cl"></div>
+            <div class="cl"><span class="f">{fn}</span>(project);</div>
+            <div class="vsc__run">
+              <button type="submit" class="btn btn--primary" data-magnetic>{c.run}</button>
+              <button type="button" class="btn btn--ghost btn--sm" data-reset>{c.reset}</button>
+            </div>
+          </form>
+
+          <aside class="vsc__panel" aria-label={c.term}>
+            <div class="fbuild" aria-hidden="true">
+              <div class="fbuild__f">
+                {fCells.map(([col, r], i) => <i style={`--c:${col};--r:${r};--i:${i}`}></i>)}
+                <i class="is-fork" style={`--c:${(fork.x / 6.5).toFixed(3)};--r:${(fork.y / 6.5).toFixed(3)}`}></i>
+              </div>
+              <div class="fbuild__label"><span>{c.build}</span><b data-prog-txt>0 / 9</b></div>
+              <i class="fbuild__bar"><b data-prog></b></i>
+            </div>
+            <div class="vsc__ptabs"><span class="is-on">{c.term}</span></div>
+            <div class="vsc__term" aria-live="polite">
+              <div class="tl"><span class="p">forklia ~ %</span> npm run start</div>
+              <div class="tl m">{c.watching}</div>
+            </div>
+            <div class="vsc__done" hidden>
+              <b>{c.doneT}</b>
+              <p>{c.doneP}</p>
+              <div class="vsc__done-btns">
+                <a class="btn btn--primary btn--sm" data-mailto href="#">{c.mail}</a>
+                <a class="btn btn--ghost btn--sm" data-wa href="#" target="_blank" rel="noopener">{c.wa}</a>
+                <button type="button" class="btn btn--ghost btn--sm" data-copy-sum>{c.copy}</button>
+              </div>
+            </div>
+          </aside>
+        </div>
+
+        <div class="vsc__status">
+          <span>⎇ main</span>
+          <span data-status-errors>⊘ 0</span>
+          <span class="hide-sm">UTF-8</span>
+          <span>TypeScript</span>
+        </div>
+      </div>
+
+      <div class="quote-next">
+        {c.steps.map(([n, h, p], i) => <div class="card" data-reveal data-spotlight style={`--d:${i * 80}ms`}><b>{n}</b><h2>{h}</h2><p>{p}</p></div>)}
+      </div>
+    </div>
+  </section>
+</Base>
+
+<script src="../scripts/quote.js"></script>

@@ -1,29 +1,29 @@
 ---
 import { site } from "../data/site";
-
-const base = import.meta.env.BASE_URL.replace(/\/?$/, "/");
+import { ui, href, type Lang } from "../i18n";
 
 interface Props {
+  lang: Lang;
   title?: string;
   text?: string;
 }
-const {
-  title = 'Listo para llevar tu marca al <span class="grad-text">siguiente nivel</span>?',
-  text = "Cuéntanos tu idea desde cualquier país y te enviamos una propuesta sin compromiso en menos de 48 horas.",
-} = Astro.props;
+const { lang } = Astro.props;
+const t = ui[lang];
+const title = Astro.props.title ?? t.ctaTitle;
+const text = Astro.props.text ?? t.ctaText;
 ---
 
-<section id="contacto" class="section" style="padding-top: 0;" aria-label="Iniciar un proyecto">
+<section id="contacto" class="section" style="padding-top: 0;" aria-label={t.start}>
   <div class="wrap">
     <div class="cta" data-reveal>
       <div class="cta__in">
-        <h2>¿<Fragment set:html={title} /></h2>
+        <h2 set:html={title} />
         <p>{text}</p>
         <div class="hero__ctas">
-          <a href={`${base}cotizar/`} class="btn btn--primary" data-magnetic>Iniciar proyecto <span class="arrow">→</span></a>
-          <a href={site.whatsapp} class="btn btn--ghost" data-magnetic>Hablar por WhatsApp</a>
+          <a href={href("start", lang)} class="btn btn--primary" data-magnetic>{t.ctaPrimary} <span class="arrow">→</span></a>
+          <a href={site.whatsapp} class="btn btn--ghost" data-magnetic>{t.ctaWhatsapp}</a>
         </div>
-        <div class="cta__note"><span class="dot dot--green"></span>Respondemos en menos de 24h</div>
+        <div class="cta__note"><span class="dot dot--green"></span>{t.ctaNote}</div>
       </div>
     </div>
   </div>

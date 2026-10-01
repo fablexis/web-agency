@@ -1,69 +1,79 @@
+import type { L } from "../i18n";
+
 export type Project = {
   slug: string;
   name: string;
-  client: string;
-  category: string;
+  client: L;
+  category: L;
   services: string[];
-  status: string;
+  status: L;
   live: boolean;
   year: string;
-  summary: string;
-  challenge: string;
-  whatWeDid: { title: string; text: string }[];
-  impact: string[];
-  numbers: { value: string; label: string }[];
+  summary: L;
+  challenge: L;
+  whatWeDid: { title: L; text: L }[];
+  impact: L[];
+  numbers: { value: string; label: L }[];
   stack: string[];
-  links: { label: string; href: string }[];
-  images: { src: string; alt: string; kind: "desktop" | "phone" }[];
+  links: { label: L; href: string }[];
+  images: { src: string; alt: L; kind: "desktop" | "phone" }[];
   icon?: string;
   effect: "palette" | "translate" | "phone";
   accent: string;
   palette: string[];
+  repo: string;
 };
+
+const testEnv: L = { en: "In staging", es: "En entorno de prueba" };
 
 export const projects: Project[] = [
   {
     slug: "simply-andy",
     name: "Simply Andy",
-    client: "Andreina Luna · UGC Creator",
-    category: "Marca personal · Web · Sistema de marca",
+    repo: "simply-andy",
+    client: { en: "Andreina Luna · UGC Creator", es: "Andreina Luna · UGC Creator" },
+    category: { en: "Personal brand · Web · Brand system", es: "Marca personal · Web · Sistema de marca" },
     services: ["branding", "web"],
-    status: "En entorno de prueba",
+    status: testEnv,
     live: false,
     year: "2026",
-    summary:
-      "Identidad, portafolio bilingüe y un brand kit interactivo para una creadora de UGC en español: un sistema visual que ella misma usa para jugar con su paleta, su logo y hasta su firma de correo.",
-    challenge:
-      "Andreina crea contenido UGC en español para TikTok e Instagram Reels. Su diferencial es que su contenido no se siente como un anuncio, pero no tenía un lugar propio que transmitiera esa voz ni una identidad coherente para presentarse ante marcas locales e internacionales.",
+    summary: {
+      en: "Identity, bilingual portfolio and an interactive brand kit for a Spanish-language UGC creator: a visual system she uses herself to play with her palette, her logo and even her email signature.",
+      es: "Identidad, portafolio bilingüe y un brand kit interactivo para una creadora de UGC en español: un sistema visual que ella misma usa para jugar con su paleta, su logo y hasta su firma de correo.",
+    },
+    challenge: {
+      en: "Andreina creates Spanish-language UGC for TikTok and Instagram Reels. Her edge is that her content doesn't feel like an ad, but she had no place of her own that carried that voice, and no consistent identity to pitch local and international brands.",
+      es: "Andreina crea contenido UGC en español para TikTok e Instagram Reels. Su diferencial es que su contenido no se siente como un anuncio, pero no tenía un lugar propio que transmitiera esa voz ni una identidad coherente para presentarse ante marcas locales e internacionales.",
+    },
     whatWeDid: [
-      { title: "Logo y wordmark", text: "Diseñamos el wordmark “andy” con el descriptor UGC CREATOR y un punto de firma, en tres combinaciones aprobadas de fondo." },
-      { title: "Paleta con nombre y rol", text: "Siete colores con nombre propio (Eggshell, Cuero, Terracota, Oliva, Tinta, Bordó e Índigo), cada uno con un trabajo y una proporción de uso." },
-      { title: "Sistema tipográfico", text: "Big Shoulders para titulares y Manrope para lectura, con jerarquías definidas para web y redes." },
-      { title: "Portafolio bilingüe", text: "Un sitio de una página en español e inglés con reels, marcas, su historia y un camino directo al contacto." },
-      { title: "Brand kit interactivo", text: "Once secciones con playground de paleta, selector de logo según fondo, reglas, errores comunes y ejemplos en acción." },
-      { title: "Generador de firma de correo", text: "Andreina elige colores aprobados, edita sus datos y exporta su firma lista para Gmail o en HTML." },
+      { title: { en: "Logo & wordmark", es: "Logo y wordmark" }, text: { en: "We designed the “andy” wordmark with the UGC CREATOR descriptor and a signature dot, in three approved background combinations.", es: "Diseñamos el wordmark “andy” con el descriptor UGC CREATOR y un punto de firma, en tres combinaciones aprobadas de fondo." } },
+      { title: { en: "A palette with names and roles", es: "Paleta con nombre y rol" }, text: { en: "Seven named colors (Eggshell, Cuero, Terracota, Oliva, Tinta, Bordó and Índigo), each with a job and a usage ratio.", es: "Siete colores con nombre propio (Eggshell, Cuero, Terracota, Oliva, Tinta, Bordó e Índigo), cada uno con un trabajo y una proporción de uso." } },
+      { title: { en: "Type system", es: "Sistema tipográfico" }, text: { en: "Big Shoulders for headlines and Manrope for reading, with defined hierarchies for web and social.", es: "Big Shoulders para titulares y Manrope para lectura, con jerarquías definidas para web y redes." } },
+      { title: { en: "Bilingual portfolio", es: "Portafolio bilingüe" }, text: { en: "A one-page site in Spanish and English with reels, brands, her story and a direct path to contact.", es: "Un sitio de una página en español e inglés con reels, marcas, su historia y un camino directo al contacto." } },
+      { title: { en: "Interactive brand kit", es: "Brand kit interactivo" }, text: { en: "Eleven sections with a palette playground, a logo switcher per background, rules, common mistakes and in-context examples.", es: "Once secciones con playground de paleta, selector de logo según fondo, reglas, errores comunes y ejemplos en acción." } },
+      { title: { en: "Email signature generator", es: "Generador de firma de correo" }, text: { en: "Andreina picks approved colors, edits her details and exports a signature ready for Gmail or as HTML.", es: "Andreina elige colores aprobados, edita sus datos y exporta su firma lista para Gmail o en HTML." } },
     ],
     impact: [
-      "Un sistema de marca que Andreina usa sola: cambia colores, prueba el logo sobre distintos fondos y crea piezas nuevas sin depender de un diseñador.",
-      "Presencia propia y bilingüe para presentarse ante marcas hispanohablantes y globales.",
-      "Consistencia en cada pieza: todo sale de las mismas reglas de color, tipografía y contraste.",
+      { en: "A brand system Andreina runs on her own: she swaps colors, tests the logo on different backgrounds and creates new pieces without waiting on a designer.", es: "Un sistema de marca que Andreina usa sola: cambia colores, prueba el logo sobre distintos fondos y crea piezas nuevas sin depender de un diseñador." },
+      { en: "Her own bilingual home to pitch Spanish-speaking and global brands.", es: "Presencia propia y bilingüe para presentarse ante marcas hispanohablantes y globales." },
+      { en: "Consistency in every piece: everything comes from the same color, type and contrast rules.", es: "Consistencia en cada pieza: todo sale de las mismas reglas de color, tipografía y contraste." },
     ],
     numbers: [
-      { value: "7", label: "colores con rol" },
-      { value: "3", label: "variantes de logo" },
-      { value: "11", label: "secciones de brand kit" },
-      { value: "2", label: "idiomas" },
+      { value: "7", label: { en: "colors with a role", es: "colores con rol" } },
+      { value: "3", label: { en: "logo variants", es: "variantes de logo" } },
+      { value: "11", label: { en: "brand kit sections", es: "secciones de brand kit" } },
+      { value: "2", label: { en: "languages", es: "idiomas" } },
     ],
     stack: ["HTML", "CSS", "JavaScript", "i18n ES/EN", "GitHub Pages"],
     links: [
-      { label: "Ver portafolio", href: "https://fpdev47.github.io/simply-andy-portfolio/" },
-      { label: "Ver brand kit", href: "https://fpdev47.github.io/simply-andy-brand-kit/" },
+      { label: { en: "View portfolio", es: "Ver portafolio" }, href: "https://fpdev47.github.io/simply-andy-portfolio/" },
+      { label: { en: "View brand kit", es: "Ver brand kit" }, href: "https://fpdev47.github.io/simply-andy-brand-kit/" },
     ],
     images: [
-      { src: "projects/simply-andy-portfolio.webp", alt: "Portada del portafolio de Simply Andy con el titular “Hi, I'm Andy, a UGC Content Creator” y una tarjeta de reel", kind: "desktop" },
-      { src: "projects/simply-andy-brand-kit.webp", alt: "Sección de paleta del brand kit de Simply Andy con siete colores y sus códigos HEX", kind: "desktop" },
-      { src: "projects/simply-andy-brand-kit-logo.webp", alt: "Tres combinaciones aprobadas del logo andy sobre fondos Índigo, Blanco y Bordó", kind: "desktop" },
-      { src: "projects/simply-andy-brand-kit-firma.webp", alt: "Generador de firma de correo del brand kit con controles de color", kind: "desktop" },
+      { src: "projects/simply-andy-portfolio.webp", alt: { en: "Simply Andy portfolio hero with the headline “Hi, I'm Andy, a UGC Content Creator” and a reel card", es: "Portada del portafolio de Simply Andy con el titular “Hi, I'm Andy, a UGC Content Creator” y una tarjeta de reel" }, kind: "desktop" },
+      { src: "projects/simply-andy-brand-kit.webp", alt: { en: "Palette section of the Simply Andy brand kit with seven colors and their HEX codes", es: "Sección de paleta del brand kit de Simply Andy con siete colores y sus códigos HEX" }, kind: "desktop" },
+      { src: "projects/simply-andy-brand-kit-logo.webp", alt: { en: "Three approved andy logo combinations on Índigo, White and Bordó backgrounds", es: "Tres combinaciones aprobadas del logo andy sobre fondos Índigo, Blanco y Bordó" }, kind: "desktop" },
+      { src: "projects/simply-andy-brand-kit-firma.webp", alt: { en: "Email signature generator in the brand kit with color controls", es: "Generador de firma de correo del brand kit con controles de color" }, kind: "desktop" },
     ],
     effect: "palette",
     accent: "#C9824F",
@@ -72,39 +82,44 @@ export const projects: Project[] = [
   {
     slug: "your-english-buddy",
     name: "Your English Buddy",
-    client: "Academia de inglés online",
-    category: "Web · Educación",
+    repo: "your-english-buddy",
+    client: { en: "Online English academy", es: "Academia de inglés online" },
+    category: { en: "Web · Education", es: "Web · Educación" },
     services: ["web", "seo"],
-    status: "En entorno de prueba",
+    status: testEnv,
     live: false,
     year: "2026",
-    summary:
-      "El sitio de una academia que enseña inglés práctico a hispanohablantes: cercano, claro y pensado para convertir visitas en clases diagnósticas.",
-    challenge:
-      "La academia enseña inglés para la vida real a hispanohablantes en Estados Unidos y Latinoamérica. Necesitaba un sitio que transmitiera confianza, explicara su método personalizado y llevara a cada visitante a reservar una clase diagnóstica.",
+    summary: {
+      en: "The website of an academy teaching practical English to Spanish speakers: warm, clear and designed to turn visits into diagnostic classes.",
+      es: "El sitio de una academia que enseña inglés práctico a hispanohablantes: cercano, claro y pensado para convertir visitas en clases diagnósticas.",
+    },
+    challenge: {
+      en: "The academy teaches real-life English to Spanish speakers in the US and Latin America. It needed a site that built trust, explained its personalized method and led every visitor to book a diagnostic class.",
+      es: "La academia enseña inglés para la vida real a hispanohablantes en Estados Unidos y Latinoamérica. Necesitaba un sitio que transmitiera confianza, explicara su método personalizado y llevara a cada visitante a reservar una clase diagnóstica.",
+    },
     whatWeDid: [
-      { title: "Arquitectura del sitio", text: "Inicio, Nosotros, Blog, Cursos y Contacto, con un recorrido que siempre termina en una acción clara." },
-      { title: "Propuesta de valor", text: "Mensajes centrados en clases personalizadas, a tu ritmo y con material disponible 24/7." },
-      { title: "Prueba social real", text: "Reseñas de estudiantes reales en Indianápolis, Florida, Virginia y Texas con frases que de verdad usan en su día a día." },
-      { title: "Conversión directa", text: "Llamados a la acción hacia la clase diagnóstica y un canal directo por WhatsApp." },
-      { title: "Identidad amable", text: "Verde fresco, ilustración 3D del personaje y tarjetas flotantes que hacen el aprendizaje menos intimidante." },
+      { title: { en: "Site architecture", es: "Arquitectura del sitio" }, text: { en: "Home, About, Blog, Courses and Contact, with a journey that always ends in a clear action.", es: "Inicio, Nosotros, Blog, Cursos y Contacto, con un recorrido que siempre termina en una acción clara." } },
+      { title: { en: "Value proposition", es: "Propuesta de valor" }, text: { en: "Messaging focused on personalized classes, at your own pace, with materials available 24/7.", es: "Mensajes centrados en clases personalizadas, a tu ritmo y con material disponible 24/7." } },
+      { title: { en: "Real social proof", es: "Prueba social real" }, text: { en: "Reviews from real students in Indianapolis, Florida, Virginia and Texas, quoting phrases they actually use day to day.", es: "Reseñas de estudiantes reales en Indianápolis, Florida, Virginia y Texas con frases que de verdad usan en su día a día." } },
+      { title: { en: "Direct conversion", es: "Conversión directa" }, text: { en: "Calls to action toward the diagnostic class and a direct WhatsApp channel.", es: "Llamados a la acción hacia la clase diagnóstica y un canal directo por WhatsApp." } },
+      { title: { en: "Friendly identity", es: "Identidad amable" }, text: { en: "Fresh green, a 3D character illustration and floating cards that make learning feel less intimidating.", es: "Verde fresco, ilustración 3D del personaje y tarjetas flotantes que hacen el aprendizaje menos intimidante." } },
     ],
     impact: [
-      "Un embudo claro: visita, clase diagnóstica y conversación por WhatsApp.",
-      "Testimonios reales como prueba social, con resultados concretos en el trabajo y la vida social de los estudiantes.",
-      "Una base lista para crecer con blog y cursos, preparada para posicionarse en búsquedas de inglés práctico.",
+      { en: "A clear funnel: visit, diagnostic class and a WhatsApp conversation.", es: "Un embudo claro: visita, clase diagnóstica y conversación por WhatsApp." },
+      { en: "Real testimonials as social proof, with concrete results in students' work and social lives.", es: "Testimonios reales como prueba social, con resultados concretos en el trabajo y la vida social de los estudiantes." },
+      { en: "A foundation ready to grow with blog and courses, set up to rank for practical-English searches.", es: "Una base lista para crecer con blog y cursos, preparada para posicionarse en búsquedas de inglés práctico." },
     ],
     numbers: [
-      { value: "5", label: "secciones" },
-      { value: "4", label: "historias reales" },
-      { value: "1", label: "CTA principal" },
-      { value: "24/7", label: "material offline" },
+      { value: "5", label: { en: "sections", es: "secciones" } },
+      { value: "4", label: { en: "real stories", es: "historias reales" } },
+      { value: "1", label: { en: "primary CTA", es: "CTA principal" } },
+      { value: "24/7", label: { en: "offline materials", es: "material offline" } },
     ],
-    stack: ["Vite", "SPA", "Vercel", "Diseño responsivo", "WhatsApp"],
-    links: [{ label: "Ver sitio", href: "https://fabio-english-academy.vercel.app/" }],
+    stack: ["Vite", "SPA", "Vercel", "Responsive design", "WhatsApp"],
+    links: [{ label: { en: "View site", es: "Ver sitio" }, href: "https://fabio-english-academy.vercel.app/" }],
     images: [
-      { src: "projects/your-english-buddy.webp", alt: "Portada de Your English Buddy con el titular “Bienvenido a Your English Buddy” y un personaje 3D estudiando", kind: "desktop" },
-      { src: "projects/your-english-buddy-2.webp", alt: "Sección de reseñas de estudiantes de Your English Buddy", kind: "desktop" },
+      { src: "projects/your-english-buddy.webp", alt: { en: "Your English Buddy hero with the headline “Bienvenido a Your English Buddy” and a 3D character studying", es: "Portada de Your English Buddy con el titular “Bienvenido a Your English Buddy” y un personaje 3D estudiando" }, kind: "desktop" },
+      { src: "projects/your-english-buddy-2.webp", alt: { en: "Student reviews section of Your English Buddy", es: "Sección de reseñas de estudiantes de Your English Buddy" }, kind: "desktop" },
     ],
     effect: "translate",
     accent: "#3DDC84",
@@ -113,41 +128,46 @@ export const projects: Project[] = [
   {
     slug: "lyapp",
     name: "Lyapp",
-    client: "Producto propio · iOS",
-    category: "App iOS · Familia y salud",
+    repo: "lyapp-ios",
+    client: { en: "In-house product · iOS", es: "Producto propio · iOS" },
+    category: { en: "iOS app · Family & health", es: "App iOS · Familia y salud" },
     services: ["apps"],
-    status: "Disponible en App Store",
+    status: { en: "Live on the App Store", es: "Disponible en App Store" },
     live: true,
     year: "2026",
-    summary:
-      "El diario cálido y privado del primer año de un bebé: sueño, tomas, sólidos, citas, vacunas y medicación en una sola app iOS, personalizada según la edad.",
-    challenge:
-      "A las 3 de la mañana nadie quiere abrir una hoja de cálculo. Madres y padres primerizos anotan sueño, tomas y citas en notas sueltas y no saben si lo que ven es normal para la edad de su bebé. Queríamos algo rápido de usar con una mano, cálido y 100% privado.",
+    summary: {
+      en: "The warm, private diary of a baby's first year: sleep, feeds, solids, appointments, vaccines and medications in one iOS app, personalized to their age.",
+      es: "El diario cálido y privado del primer año de un bebé: sueño, tomas, sólidos, citas, vacunas y medicación en una sola app iOS, personalizada según la edad.",
+    },
+    challenge: {
+      en: "At 3 a.m. nobody wants to open a spreadsheet. New parents jot down sleep, feeds and appointments in scattered notes and can't tell whether what they see is normal for their baby's age. We wanted something fast to use one-handed, warm and 100% private.",
+      es: "A las 3 de la mañana nadie quiere abrir una hoja de cálculo. Madres y padres primerizos anotan sueño, tomas y citas en notas sueltas y no saben si lo que ven es normal para la edad de su bebé. Queríamos algo rápido de usar con una mano, cálido y 100% privado.",
+    },
     whatWeDid: [
-      { title: "Temporizador de sueño en vivo", text: "Un toque para iniciar la siesta o la noche. El temporizador vive en la pantalla de bloqueo y en la Dynamic Island con Live Activities." },
-      { title: "Registro de alimentación", text: "Pecho con cronómetro por lado, biberón con mililitros ofrecidos y tomados, y sólidos con alimentos y cantidades." },
-      { title: "Resumen frente a rangos pediátricos", text: "Gráficos semanales comparados con los rangos típicos por edad según las guías de la American Academy of Pediatrics." },
-      { title: "Coach con IA opcional", text: "Detecta patrones en los registros y responde preguntas solo si el usuario lo autoriza de forma explícita." },
-      { title: "Agenda de salud y reportes", text: "Citas, vacunas y medicación con dosis programadas, más reportes PDF para compartir con el pediatra." },
-      { title: "Privacidad por diseño", text: "Sin cuentas, sin nube, sin anuncios y sin rastreadores: todos los datos viven en el teléfono." },
+      { title: { en: "Live sleep timer", es: "Temporizador de sueño en vivo" }, text: { en: "One tap starts a nap or the night. The timer lives on the Lock Screen and in the Dynamic Island with Live Activities.", es: "Un toque para iniciar la siesta o la noche. El temporizador vive en la pantalla de bloqueo y en la Dynamic Island con Live Activities." } },
+      { title: { en: "Feeding log", es: "Registro de alimentación" }, text: { en: "Breastfeeding with a per-side stopwatch, bottles with milliliters offered and taken, and solids with foods and amounts.", es: "Pecho con cronómetro por lado, biberón con mililitros ofrecidos y tomados, y sólidos con alimentos y cantidades." } },
+      { title: { en: "Summary vs. pediatric ranges", es: "Resumen frente a rangos pediátricos" }, text: { en: "Weekly charts compared with typical ranges by age, based on American Academy of Pediatrics guidelines.", es: "Gráficos semanales comparados con los rangos típicos por edad según las guías de la American Academy of Pediatrics." } },
+      { title: { en: "Optional AI coach", es: "Coach con IA opcional" }, text: { en: "Spots patterns in the logs and answers questions only if the user explicitly allows it.", es: "Detecta patrones en los registros y responde preguntas solo si el usuario lo autoriza de forma explícita." } },
+      { title: { en: "Health agenda & reports", es: "Agenda de salud y reportes" }, text: { en: "Appointments, vaccines and medication with scheduled doses, plus PDF reports to share with the pediatrician.", es: "Citas, vacunas y medicación con dosis programadas, más reportes PDF para compartir con el pediatra." } },
+      { title: { en: "Privacy by design", es: "Privacidad por diseño" }, text: { en: "No accounts, no cloud, no ads and no trackers: all data lives on the phone.", es: "Sin cuentas, sin nube, sin anuncios y sin rastreadores: todos los datos viven en el teléfono." } },
     ],
     impact: [
-      "Publicada en la App Store: versión 1.0 el 29 de agosto y versión 1.1 el 21 de septiembre.",
-      "La versión 1.1 sumó varios bebés, registro de temperatura con umbrales de fiebre pediátricos y temporizador con pausa.",
-      "Disponible en inglés y español, pensada para familias de cualquier país.",
+      { en: "Live on the App Store: version 1.0 on August 29 and version 1.1 on September 21.", es: "Publicada en la App Store: versión 1.0 el 29 de agosto y versión 1.1 el 21 de septiembre." },
+      { en: "Version 1.1 added multiple babies, temperature logging with pediatric fever thresholds and a timer with pause.", es: "La versión 1.1 sumó varios bebés, registro de temperatura con umbrales de fiebre pediátricos y temporizador con pausa." },
+      { en: "Available in English and Spanish, built for families in any country.", es: "Disponible en inglés y español, pensada para familias de cualquier país." },
     ],
     numbers: [
-      { value: "1.1", label: "versión publicada" },
-      { value: "0", label: "cuentas o rastreadores" },
-      { value: "2", label: "idiomas" },
-      { value: "iOS", label: "nativa" },
+      { value: "1.1", label: { en: "version shipped", es: "versión publicada" } },
+      { value: "0", label: { en: "accounts or trackers", es: "cuentas o rastreadores" } },
+      { value: "2", label: { en: "languages", es: "idiomas" } },
+      { value: "iOS", label: { en: "native", es: "nativa" } },
     ],
-    stack: ["iOS nativo", "Live Activities", "Dynamic Island", "PDF", "IA opcional"],
-    links: [{ label: "Ver en App Store", href: "https://apps.apple.com/us/app/lyapp-baby-tracker-sleep/id6805567858" }],
+    stack: ["Native iOS", "Live Activities", "Dynamic Island", "PDF", "Optional AI"],
+    links: [{ label: { en: "View on the App Store", es: "Ver en App Store" }, href: "https://apps.apple.com/us/app/lyapp-baby-tracker-sleep/id6805567858" }],
     images: [
-      { src: "projects/lyapp-hoy.webp", alt: "Pantalla de inicio de Lyapp con el anillo de sueño de 12.5 horas y el botón para iniciar el temporizador", kind: "phone" },
-      { src: "projects/lyapp-resumen.webp", alt: "Pantalla de resumen semanal de Lyapp con barras de sueño comparadas con el rango típico", kind: "phone" },
-      { src: "projects/lyapp-coach.webp", alt: "Pantalla Coach de Lyapp con tarjetas de patrones detectados en los registros", kind: "phone" },
+      { src: "projects/lyapp-hoy.webp", alt: { en: "Lyapp home screen with a 12.5-hour sleep ring and the button to start the sleep timer", es: "Pantalla de inicio de Lyapp con el anillo de sueño de 12.5 horas y el botón para iniciar el temporizador" }, kind: "phone" },
+      { src: "projects/lyapp-resumen.webp", alt: { en: "Lyapp weekly summary screen with sleep bars compared with the typical range", es: "Pantalla de resumen semanal de Lyapp con barras de sueño comparadas con el rango típico" }, kind: "phone" },
+      { src: "projects/lyapp-coach.webp", alt: { en: "Lyapp Coach screen with cards of patterns found in the logs", es: "Pantalla Coach de Lyapp con tarjetas de patrones detectados en los registros" }, kind: "phone" },
     ],
     icon: "projects/lyapp-icon.webp",
     effect: "phone",
@@ -157,13 +177,13 @@ export const projects: Project[] = [
 ];
 
 export const upcoming = [
-  { name: "Tu e-commerce aquí", category: "Web · E-commerce", note: "Agenda abierta" },
-  { name: "Proyecto en desarrollo", category: "Plataforma SaaS", note: "Bajo NDA · próximamente" },
+  { name: { en: "Your e-commerce here", es: "Tu e-commerce aquí" }, category: { en: "Web · E-commerce", es: "Web · E-commerce" }, note: { en: "Booking now", es: "Agenda abierta" } },
+  { name: { en: "Project in progress", es: "Proyecto en desarrollo" }, category: { en: "SaaS platform", es: "Plataforma SaaS" }, note: { en: "Under NDA · coming soon", es: "Bajo NDA · próximamente" } },
 ];
 
-export const serviceNames: Record<string, string> = {
-  apps: "Apps móviles",
-  web: "Desarrollo web",
-  seo: "SEO & GEO",
-  branding: "Sistemas de marca",
+export const serviceNames: Record<string, L> = {
+  apps: { en: "Mobile apps", es: "Apps móviles" },
+  web: { en: "Web development", es: "Desarrollo web" },
+  seo: { en: "SEO & GEO", es: "SEO & GEO" },
+  branding: { en: "Brand systems", es: "Sistemas de marca" },
 };

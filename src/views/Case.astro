@@ -1,0 +1,155 @@
+---
+import Base from "../layouts/Base.astro";
+import Cta from "../components/Cta.astro";
+import AndyEffect from "../components/AndyEffect.astro";
+import BuddyEffect from "../components/BuddyEffect.astro";
+import LyappScrolly from "../components/LyappScrolly.astro";
+import { site, testimonials } from "../data/site";
+import { projects, serviceNames } from "../data/projects";
+import { href, route, loc, base, type Lang } from "../i18n";
+import { avatarSvg } from "../lib/avatar";
+
+interface Props { lang: Lang; slug: string }
+const { lang, slug } = Astro.props;
+const other: Lang = lang === "en" ? "es" : "en";
+const raw = projects.find((x) => x.slug === slug)!;
+const p = loc(raw, lang) as any;
+const idx = projects.findIndex((x) => x.slug === slug);
+const next = loc(projects[(idx + 1) % projects.length], lang) as any;
+const qt = testimonials.find((t) => t.project === slug);
+const quote = qt ? { ...loc(qt, lang), av: avatarSvg(qt.seed, qt.colors, 56) } : null;
+const pageUrl = new URL(route("case", lang, slug), site.url).href;
+const c = {
+  en: { case: "Case", crumb: "deploys/", client: "Client", modules: "Modules", year: "Year", stack: "Stack", challenge: "// the challenge", challengeT: "Where we started", try: "// try it", did: "// what we built", didT: "What we shipped", impact: "// impact", impactT: "What changed", next: "// next deploy", building: "building next deploy…", ready: "ready · open ↵", more: "More screenshots", demo: "Interactive demo" },
+  es: { case: "Caso", crumb: "deploys/", client: "Cliente", modules: "Módulos", year: "Año", stack: "Stack", challenge: "// el reto", challengeT: "El punto de partida", try: "// pruébalo", did: "// lo que hicimos", didT: "Qué construimos", impact: "// impacto", impactT: "Qué cambió", next: "// siguiente deploy", building: "compilando el siguiente deploy…", ready: "listo · abrir ↵", more: "Más capturas", demo: "Demo interactiva" },
+}[lang];
+const org = { "@id": new URL("#organization", site.url).href };
+const work = raw.effect === "phone"
+  ? { "@type": "SoftwareApplication", name: p.name, description: p.summary, operatingSystem: "iOS", applicationCategory: "HealthApplication", offers: { "@type": "Offer", price: "0", priceCurrency: "USD" }, url: p.links[0].href, image: new URL(p.images[0].src, site.url).href, inLanguage: ["en", "es"] }
+  : { "@type": "WebSite", name: p.name, description: p.summary, url: p.links[0].href };
+const schema = [{ "@type": "CreativeWork", "@id": `${pageUrl}#case`, name: `${c.case} ${p.name}`, headline: `${p.name}: ${p.category}`, description: p.summary, url: pageUrl, image: new URL(p.images[0].src, site.url).href, creator: org, dateCreated: p.year, inLanguage: lang, about: work }];
+const title = `${p.name}: ${p.category.toLowerCase()} | ${c.case} Forklia`;
+const desc = p.summary.length > 158 ? p.summary.slice(0, 155).replace(/\s\S*$/, "") + "…" : p.summary;
+const slugify = (s: string) => s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+const fonts = raw.effect === "phone" ? "&family=Playfair+Display:wght@500;600" : raw.effect === "palette" ? "&family=Archivo:wght@700&family=DM+Mono" : "";
+---
+
+<Base lang={lang} alt={route("case", other, slug)} title={title} description={desc} image={p.images[0].src} imageAlt={p.images[0].alt} type="article" breadcrumbs={[{ name: c.crumb, path: route("work", lang) }, { name: p.name, path: route("case", lang, slug) }]} schema={schema} fonts={fonts}>
+  <article class="case-page" style={`--pa:${p.accent}`}>
+    <header class="page-hero case-hero">
+      <div class="wrap">
+        <nav class="crumbs" aria-label="Breadcrumb" data-reveal><a href={href("home", lang)}>~</a><span>/</span><a href={href("work", lang)}>deploys</a><span>/</span><span aria-current="page">{p.slug}</span></nav>
+        <div class="case-hero__top" data-reveal>
+          {p.icon && <img class="case-hero__icon" src={base + p.icon} alt={`${p.name} icon`} width="64" height="64" />}
+          <span class={`pcard__status${p.live ? " is-live" : ""}`}><span class="dot"></span>{p.status}</span>
+          <span class="case-hero__cat">{p.category}</span>
+        </div>
+        <h1 data-split>{p.name}</h1>
+        <p class="lead" data-reveal style="--d:200ms">{p.summary}</p>
+        <div class="hero__ctas case-hero__ctas" data-reveal style="--d:280ms">
+          {p.links.map((l: any, i: number) => <a href={l.href} class={`btn ${i === 0 ? "btn--primary" : "btn--ghost"}`} target="_blank" rel="noopener" data-magnetic>{l.label} <span class="arrow">↗</span></a>)}
+        </div>
+        <dl class="case-facts" data-reveal style="--d:340ms">
+          <div><dt>{c.client}</dt><dd>{p.client}</dd></div>
+          <div><dt>{c.modules}</dt><dd>{raw.services.map((s) => serviceNames[s][lang]).join(" · ")}</dd></div>
+          <div><dt>{c.year}</dt><dd>{p.year}</dd></div>
+          <div><dt>{c.stack}</dt><dd>{p.stack.slice(0, 3).join(" · ")}</dd></div>
+        </dl>
+      </div>
+    </header>
+
+    <section class="wrap case-media" data-reveal aria-label={p.name}>
+      {p.images[0].kind === "desktop" ? (
+        <div class="case-browser">
+          <div class="window__bar"><div class="window__dots"><i></i><i></i><i></i></div><div class="window__url"><b>●</b> {p.links[0].href.replace(/^https?:\/\//, "")}</div></div>
+          <img src={base + p.images[0].src} alt={p.images[0].alt} width="1280" height="800" fetchpriority="high" />
+        </div>
+      ) : (
+        <div class="case-phones">{p.images.map((im: any, i: number) => <img src={base + im.src} alt={im.alt} width="600" height="1298" style={`--i:${i}`} loading={i ? "lazy" : "eager"} />)}</div>
+      )}
+    </section>
+
+    <section class="section">
+      <div class="wrap case-grid">
+        <div class="case-sticky"><div class="eyebrow" data-reveal>{c.challenge}</div><h2 class="h2" data-split>{c.challengeT}</h2></div>
+        <p class="case-text" data-reveal>{p.challenge}</p>
+      </div>
+    </section>
+
+    {raw.effect === "phone" && <LyappScrolly lang={lang} />}
+    {(raw.effect === "palette" || raw.effect === "translate") && (
+      <section class="section" style="padding-top: 0;" aria-label={c.demo}>
+        <div class="wrap case-demo"><div class="eyebrow" data-reveal>{c.try}</div><div data-reveal>{raw.effect === "palette" ? <AndyEffect lang={lang} /> : <BuddyEffect lang={lang} />}</div></div>
+      </section>
+    )}
+
+    <section class="section" style="padding-top: 0;">
+      <div class="wrap">
+        <div class="section-head"><div class="eyebrow eyebrow--violet" data-reveal>{c.did}</div><h2 class="h2" data-split>{c.didT}</h2></div>
+        <div class="did">
+          {p.whatWeDid.map((w: any, i: number) => (
+            <div class="card did__item" data-reveal data-spotlight style={`--d:${(i % 3) * 80}ms`}>
+              <span class="did__file">{`${String(i + 1).padStart(2, "0")}.${slugify(w.title)}`}</span>
+              <h3>{w.title}</h3>
+              <p>{w.text}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    {p.images.length > 1 && p.images[0].kind === "desktop" && (
+      <section class="section" style="padding-top: 0;" aria-label={c.more}>
+        <div class="wrap gallery">
+          {p.images.slice(1).map((im: any, i: number) => (
+            <figure class="case-browser case-browser--sm" data-reveal style={`--d:${i * 80}ms`}>
+              <div class="window__bar"><div class="window__dots"><i></i><i></i><i></i></div></div>
+              <img src={base + im.src} alt={im.alt} width="1280" height="800" loading="lazy" decoding="async" />
+              <figcaption>{im.alt}</figcaption>
+            </figure>
+          ))}
+        </div>
+      </section>
+    )}
+
+    <section class="section" style="padding-top: 0;">
+      <div class="wrap">
+        <div class="impact card" data-reveal>
+          <div><div class="eyebrow">{c.impact}</div><h2 class="h2">{c.impactT}</h2><ul class="checks">{p.impact.map((x: string) => <li>{x}</li>)}</ul></div>
+          <div class="impact__nums">{p.numbers.map((n: any) => <div><strong class="grad-text">{n.value}</strong><span>{n.label}</span></div>)}</div>
+        </div>
+      </div>
+    </section>
+
+    {quote && (
+      <section class="section" style="padding-top: 0;">
+        <div class="wrap">
+          <figure class="tlog__q is-active tlog__q--solo" data-reveal>
+            <blockquote><p>“{quote.q}”</p></blockquote>
+            <figcaption><span class="tlog__av" set:html={quote.av} /><span class="tlog__who"><b>{quote.n}</b><small>{quote.r}</small></span></figcaption>
+          </figure>
+        </div>
+      </section>
+    )}
+
+    <section class="section" style="padding-top: 0;">
+      <div class="wrap">
+        <a href={href("case", lang, next.slug)} class="nextdeploy" data-reveal style={`--na:${next.accent}`}>
+          <div class="nextdeploy__blocks" aria-hidden="true">{next.palette.concat(next.palette).slice(0, 8).map((col: string, i: number) => <i style={`--c:${col};--i:${i}`}></i>)}</div>
+          <div class="nextdeploy__main">
+            <span class="nextdeploy__term"><span class="tk tk--p">$</span> git checkout <b>{next.repo}</b><i class="hero2__caret"></i></span>
+            <small>{c.next}</small>
+            <span class="nextdeploy__name" aria-label={next.name}>{next.name.split(" ").map((w: string, wi: number) => <span class="nd-w" aria-hidden="true">{[...w].map((ch: string, i: number) => <span style={`--i:${wi * 6 + i}`}>{ch}</span>)}</span>)}</span>
+            <span class="nextdeploy__cat">{next.category}</span>
+            <span class="nextdeploy__bar"><i></i><em class="nextdeploy__b1">{c.building}</em><em class="nextdeploy__b2">{c.ready}</em></span>
+          </div>
+          <div class={`nextdeploy__shot nextdeploy__shot--${next.images[0].kind}`} aria-hidden="true">
+            {next.images[0].kind === "desktop" ? <img src={base + next.images[0].src} alt="" width="1280" height="800" loading="lazy" /> : next.images.slice(0, 2).map((im: any) => <img src={base + im.src} alt="" width="600" height="1298" loading="lazy" />)}
+          </div>
+        </a>
+      </div>
+    </section>
+  </article>
+
+  <Cta lang={lang} />
+</Base>

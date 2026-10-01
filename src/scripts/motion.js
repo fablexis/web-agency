@@ -504,7 +504,10 @@ if (pal) {
   const close = () => { pal.hidden = true; document.body.style.overflow = ""; };
   const filter = () => {
     const q = input.value.trim().toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
-    items.forEach((li) => (li.hidden = q && !li.dataset.search.normalize("NFD").replace(/[̀-ͯ]/g, "").includes(q)));
+    items.forEach((li) => {
+      const pop = li.dataset.pop === "1";
+      li.hidden = q ? pop || !li.dataset.search.normalize("NFD").replace(/[\u0300-\u036f]/g, "").includes(q) : !pop;
+    });
     sel = 0; mark();
   };
   const go = (li) => {
@@ -512,7 +515,7 @@ if (pal) {
     const href = li.dataset.href;
     if (href.startsWith("copy:")) {
       navigator.clipboard?.writeText(href.slice(5));
-      $("b", li).textContent = "✓ Correo copiado";
+      $("b", li).textContent = document.documentElement.lang === "es" ? "✓ Correo copiado" : "✓ Email copied";
       setTimeout(close, 700);
       return;
     }
@@ -640,65 +643,6 @@ function solSpy() {
     const end = last.getBoundingClientRect().bottom + scrollY - innerHeight;
     spyBar.style.transform = `scaleX(${clamp((scrollY - first + 120) / (end - first + 120))})`;
   }
-}
-
-/* ───────── Footer: playable F ───────── */
-const fplay = $("#fplay");
-if (fplay) {
-  const box = $(".fplay__f", fplay);
-  const cells = $$("i", box).map((el) => ({ el, fork: el.classList.contains("is-fork"), x: 0, y: 0, r: 0, vx: 0, vy: 0, vr: 0, tx: 0, ty: 0, tr: 0 }));
-  let pointer = null, dropping = false, running = false, inView = false, idleFrames = 0;
-  const unit = () => box.getBoundingClientRect().height / 32;
-  const home = (c) => { const b = box.getBoundingClientRect(); const r = c.el.getBoundingClientRect(); return { x: r.left - c.x + r.width / 2 - b.left, y: r.top - c.y + r.height / 2 - b.top }; };
-  const frame = () => {
-    const u = unit();
-    const b = box.getBoundingClientRect();
-    let energy = 0;
-    cells.forEach((c) => {
-      let tx = c.tx, ty = c.ty, tr = c.tr;
-      if (!dropping && pointer) {
-        const h = home(c);
-        const px = pointer.x - b.left, py = pointer.y - b.top;
-        if (c.fork) {
-          tx = (px - h.x) * 0.9; ty = (py - h.y) * 0.9; tr = tx * 0.4;
-        } else {
-          const dx = h.x - px, dy = h.y - py, d = Math.hypot(dx, dy) || 1, R = 14 * u;
-          if (d < R) { const f = (1 - d / R) * 9 * u; tx = (dx / d) * f; ty = (dy / d) * f; tr = (dx / d) * 18; }
-          c.el.classList.toggle("is-hot", d < R * 0.8);
-        }
-      } else c.el.classList.remove("is-hot");
-      const k = dropping ? 0.06 : 0.12, damp = dropping ? 0.82 : 0.78;
-      c.vx = (c.vx + (tx - c.x) * k) * damp; c.vy = (c.vy + (ty - c.y) * k) * damp; c.vr = (c.vr + (tr - c.r) * k) * damp;
-      c.x += c.vx; c.y += c.vy; c.r += c.vr;
-      energy += Math.abs(c.vx) + Math.abs(c.vy) + Math.abs(tx - c.x) + Math.abs(ty - c.y);
-      c.el.style.transform = `translate(${c.x.toFixed(2)}px, ${c.y.toFixed(2)}px) rotate(${c.r.toFixed(1)}deg)`;
-    });
-    idleFrames = energy < 0.5 && !pointer ? idleFrames + 1 : 0;
-    if (inView && idleFrames < 30) requestAnimationFrame(frame);
-    else running = false;
-  };
-  const kick = () => { if (!running && inView) { running = true; idleFrames = 0; requestAnimationFrame(frame); } };
-  if (!reduced) {
-    fplay.addEventListener("pointermove", (e) => { pointer = { x: e.clientX, y: e.clientY }; kick(); });
-    fplay.addEventListener("pointerleave", () => { pointer = null; kick(); });
-    fplay.addEventListener("click", () => {
-      if (dropping) return;
-      dropping = true;
-      const u = unit();
-      const floor = 32 * u + 4 * u;
-      const cols = [0, 0, 0, 0, 0];
-      cells.forEach((c, i) => {
-        const h = home(c);
-        const col = i % 5;
-        const x = (col - 2) * 6.5 * u + 12.75 * u;
-        cols[col] += 1;
-        c.tx = x - h.x; c.ty = floor - cols[col] * 6.5 * u - h.y + 3 * u; c.tr = (Math.random() > 0.5 ? 90 : 0);
-      });
-      kick();
-      setTimeout(() => { cells.forEach((c) => { c.tx = 0; c.ty = 0; c.tr = 0; }); kick(); setTimeout(() => (dropping = false), 900); }, 1500);
-    });
-  }
-  new IntersectionObserver(([e]) => { inView = e.isIntersecting; if (inView) kick(); }).observe(fplay);
 }
 
 /* ───────── Scroll loop ───────── */

@@ -1,20 +1,21 @@
 # Forklia
 
-> Forklia es un estudio remoto de producto digital fundado por Fabian Pernía (Full Stack Engineer) y Fabio Pernía (Creative Director & Head of Sales). Diseña y desarrolla apps móviles, sitios web, estrategias SEO/GEO y sistemas de marca interactivos para clientes de cualquier país, en español e inglés.
+> Forklia is a remote digital product studio founded by Fabian Pernía (Full Stack Engineer) and Fabio Pernía (Creative Director & Head of Sales). It designs and codes mobile apps, websites, SEO/GEO strategies and interactive brand systems for clients in any country, in English and Spanish. Spanish version: https://fablexis.github.io/web-agency/es/
 
-## Superpoderes (servicios)
+## Modules (services)
 
-- [Apps móviles](https://fablexis.github.io/web-agency/soluciones/#apps): apps iOS nativas y multiplataforma, de descubrimiento a publicación en App Store y Google Play.
-- [Desarrollo web](https://fablexis.github.io/web-agency/soluciones/#web): landing pages, sitios corporativos, e-commerce y plataformas a medida.
-- [SEO & GEO](https://fablexis.github.io/web-agency/soluciones/#seo): SEO técnico, contenido, datos estructurados y optimización para motores de respuesta con IA.
-- [Sistemas de marca](https://fablexis.github.io/web-agency/soluciones/#branding): logo, paleta, tipografía y brand kits interactivos con generador de firma de correo.
+- [Mobile apps](https://fablexis.github.io/web-agency/services/#apps): native iOS and cross-platform apps, from discovery to App Store and Google Play.
+- [Web development](https://fablexis.github.io/web-agency/services/#web): landing pages, company sites, e-commerce and custom platforms.
+- [SEO & GEO](https://fablexis.github.io/web-agency/services/#seo): technical SEO, content, structured data and optimization for AI answer engines.
+- [Brand systems](https://fablexis.github.io/web-agency/services/#branding): logo, palette, type and interactive brand kits with an email signature generator.
 
-## Proyectos
+## Deploys (projects)
 
-- [Lyapp](https://fablexis.github.io/web-agency/proyectos/lyapp/): app iOS para registrar el sueño, la alimentación y la salud del primer año de un bebé. Disponible en App Store.
-- [Simply Andy](https://fablexis.github.io/web-agency/proyectos/simply-andy/): identidad, portafolio bilingüe y brand kit interactivo para una creadora de UGC.
-- [Your English Buddy](https://fablexis.github.io/web-agency/proyectos/your-english-buddy/): sitio de una academia de inglés práctico para hispanohablantes.
+- [Lyapp](https://fablexis.github.io/web-agency/work/lyapp/): iOS app to track a baby's sleep, feeding and health in their first year. Live on the App Store.
+- [Simply Andy](https://fablexis.github.io/web-agency/work/simply-andy/): identity, bilingual portfolio and interactive brand kit for a UGC creator.
+- [Your English Buddy](https://fablexis.github.io/web-agency/work/your-english-buddy/): website for an academy teaching practical English to Spanish speakers.
 
-## Contacto
+## Contact
 
-- [Iniciar proyecto](https://fablexis.github.io/web-agency/cotizar/): propuesta con alcance, plazo y precio cerrado en menos de 48 horas.
+- [Start a project](https://fablexis.github.io/web-agency/start/): proposal with scope, timeline and fixed price in under 48 hours.
+- [FAQ & pricing](https://fablexis.github.io/web-agency/services/#faq)

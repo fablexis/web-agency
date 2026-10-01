@@ -1,67 +1,16 @@
 ---
-import Base from "../../layouts/Base.astro";
-import PostCard from "../../components/PostCard.astro";
-import Cta from "../../components/Cta.astro";
-import { posts, formatDate, type Post } from "../../data/site";
+import PostView from "../../views/Post.astro";
+import Redirect from "../../components/Redirect.astro";
+import { posts } from "../../data/site";
 
 export function getStaticPaths() {
-  return posts.map((post) => ({ params: { slug: post.slug }, props: { post } }));
+  return [
+    ...posts.map((post) => ({ params: { slug: post.slug.en }, props: { post, legacy: false } })),
+    // old Spanish URLs lived under /blog/
+    ...posts.map((post) => ({ params: { slug: post.slug.es }, props: { post, legacy: true } })),
+  ];
 }
-
-const { post } = Astro.props as { post: Post };
-const base = import.meta.env.BASE_URL.replace(/\/?$/, "/");
-const related = posts.filter((p) => p.slug !== post.slug).slice(0, 3);
+const { post, legacy } = Astro.props;
 ---
 
-<Base
-  title={`${post.title} | Bitácora Forklia`}
-  description={post.excerpt}
-  type="article"
-  noindex={post.placeholder}
-  breadcrumbs={[{ name: "Bitácora", path: "blog/" }, { name: post.title, path: `blog/${post.slug}/` }]}
-  schema={[
-    {
-      "@type": "BlogPosting",
-      headline: post.title,
-      description: post.excerpt,
-      datePublished: post.date,
-      author: { "@type": "Person", name: post.author },
-      publisher: { "@id": "https://fablexis.github.io/web-agency/#organization" },
-      inLanguage: "es",
-    },
-  ]}
->
-  <article class="section">
-    <div class="wrap article">
-      <a href={`${base}blog/`} class="back" data-reveal>← Volver a la bitácora</a>
-      <div class="post__meta" style="margin-top: 28px;" data-reveal><span class="cat">{post.category}</span><span>{formatDate(post.date)}</span><span>· {post.readTime} de lectura</span></div>
-      <h1 data-split>{post.title}</h1>
-      <p class="lead" data-reveal>{post.excerpt}</p>
-      <div class="post__meta" style="margin-top: 22px;" data-reveal>Por {post.author}</div>
-      <div class="post__cover" style={`--h:${post.hue}; aspect-ratio: 16/8;`} data-reveal><div class="post__shape"></div><span>Imagen de portada · placeholder</span></div>
-      <div class="article__body" data-reveal>
-        <p>Este es un artículo de ejemplo. Aquí irá el contenido real cuando se publique: una introducción que plantee el problema y por qué importa para tu negocio.</p>
-        <div class="ph-line" style="width: 96%"></div>
-        <div class="ph-line" style="width: 88%"></div>
-        <div class="ph-line" style="width: 92%"></div>
-        <h2>Sección de contenido</h2>
-        <div class="ph-line" style="width: 94%"></div>
-        <div class="ph-line" style="width: 80%"></div>
-        <div class="ph-line" style="width: 90%"></div>
-        <div class="ph-line" style="width: 60%"></div>
-        <h2>Conclusión</h2>
-        <div class="ph-line" style="width: 86%"></div>
-        <div class="ph-line" style="width: 70%"></div>
-      </div>
-    </div>
-  </article>
-
-  <section class="section" style="padding-top: 0;">
-    <div class="wrap">
-      <div class="section-head"><h2 class="h2" data-split>Sigue leyendo</h2></div>
-      <div class="posts">{related.map((p, i) => <PostCard post={p} delay={i * 90} />)}</div>
-    </div>
-  </section>
-
-  <Cta />
-</Base>
+{legacy ? <Redirect to={`es/blog/${post.slug.es}/`} /> : <PostView lang="en" post={post} />}

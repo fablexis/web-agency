@@ -1,0 +1,11 @@
+---
+import PostView from "../../../views/Post.astro";
+import { posts } from "../../../data/site";
+
+export function getStaticPaths() {
+  return posts.map((post) => ({ params: { slug: post.slug.es }, props: { post } }));
+}
+const { post } = Astro.props;
+---
+
+<PostView lang="es" post={post} />
