@@ -1395,3 +1395,13 @@ a.svc { text-decoration: none; color: inherit; }
 .f12 { right: 3%; top: 92%; animation-duration: 8.8s; animation-delay: -7s; font-size: 11px; opacity: .7; }
 @media (max-width: 1100px) { .f2, .f6, .f9, .f10, .f11, .f12 { display: none; } }
 @media (max-width: 640px) { .hero2__float { display: none; } }
+
+/* Team photos: tetris assembly */
+.dev__photo.is-tetris img { opacity: 0; transition: opacity .5s ease; }
+.dev__photo.is-tetris.is-built img { opacity: 1; }
+.dev__photo canvas { transition: opacity .5s ease; }
+.dev__photo.is-built canvas { opacity: 0; }
+.dev__photo.is-built.is-xray canvas { opacity: 1; transition-duration: .25s; }
+.dev__photo.is-built { cursor: crosshair; }
+img { -webkit-user-drag: none; user-select: none; -webkit-user-select: none; }
+.dev__photo { -webkit-touch-callout: none; user-select: none; }

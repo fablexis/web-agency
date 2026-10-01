@@ -668,3 +668,6 @@ const onScroll = () => {
 window.addEventListener("scroll", onScroll, { passive: true });
 window.addEventListener("resize", onScroll, { passive: true });
 onScroll();
+
+/* ───────── Images can't be dragged out of the page ───────── */
+addEventListener("dragstart", (e) => { if (e.target instanceof HTMLImageElement || e.target.closest?.(".dev__photo")) e.preventDefault(); });

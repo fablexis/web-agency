@@ -251,76 +251,129 @@ if (fplay) {
   if (reduced) fplay.classList.add("is-in");
 }
 
-/* ───────── Team photos: compile from ASCII, live ASCII on hover ───────── */
-const RAMP = " .,:;i1tfLCG08@";
-$$("[data-ascii]").forEach((fig) => {
-  const img = $("img", fig), canvas = $("canvas", fig), scan = $(".dev__scan", fig);
-  const accent = getComputedStyle(fig.closest(".dev") || fig).getPropertyValue("--fc").trim() || "#45E0FF";
+/* ───────── Team photos: assembled from falling tetrominoes ───────── */
+const SHAPES = {
+  I: [[0, 0], [1, 0], [2, 0], [3, 0]], O: [[0, 0], [1, 0], [0, 1], [1, 1]], T: [[0, 0], [1, 0], [2, 0], [1, 1]],
+  L: [[0, 0], [0, 1], [0, 2], [1, 2]], J: [[1, 0], [1, 1], [1, 2], [0, 2]], S: [[1, 0], [2, 0], [0, 1], [1, 1]], Z: [[0, 0], [1, 0], [1, 1], [2, 1]],
+};
+const norm = (cells) => { const mx = Math.min(...cells.map((c) => c[0])), my = Math.min(...cells.map((c) => c[1])); return cells.map(([x, y]) => [x - mx, y - my]); };
+const rotations = (cells) => { const out = []; let c = cells; for (let i = 0; i < 4; i++) { c = norm(c.map(([x, y]) => [-y, x])); const k = JSON.stringify([...c].sort()); if (!out.some((o) => o.k === k)) out.push({ k, c }); } return out.map((o) => o.c); };
+const PIECES = Object.values(SHAPES).flatMap(rotations);
+const TINTS = ["#45E0FF", "#9B6BFF", "#3B6BFF", "#4BE3A0", "#B58CFF", "#7fe7ff"];
+
+$$("[data-tetris]").forEach((fig, figIndex) => {
+  const img = $("img", fig), canvas = $("canvas", fig), card = fig.closest(".dev") || fig;
   const ctx = canvas.getContext("2d");
-  let lum = null, cols = 0, rows = 0, cw = 0, ch = 0, reveal = 0, hover = 0, hoverTarget = 0, raf = 0, started = false;
-  const sample = () => {
-    const r = fig.getBoundingClientRect();
-    const dpr = Math.min(2, devicePixelRatio || 1);
-    canvas.width = Math.round(r.width * dpr); canvas.height = Math.round(r.height * dpr);
-    cols = r.width < 360 ? 52 : 78;
-    cw = canvas.width / cols; ch = cw * 1.7; rows = Math.ceil(canvas.height / ch);
-    const off = document.createElement("canvas");
-    off.width = cols; off.height = rows;
-    const o = off.getContext("2d");
-    // mimic object-fit: cover; object-position: 50% 18%
-    const s = Math.max(cols / img.naturalWidth, rows * (ch / cw) / img.naturalHeight);
-    const dw = img.naturalWidth * s, dh = img.naturalHeight * s / (ch / cw);
-    o.drawImage(img, (cols - dw) / 2, (rows - dh) * 0.18, dw, dh);
-    const d = o.getImageData(0, 0, cols, rows).data;
-    lum = new Float32Array(cols * rows);
-    for (let i = 0; i < cols * rows; i++) lum[i] = (d[i * 4] * 0.3 + d[i * 4 + 1] * 0.59 + d[i * 4 + 2] * 0.11) / 255;
-  };
-  const draw = (t) => {
-    if (!lum) return;
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    const scanRow = reveal * rows;
-    ctx.font = `${Math.round(ch * 0.82)}px "JetBrains Mono", monospace`;
-    ctx.textBaseline = "top";
-    for (let y = 0; y < rows; y++) {
-      const hidden = y >= scanRow;            // not yet compiled → solid ASCII
-      const a = hidden ? 1 : hover;            // compiled → ASCII only while hovering
-      if (a <= 0.01) continue;
-      ctx.fillStyle = `rgba(6, 7, 14, ${hidden ? 1 : 0.92 * a})`;
-      ctx.fillRect(0, y * ch, canvas.width, ch + 1);
-      for (let x = 0; x < cols; x++) {
-        let v = lum[y * cols + x];
-        if (hover > 0 && Math.random() < 0.012) v = Math.random();
-        const c = RAMP[Math.min(RAMP.length - 1, Math.floor(Math.pow(v, 0.75) * RAMP.length))];
-        if (c === " ") continue;
-        ctx.globalAlpha = Math.min(1, 0.45 + v * 1.1) * (hidden ? 1 : a);
-        ctx.fillStyle = v > 0.55 ? "#eef2f8" : accent;
-        ctx.fillText(c, x * cw, y * ch);
+  let W = 0, H = 0, cs = 0, cols = 8, rows = 0, pieces = [], t0 = 0, raf = 0, built = false, started = false, hoverPiece = null, xray = 0, xrayTarget = 0;
+  let map = null; // image cover mapping
+  const rng = (seed => () => (seed = (seed * 16807) % 2147483647) / 2147483647)(9 + figIndex * 7);
+
+  const layout = () => {
+    const r = fig.getBoundingClientRect(), dpr = Math.min(2, devicePixelRatio || 1);
+    W = canvas.width = Math.round(r.width * dpr); H = canvas.height = Math.round(r.height * dpr);
+    cols = r.width < 360 ? 7 : 8; cs = W / cols; rows = Math.ceil(H / cs);
+    const s = Math.max(W / img.naturalWidth, H / img.naturalHeight);
+    map = { s, ox: (W - img.naturalWidth * s) / 2, oy: (H - img.naturalHeight * s) * 0.18 };
+    // tile the grid bottom-up with tetrominoes (dominoes/monominoes only as filler)
+    const grid = Array.from({ length: rows }, () => Array(cols).fill(-1));
+    pieces = [];
+    const fits = (cells, ax, ay) => cells.every(([x, y]) => { const gx = ax + x, gy = ay + y; return gx >= 0 && gx < cols && gy >= 0 && gy < rows && grid[gy][gx] < 0; });
+    for (let y = rows - 1; y >= 0; y--) for (let x = 0; x < cols; x++) {
+      if (grid[y][x] >= 0) continue;
+      const opts = [...PIECES].sort(() => rng() - 0.5);
+      let placed = null;
+      for (const shape of opts) {
+        for (const [cx, cy] of shape) { const ax = x - cx, ay = y - cy; if (fits(shape, ax, ay)) { placed = shape.map(([a, b]) => [ax + a, ay + b]); break; } }
+        if (placed) break;
       }
-      ctx.globalAlpha = 1;
+      if (!placed) for (const sh of [[[0, 0], [1, 0]], [[0, 0], [0, 1]], [[0, -1], [0, 0]], [[0, 0]]]) if (fits(sh, x, y)) { placed = sh.map(([a, b]) => [x + a, y + b]); break; }
+      const id = pieces.length;
+      placed.forEach(([gx, gy]) => (grid[gy][gx] = id));
+      const top = Math.min(...placed.map((c) => c[1]));
+      pieces.push({ cells: placed, top, tint: TINTS[Math.floor(rng() * TINTS.length)], landed: 0, dist: top + 2 + Math.max(...placed.map((c) => c[1])) - top + Math.floor(rng() * 2) });
     }
-    if (scan) { scan.style.opacity = reveal > 0 && reveal < 1 ? "1" : "0"; scan.style.transform = `translateY(${(scanRow * ch) / (canvas.height / fig.clientHeight)}px)`; }
+    // drop order: lowest pieces first, like a real stack
+    pieces.sort((a, b) => Math.max(...b.cells.map((c) => c[1])) - Math.max(...a.cells.map((c) => c[1])) || a.cells[0][0] - b.cells[0][0]);
+    pieces.forEach((p, i) => (p.delay = i * 80));
   };
+
+  const block = (gx, gy, dy, tint, tintA, lift = 0) => {
+    const g = Math.max(1, cs * 0.035), x = gx * cs, y = gy * cs + dy - lift;
+    const sx = (x - map.ox) / map.s, sy = (gy * cs - map.oy) / map.s, sw = cs / map.s;
+    ctx.drawImage(img, sx, sy, sw, sw, x + g, y + g, cs - 2 * g, cs - 2 * g);
+    if (tintA > 0.01) { ctx.globalAlpha = tintA; ctx.fillStyle = tint; ctx.fillRect(x + g, y + g, cs - 2 * g, cs - 2 * g); ctx.globalAlpha = 1; }
+    // bevel: light top/left, dark bottom/right
+    const b = Math.max(1.5, cs * 0.06);
+    ctx.fillStyle = "rgba(255,255,255,.16)"; ctx.fillRect(x + g, y + g, cs - 2 * g, b); ctx.fillRect(x + g, y + g, b, cs - 2 * g);
+    ctx.fillStyle = "rgba(0,0,0,.28)"; ctx.fillRect(x + g, y + cs - g - b, cs - 2 * g, b); ctx.fillRect(x + cs - g - b, y + g, b, cs - 2 * g);
+  };
+
+  const draw = (now) => {
+    ctx.clearRect(0, 0, W, H);
+    const t = now - t0;
+    const rowFill = new Array(rows).fill(0);
+    let allDone = true;
+    for (const p of pieces) {
+      const local = t - p.delay;
+      if (local < 0 && !built) { allDone = false; continue; }
+      const STEP = 34; // ms per row: stepped, like a real Tetris drop
+      const fallen = built ? p.dist : Math.min(p.dist, Math.floor(local / STEP));
+      const dy = -(p.dist - fallen) * cs;
+      if (fallen >= p.dist && !p.landed) p.landed = now;
+      const since = p.landed ? now - p.landed : -1;
+      let tintA = built ? 0 : since < 0 ? 0.55 : Math.max(0, 0.55 - since / 700);
+      if (since >= 0 && since < 120 && !built) tintA = 0.9 - since / 300; // impact flash
+      if (!built && (since < 0 || tintA > 0)) allDone = false;
+      const isHover = hoverPiece === p;
+      if (built) tintA = xray * (isHover ? 0.45 : 0.2);
+      for (const [gx, gy] of p.cells) {
+        block(gx, gy, dy, p.tint, tintA, isHover ? xray * cs * 0.12 : 0);
+        if (since >= 0) rowFill[gy]++;
+      }
+      if (built && xray > 0.01) { // x-ray outlines of each piece
+        ctx.globalAlpha = xray * (isHover ? 1 : 0.55); ctx.strokeStyle = p.tint; ctx.lineWidth = Math.max(1.5, cs * 0.04);
+        for (const [gx, gy] of p.cells) ctx.strokeRect(gx * cs + 2, gy * cs + 2 - (isHover ? xray * cs * 0.12 : 0), cs - 4, cs - 4);
+        ctx.globalAlpha = 1;
+      }
+    }
+    // line clear flash when a row completes
+    if (!built) rowFill.forEach((n, r) => {
+      if (n === cols) {
+        const p0 = pieces.filter((p) => p.cells.some((c) => c[1] === r)).reduce((m, p) => Math.max(m, p.landed || 0), 0);
+        const a = 1 - (now - p0) / 380;
+        if (a > 0) { ctx.globalAlpha = a * 0.55; ctx.fillStyle = "#eef2f8"; ctx.fillRect(0, r * cs, W, cs); ctx.globalAlpha = 1; }
+      }
+    });
+    return allDone;
+  };
+
   const loop = (now) => {
-    hover += (hoverTarget - hover) * 0.12;
-    draw(now);
-    raf = (reveal < 1 || Math.abs(hoverTarget - hover) > 0.01 || hoverTarget > 0) ? requestAnimationFrame(loop) : 0;
+    xray += (xrayTarget - xray) * 0.14;
+    const done = draw(now);
+    if (!built && done) { built = true; fig.classList.add("is-built"); }
+    raf = !built || Math.abs(xrayTarget - xray) > 0.01 || xrayTarget > 0 ? requestAnimationFrame(loop) : 0;
   };
   const kick = () => { if (!raf) raf = requestAnimationFrame(loop); };
   const start = () => {
     if (started) return; started = true;
-    sample();
-    if (reduced) { reveal = 1; draw(); return; }
-    const t0 = performance.now();
-    const step = (now) => { reveal = Math.min(1, (now - t0) / 1500); if (reveal < 1) requestAnimationFrame(step); };
-    requestAnimationFrame(step); kick();
+    layout(); t0 = performance.now();
+    if (reduced) { built = true; fig.classList.add("is-built"); return; }
+    kick();
   };
-  const ready = () => new IntersectionObserver(([e], io) => { if (e.isIntersecting) { io.disconnect(); setTimeout(start, 250); } }, { threshold: 0.35 }).observe(fig);
+  fig.classList.add("is-tetris");
+  const ready = () => new IntersectionObserver(([e], io) => { if (e.isIntersecting) { io.disconnect(); setTimeout(start, 200 + figIndex * 250); } }, { threshold: 0.3 }).observe(fig);
   img.complete && img.naturalWidth ? ready() : img.addEventListener("load", ready, { once: true });
   if (!reduced) {
-    fig.closest(".dev").addEventListener("pointerenter", () => { if (started && reveal >= 1) { hoverTarget = 1; kick(); } });
-    fig.closest(".dev").addEventListener("pointerleave", () => { hoverTarget = 0; kick(); });
+    fig.addEventListener("pointermove", (e) => {
+      if (!built) return;
+      const r = fig.getBoundingClientRect(), dpr = W / r.width;
+      const gx = Math.floor(((e.clientX - r.left) * dpr) / cs), gy = Math.floor(((e.clientY - r.top) * dpr) / cs);
+      hoverPiece = pieces.find((p) => p.cells.some((c) => c[0] === gx && c[1] === gy)) || null;
+      xrayTarget = 1; fig.classList.add("is-xray"); kick();
+    });
+    fig.addEventListener("pointerleave", () => { xrayTarget = 0; hoverPiece = null; fig.classList.remove("is-xray"); kick(); });
   }
-  addEventListener("resize", () => { if (started) { sample(); draw(); } }, { passive: true });
+  addEventListener("resize", () => { if (started) { layout(); if (built) draw(performance.now()); } }, { passive: true });
 });
 
 /* ───────── Hero: floating code ornaments drift with the pointer ───────── */

@@ -53,10 +53,9 @@ const schema = [{ "@type": "AboutPage", name: c.title, url: new URL(route("about
                 <span class="dev__blame">git blame · {f.sha}</span>
               </div>
               <div class="dev__body">
-                <figure class="dev__photo" data-ascii>
-                  <img src={base + f.photo} alt={`${c.photo} ${f.name}, ${f.jobTitle} — Forklia`} width="880" height="1172" loading="lazy" decoding="async" />
+                <figure class="dev__photo" data-tetris>
+                  <img src={base + f.photo} alt={`${c.photo} ${f.name}, ${f.jobTitle} — Forklia`} width="880" height="1172" loading="lazy" decoding="async" draggable="false" />
                   <canvas aria-hidden="true"></canvas>
-                  <span class="dev__scan" aria-hidden="true"></span>
                   <figcaption aria-hidden="true">{id}.webp · 880×1172</figcaption>
                 </figure>
                 <div class="dev__code">
