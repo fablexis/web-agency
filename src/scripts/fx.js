@@ -171,7 +171,7 @@ if (tlog) {
 const fplay = $("#fplay");
 if (fplay) {
   const box = $(".fplay__f", fplay);
-  const letterEls = $$(".fplay__l", fplay);
+  const letterEls = $$(".fplay__lg", fplay);
   const cursor = document.createElement("i");
   cursor.className = "fplay__cursor";
   fplay.appendChild(cursor);

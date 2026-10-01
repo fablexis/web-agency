@@ -251,8 +251,18 @@ const dropOrder = [[0, 4], [0, 3], [0, 2], [0, 1], [0, 0], [1, 0], [2, 0], [3, 0
               {fCells.map(([c, r], i) => <i style={`--c:${c};--r:${r};--i:${i}`}></i>)}
               <i class="is-fork" style={`--c:${(fork.x / 6.5).toFixed(3)};--r:${(fork.y / 6.5).toFixed(3)};--i:9`}></i>
             </div>
-            <svg class="fplay__rest" viewBox="27 0 114 32">
-              {letters.map((l, i) => <path class="fplay__l" style={`--i:${i}`} d={l.d}></path>)}
+            <svg class="fplay__rest" viewBox="25 -6 120 44">
+              <defs>
+                <filter id="fp-glow" x="-60%" y="-60%" width="220%" height="220%" color-interpolation-filters="sRGB">
+                  <feGaussianBlur stdDeviation="1.8" />
+                </filter>
+              </defs>
+              {letters.map((l, i) => (
+                <g class="fplay__lg" style={`--i:${i}`}>
+                  <path class="fplay__g" filter="url(#fp-glow)" d={l.d}></path>
+                  <path class="fplay__l" d={l.d}></path>
+                </g>
+              ))}
             </svg>
           </div>
         </div>

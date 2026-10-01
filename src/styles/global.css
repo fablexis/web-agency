@@ -656,7 +656,7 @@ kbd { font-family: var(--mono); font-size: 11px; padding: 2px 6px; border-radius
 .fplay__f { position: relative; flex: none; width: calc(25.5 * var(--u)); height: calc(32 * var(--u)); }
 .fplay__f i { will-change: transform; transition: background .4s, box-shadow .4s; }
 .fplay__f i.is-hot { background: #c9f4ff; box-shadow: 0 0 calc(2 * var(--u)) rgba(69, 224, 255, .5); }
-.fplay__rest { flex: none; height: calc(32 * var(--u)); width: calc(114 * var(--u)); margin-left: calc(1.5 * var(--u)); color: rgba(238, 242, 248, .07); transition: color .5s; overflow: hidden; }
+.fplay__rest { flex: none; height: calc(44 * var(--u)); width: calc(120 * var(--u)); margin: calc(-6 * var(--u)) calc(-4 * var(--u)) calc(-6 * var(--u)) calc(-0.5 * var(--u)); overflow: visible; }
 .fplay:hover .fplay__rest { color: rgba(238, 242, 248, .14); }
 .footer__bottom .mono { font-family: var(--mono); font-size: 12px; }
 
@@ -1271,9 +1271,12 @@ a.svc { text-decoration: none; color: inherit; }
 @keyframes fpDrop { from { opacity: 0; translate: 0 -260px; rotate: 90deg; } to { opacity: 1; translate: 0 0; rotate: 0deg; } }
 @keyframes fpBreath { 0%, 100% { box-shadow: 0 0 calc(3 * var(--u)) rgba(56, 189, 248, .55); } 50% { box-shadow: 0 0 calc(7 * var(--u)) rgba(155, 107, 255, .8); } }
 .fplay__rest { color: rgba(238, 242, 248, .06); }
-.fplay__l { fill: rgba(238, 242, 248, calc(.06 + var(--glow, 0) * .55)); filter: drop-shadow(0 0 calc(var(--glow, 0) * 2.2px) rgba(69, 224, 255, calc(var(--glow, 0) * .9))); transition: fill .25s, filter .25s; }
+.fplay__l { fill: rgba(238, 242, 248, calc(.06 + var(--glow, 0) * .55)); transition: fill .25s; }
+.fplay__g { fill: #45E0FF; opacity: calc(var(--glow, 0) * .85); transition: opacity .25s; }
 .fplay.is-in .fplay__l { animation: fpSweep 1.4s ease backwards; animation-delay: calc(var(--i) * 110ms + 1s); }
-@keyframes fpSweep { 0%, 100% { fill: rgba(238, 242, 248, .06); } 45% { fill: rgba(201, 244, 255, .7); filter: drop-shadow(0 0 2px rgba(69, 224, 255, .9)); } }
+@keyframes fpSweep { 0%, 100% { fill: rgba(238, 242, 248, .06); } 45% { fill: rgba(201, 244, 255, .7); } }
+.fplay.is-in .fplay__g { animation: fpSweepGlow 1.4s ease backwards; animation-delay: calc(var(--i) * 110ms + 1s); }
+@keyframes fpSweepGlow { 0%, 100% { opacity: 0; } 45% { opacity: .8; } }
 @media (hover: none) { .fplay { cursor: default; } }
 @media (max-width: 760px) { .footer__top { grid-template-columns: 1fr 1fr; } .footer__intro { grid-column: 1 / -1; } }
 
