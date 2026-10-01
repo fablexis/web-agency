@@ -126,8 +126,10 @@ const dropOrder = [[0, 4], [0, 3], [0, 2], [0, 1], [0, 0], [1, 0], [2, 0], [3, 0
         var d = document.documentElement;
         d.classList.remove("no-js");
         try {
-          if (sessionStorage.getItem("fk-loaded") || matchMedia("(prefers-reduced-motion: reduce)").matches) d.classList.add("no-loader");
-          else sessionStorage.setItem("fk-loaded", "1");
+          var nav = performance.getEntriesByType && performance.getEntriesByType("navigation")[0];
+          var reload = nav ? nav.type === "reload" : performance.navigation && performance.navigation.type === 1;
+          var internal = document.referrer && document.referrer.indexOf(location.host) > -1;
+          if (matchMedia("(prefers-reduced-motion: reduce)").matches || (internal && !reload)) d.classList.add("no-loader");
         } catch (e) { d.classList.add("no-loader"); }
       })();
     </script>

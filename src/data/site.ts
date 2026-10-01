@@ -105,6 +105,7 @@ export const founders = [
     name: "Fabian Pernía",
     initials: "Fabian",
     photo: "team/fabian-pernia.webp",
+    sha: "f4b1a2e",
     role: { en: "Co-founder · Full Stack Engineer", es: "Co-founder · Full Stack Engineer" },
     jobTitle: "Full Stack Engineer",
     bio: {
@@ -118,6 +119,7 @@ export const founders = [
     name: "Fabio Pernía",
     initials: "Fabio",
     photo: "team/fabio-pernia.webp",
+    sha: "0fa8c3d",
     role: { en: "Co-founder · Creative Director & Head of Sales", es: "Co-founder · Creative Director & Head of Sales" },
     jobTitle: "Creative Director & Head of Sales",
     bio: {

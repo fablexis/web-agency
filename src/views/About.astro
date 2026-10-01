@@ -42,21 +42,39 @@ const schema = [{ "@type": "AboutPage", name: c.title, url: new URL(route("about
   <PageHero lang={lang} eyebrow={c.eyebrow} crumb={c.crumb} title={c.h1} lead={c.lead} violet />
   <section class="section" style="padding-top: 0;">
     <div class="wrap">
-      <div class="about">
-        {people.map((f, i) => (
-          <article class="card founder" data-reveal data-spotlight style={`--d:${i * 120}ms; --fc:${f.accent === "cyan" ? "#45E0FF" : "#9B6BFF"}`}>
-            <div class="founder__photo"><img src={base + f.photo} alt={`${c.photo} ${f.name}, ${f.jobTitle} — Forklia`} width="880" height="1172" loading="lazy" decoding="async" /></div>
-            <div class="founder__body">
-              <div class="founder__role">{f.role}</div>
-              <h2 class="founder__name">{f.name}</h2>
-              <p>{f.bio}</p>
-              <div class="tags">{f.skills.map((s: string) => <span class="tag">{s}</span>)}</div>
-            </div>
-          </article>
-        ))}
+      <div class="devs">
+        {people.map((f, i) => {
+          const id = f.initials.toLowerCase();
+          return (
+            <article class="dev" data-reveal style={`--d:${i * 120}ms; --fc:${f.accent === "cyan" ? "#45E0FF" : "#B58CFF"}`}>
+              <div class="dev__bar">
+                <span class="window__dots"><i></i><i></i><i></i></span>
+                <span class="dev__file"><span class="vsc__ts">TS</span>{id}.ts</span>
+                <span class="dev__blame">git blame · {f.sha}</span>
+              </div>
+              <div class="dev__body">
+                <figure class="dev__photo" data-ascii>
+                  <img src={base + f.photo} alt={`${c.photo} ${f.name}, ${f.jobTitle} — Forklia`} width="880" height="1172" loading="lazy" decoding="async" />
+                  <canvas aria-hidden="true"></canvas>
+                  <span class="dev__scan" aria-hidden="true"></span>
+                  <figcaption aria-hidden="true">{id}.webp · 880×1172</figcaption>
+                </figure>
+                <div class="dev__code">
+                  <div class="dl"><span class="k">export const</span> <span class="v">{id}</span> = {"{"}</div>
+                  <div class="dl dl--in"><span class="p">name</span>: <span class="s">"</span><h2 class="dev__name">{f.name}</h2><span class="s">"</span>,</div>
+                  <div class="dl dl--in"><span class="p">role</span>: <span class="s">"{f.jobTitle}"</span>,</div>
+                  <div class="dl dl--in dl--wrap"><span class="p">stack</span>: [{f.skills.map((sk: string, k: number) => <span class="dev__chip">"{sk}"{k < f.skills.length - 1 ? "," : ""}</span>)}],</div>
+                  <div class="dl dl--in dl--bio"><span class="p">bio</span>: <span class="s">`</span><p>{f.bio}</p><span class="s">`</span>,</div>
+                  <div class="dl">{"};"}</div>
+                </div>
+              </div>
+            </article>
+          );
+        })}
       </div>
     </div>
   </section>
+
   <section class="section" style="padding-top: 0;">
     <div class="wrap"><p class="manifesto" data-manifesto>{c.manifesto.split(" ").map((w) => <span>{w} </span>)}</p></div>
   </section>

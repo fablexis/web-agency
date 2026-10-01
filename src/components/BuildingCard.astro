@@ -1,27 +1,29 @@
 ---
-import { href, type Lang } from "../i18n";
+import { ctaCards } from "../data/projects";
+import { href, loc, type Lang } from "../i18n";
 
 interface Props {
   lang: Lang;
-  name: string;
-  category: string;
-  note: string;
+  card: string;
   delay?: number;
+  hidden?: boolean;
+  wide?: boolean;
 }
-const { lang, name, category, note, delay = 0 } = Astro.props;
+const { lang, card, delay = 0, hidden = false, wide = false } = Astro.props;
+const c = loc(ctaCards.find((x) => x.key === card)!, lang) as any;
 const blocks = Array.from({ length: 24 }, (_, i) => i);
-const copy = { en: { p: "This slot is still compiling. It could be yours.", c: "Start a project" }, es: { p: "Este espacio se está compilando. Podría ser el tuyo.", c: "Iniciar proyecto" } }[lang];
+const url = href("start", lang) + (c.module ? `?m=${c.module}` : "");
 ---
 
-<a href={href("start", lang)} class="card build" data-reveal data-spotlight style={`--d:${delay}ms`}>
+<a href={url} class={`card build${wide ? " build--wide" : ""}`} data-reveal data-spotlight data-cta={card === "all" ? "todos" : card} hidden={hidden ? true : undefined} style={`--d:${delay}ms`}>
   <div class="build__art" aria-hidden="true">
     <div class="build__grid">{blocks.map((i) => <i style={`--i:${i};--x:${i % 6};--y:${Math.floor(i / 6)}`}></i>)}</div>
-    <span class="build__status"><span class="dot"></span>{note}</span>
+    <span class="build__status"><span class="dot"></span>{c.note}</span>
   </div>
   <div class="build__body">
-    <div class="case__cat">{category}</div>
-    <h3>{name}</h3>
-    <p>{copy.p}</p>
-    <span class="post__more">{copy.c} <span>→</span></span>
+    <div class="case__cat">{c.category}</div>
+    <h3>{c.name}</h3>
+    <p>{c.text}</p>
+    <span class="btn btn--primary btn--sm build__btn">{c.cta} <span class="arrow">→</span></span>
   </div>
 </a>

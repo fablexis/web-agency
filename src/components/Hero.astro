@@ -9,7 +9,7 @@ const c = {
   en: {
     badge: "New", badgeText: "Lyapp is live on the App Store",
     cmd: "forklia build --from idea --to product",
-    h1a: "Ideas in.", h1b: "Products out.",
+    h1a: "Ideas in.", h1b: "Products out.", code: "ideas.map(build)",
     lead: "Forklia is a remote studio that designs and codes apps, websites, SEO and brand systems for teams anywhere in the world.",
     see: "See shipped work",
     chips: [["Build passed", "prod · 2s ago"], ["Lighthouse 100", "perf · a11y · seo"], ["Shipped to App Store", "Lyapp · v1.1"]],
@@ -23,7 +23,7 @@ const c = {
   es: {
     badge: "Nuevo", badgeText: "Lyapp ya está en la App Store",
     cmd: "forklia build --desde idea --hasta producto",
-    h1a: "Entra una idea.", h1b: "Sale un producto.",
+    h1a: "Entra una idea.", h1b: "Sale un producto.", code: "idea.compilar()",
     lead: "Forklia es un estudio remoto que diseña y programa apps, sitios web, SEO y sistemas de marca para equipos de cualquier país.",
     see: "Ver proyectos reales",
     chips: [["Build exitoso", "prod · hace 2s"], ["Lighthouse 100", "perf · a11y · seo"], ["Publicada en App Store", "Lyapp · v1.1"]],
@@ -90,8 +90,10 @@ const scenes = [
     </a>
     <div class="hero2__cmd" aria-hidden="true"><span class="tk tk--p">$</span> <span data-hero-cmd data-text={c.cmd}>{c.cmd}</span><i class="hero2__caret"></i></div>
     <h1 class="hero2__h1" data-hero-h1>
-      <span class="hero2__l1" data-scramble>{c.h1a}</span>
-      <span class="hero2__l2 grad-text" data-scramble>{c.h1b}</span>
+      <span class="h1-tag" aria-hidden="true">&lt;h1&gt;</span>
+      <span class="hero2__l1" data-type>{c.h1a}</span>
+      <span class="hero2__l2 grad-text" data-compile data-code={c.code}>{c.h1b}</span>
+      <span class="h1-tag h1-tag--end" aria-hidden="true">&lt;/h1&gt;</span>
     </h1>
     <p class="lead" data-reveal style="--d:300ms">{c.lead}</p>
     <div class="hero__ctas" data-reveal style="--d:380ms">

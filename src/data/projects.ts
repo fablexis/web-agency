@@ -26,7 +26,7 @@ export type Project = {
 
 const testEnv: L = { en: "In staging", es: "En entorno de prueba" };
 
-export const projects: Project[] = [
+const list: Project[] = [
   {
     slug: "simply-andy",
     name: "Simply Andy",
@@ -176,9 +176,16 @@ export const projects: Project[] = [
   },
 ];
 
-export const upcoming = [
-  { name: { en: "Your e-commerce here", es: "Tu e-commerce aquí" }, category: { en: "Web · E-commerce", es: "Web · E-commerce" }, note: { en: "Booking now", es: "Agenda abierta" } },
-  { name: { en: "Project in progress", es: "Proyecto en desarrollo" }, category: { en: "SaaS platform", es: "Plataforma SaaS" }, note: { en: "Under NDA · coming soon", es: "Bajo NDA · próximamente" } },
+/** Display order: Lyapp, Simply Andy, Your English Buddy. */
+export const projects: Project[] = ["lyapp", "simply-andy", "your-english-buddy"].map((slug) => list.find((p) => p.slug === slug)!);
+
+/** "Your project here" card: one per filter, each with its own call to action. */
+export const ctaCards: { key: string; module: string; name: L; category: L; text: L; cta: L; note: L }[] = [
+  { key: "all", module: "", name: { en: "Your project here", es: "Tu proyecto aquí" }, category: { en: "App · Web · E-commerce · SaaS", es: "App · Web · E-commerce · SaaS" }, text: { en: "An e-commerce, a SaaS platform, an app or a brand system: this slot is still compiling. It could be yours.", es: "Un e-commerce, una plataforma SaaS, una app o un sistema de marca: este espacio se está compilando. Podría ser el tuyo." }, cta: { en: "Start a project", es: "Iniciar proyecto" }, note: { en: "Booking now", es: "Agenda abierta" } },
+  { key: "apps", module: "apps", name: { en: "Your app here", es: "Tu app aquí" }, category: { en: "Mobile apps", es: "Apps móviles" }, text: { en: "From idea to the App Store and Google Play, with the polish of Lyapp.", es: "De la idea a la App Store y Google Play, con el nivel de detalle de Lyapp." }, cta: { en: "Build my app", es: "Construir mi app" }, note: { en: "iOS · Android", es: "iOS · Android" } },
+  { key: "web", module: "web", name: { en: "Your website here", es: "Tu web aquí" }, category: { en: "Web development", es: "Desarrollo web" }, text: { en: "A fast website that turns visits into customers, from landing page to platform.", es: "Una web rápida que convierte visitas en clientes, de landing page a plataforma." }, cta: { en: "Launch my website", es: "Lanzar mi web" }, note: { en: "Landing · E-commerce · SaaS", es: "Landing · E-commerce · SaaS" } },
+  { key: "seo", module: "seo", name: { en: "Your rankings here", es: "Tu posicionamiento aquí" }, category: { en: "SEO & GEO", es: "SEO & GEO" }, text: { en: "Get found on Google and cited in AI answers. We start with a technical audit.", es: "Que te encuentren en Google y te citen las IA. Empezamos con una auditoría técnica." }, cta: { en: "Get an SEO audit", es: "Pedir auditoría SEO" }, note: { en: "Audit in 2 weeks", es: "Auditoría en 2 semanas" } },
+  { key: "branding", module: "branding", name: { en: "Your brand system here", es: "Tu sistema de marca aquí" }, category: { en: "Brand systems", es: "Sistemas de marca" }, text: { en: "A brand kit your team can actually use, like the one we built for Simply Andy.", es: "Un brand kit que tu equipo pueda usar de verdad, como el que hicimos para Simply Andy." }, cta: { en: "Build my brand kit", es: "Crear mi brand kit" }, note: { en: "3–5 weeks", es: "3–5 semanas" } },
 ];
 
 export const serviceNames: Record<string, L> = {

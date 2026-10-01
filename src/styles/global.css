@@ -1096,7 +1096,7 @@ a.svc { text-decoration: none; color: inherit; }
 .hero2__cmd { display: flex; justify-content: center; align-items: center; gap: 8px; margin: 4px 0 22px; font-family: var(--mono); font-size: clamp(12px, 1.4vw, 14px); color: var(--soft); min-height: 1.5em; }
 .hero2__caret, .hero2 .hero2__caret { display: inline-block; width: .55em; height: 1.1em; background: var(--cyan); vertical-align: -2px; animation: blink 1s steps(1) infinite; }
 .hero2__h1 { font-family: var(--display); font-weight: 700; font-size: clamp(46px, 8.6vw, 116px); line-height: .98; letter-spacing: -.045em; margin: 0 auto; }
-.hero2__h1 span { display: block; }
+.hero2__l1, .hero2__l2 { display: block; }
 .hero2__h1 [data-scramble] .gl { color: var(--cyan-2); opacity: .7; font-family: var(--mono); font-weight: 500; -webkit-text-fill-color: var(--cyan-2); }
 .hero2 .lead { margin: 26px auto 0; text-align: center; max-width: 54ch; }
 .hero2 .stage { margin-top: clamp(48px, 8vh, 80px); }
@@ -1317,3 +1317,51 @@ a.svc { text-decoration: none; color: inherit; }
 .nd-w { display: inline-flex; }
 .vsc__editor textarea { max-width: none !important; flex: 1 1 100% !important; }
 .nextdeploy__main { position: relative; z-index: 1; }
+
+/* ─────────────────────────────  Team: code-editor cards  ───────────────────────────── */
+.devs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+.dev { border-radius: 20px; border: 1px solid var(--line-2); background: #0b0e1c; overflow: hidden; box-shadow: 0 40px 90px -40px rgba(0, 0, 0, .9); transition: border-color .3s, transform .5s var(--ease); }
+.dev:hover { border-color: color-mix(in srgb, var(--fc) 55%, transparent); transform: translateY(-4px); }
+.dev__bar { display: flex; align-items: center; gap: 14px; padding: 11px 14px; background: #090b17; border-bottom: 1px solid var(--line); font-family: var(--mono); font-size: 12px; }
+.dev__file { display: inline-flex; gap: 7px; align-items: center; padding: 4px 10px; border-radius: 7px; background: var(--ed, #0d1020); color: var(--text); border-top: 2px solid var(--fc); }
+.dev__blame { margin-left: auto; color: var(--faint); }
+.dev__body { display: grid; grid-template-columns: minmax(0, .95fr) minmax(0, 1.05fr); }
+.dev__photo { position: relative; margin: 0; min-height: 440px; overflow: hidden; background: #000; border-right: 1px solid var(--line); }
+.dev__photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 18%; }
+.dev__photo canvas { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.dev__scan { position: absolute; left: 0; right: 0; top: 0; height: 2px; background: var(--fc); box-shadow: 0 0 18px 3px var(--fc); opacity: 0; pointer-events: none; }
+.dev__photo figcaption { position: absolute; left: 10px; bottom: 10px; padding: 3px 8px; border-radius: 6px; background: rgba(6, 7, 14, .75); font-family: var(--mono); font-size: 10.5px; color: var(--dim); }
+.dev__code { padding: 20px 20px 22px 18px; font-family: var(--mono); font-size: 13px; line-height: 1.9; color: #c7cee6; counter-reset: dl; min-width: 0; }
+.dl { position: relative; padding-left: 30px; counter-increment: dl; }
+.dl::before { content: counter(dl); position: absolute; left: 0; width: 18px; text-align: right; color: #3b4266; font-size: 11.5px; }
+.dl--in { padding-left: 48px; }
+.dev__code .k { color: #c792ea; } .dev__code .v { color: var(--fc); } .dev__code .p { color: #82aaff; } .dev__code .s { color: #c3e88d; }
+.dev__name { display: inline; white-space: nowrap; font-family: var(--display); font-size: clamp(18px, 1.6vw, 22px); font-weight: 700; letter-spacing: -.5px; color: #c3e88d; }
+.dl--wrap { display: block; }
+.dev__chip { display: inline-block; margin-right: 6px; color: #c3e88d; }
+.dl--bio p { display: inline; font-family: var(--body); font-size: 14px; line-height: 1.65; color: var(--muted); }
+@media (max-width: 1100px) { .devs { grid-template-columns: 1fr; } }
+@media (max-width: 560px) { .dev__body { grid-template-columns: 1fr; } .dev__photo { border-right: 0; border-bottom: 1px solid var(--line); min-height: 0; aspect-ratio: 1; } .dev__blame { display: none; } }
+.build[hidden] { display: none !important; }
+.build__btn { align-self: flex-start; margin-top: auto; }
+.build__body p { margin-bottom: 18px; }
+.build--wide { grid-template-columns: 260px 1fr; min-height: 220px; }
+.build--wide .build__body { justify-content: center; padding: 30px 34px; }
+.build--wide h3 { font-size: clamp(24px, 3vw, 34px); }
+
+/* Hero headline: typed, then compiled */
+.hero2__h1 { position: relative; display: inline-block; padding: 0 .35em; }
+.h1-tag { position: absolute; left: -.2em; top: -.15em; font-family: var(--mono); font-size: clamp(12px, 1.2vw, 15px); font-weight: 500; letter-spacing: 0; color: #c792ea; opacity: .75; }
+.h1-tag--end { left: auto; top: auto; right: -.4em; bottom: -.1em; }
+.hero2__l1, .hero2__l2 { min-height: 1em; }
+.is-typing .tl-ch { opacity: 0; }
+.tl-ch.is-on { opacity: 1; }
+.tl-ch.is-cur { box-shadow: .08em 0 0 0 var(--cyan); }
+.hero2__l2.is-code { font-family: var(--mono); font-weight: 500; font-size: .62em; letter-spacing: -.02em; line-height: 1.6; background: none; -webkit-text-fill-color: #7fe7ff; color: #7fe7ff; }
+.hero2__l2.is-code::after { content: ""; display: inline-block; width: .5em; height: .9em; margin-left: .06em; vertical-align: -.08em; background: var(--cyan); animation: blink .6s steps(1) infinite; }
+.hero2__l2 .tl-ch { display: inline-block; white-space: pre; background-image: var(--grad-text); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+.tl-ch.is-flip { animation: compileIn .5s cubic-bezier(.3, 1.4, .5, 1) both; animation-delay: calc(var(--i) * 22ms); }
+@keyframes compileIn { 0% { transform: translateY(.35em) rotateX(90deg); opacity: 0; filter: blur(4px); } 60% { opacity: 1; } 100% { transform: none; opacity: 1; filter: none; } }
+.hero2__h1.is-compiled .h1-tag { animation: tagPulse .8s ease 1; }
+@keyframes tagPulse { 50% { opacity: 1; color: var(--cyan); } }
+@media (max-width: 640px) { .h1-tag { display: none; } .hero2__h1 { padding: 0; } }

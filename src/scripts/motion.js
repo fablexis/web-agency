@@ -464,7 +464,13 @@ $$("[data-filters]").forEach((filters) => {
     $$("[data-cat]", scope).forEach((el) => {
       if (el === filters) return;
       const cats = el.dataset.cat.split(" ");
-      el.classList.toggle("is-hidden", !all && !cats.includes(cat) && !(el.dataset.cat === "upcoming"));
+      el.classList.toggle("is-hidden", !all && !cats.includes(cat));
+    });
+    // one "your project here" card per filter, each with its own CTA
+    $$("[data-cta]", scope).forEach((el) => {
+      const show = el.dataset.cta === (all ? "todos" : cat);
+      el.hidden = !show;
+      if (show) el.classList.add("is-in");
     });
   });
 });
@@ -474,7 +480,7 @@ const loader = $("#loader");
 if (loader && !document.documentElement.classList.contains("no-loader")) {
   const pct = $("#loader-pct");
   const t0 = performance.now();
-  const MIN = 1700;
+  const MIN = 1300;
   let loaded = document.readyState === "complete";
   addEventListener("load", () => (loaded = true), { once: true });
   const step = (now) => {
