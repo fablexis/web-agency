@@ -1,64 +1,49 @@
 ---
-interface Props {
-  more?: boolean;
-}
-const { more = false } = Astro.props;
+import { services } from "../data/services";
+
+const base = import.meta.env.BASE_URL.replace(/\/?$/, "/");
+const by = Object.fromEntries(services.map((s) => [s.id, s]));
+const layout = [
+  { id: "web", size: "wide" },
+  { id: "apps", size: "narrow" },
+  { id: "seo", size: "half" },
+  { id: "branding", size: "half" },
+];
+const brandSwatches = ["#45E0FF", "#9B6BFF", "#3B6BFF", "#4BE3A0", "#E9E2D0", "#864C24", "#E8805A", "#185C60"];
 ---
 
 <div class="bento">
-  <article class="card svc svc--wide" data-reveal data-spotlight>
-    <div class="svc__ic ic-cyan"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"></circle><path d="M3 12h18"></path><path d="M12 3a14 14 0 0 1 0 18a14 14 0 0 1 0-18z"></path></svg></div>
-    <h3>Desarrollo Web</h3>
-    <p>Sitios y aplicaciones web rápidas, escalables y a medida. Desde landing pages que convierten hasta plataformas complejas con arquitecturas modernas.</p>
-    <div class="tags"><span class="tag">React / Next.js</span><span class="tag">E-commerce</span><span class="tag">Plataformas SaaS</span></div>
-    <div class="svc__viz"><div class="code" data-code aria-hidden="true"></div></div>
-  </article>
-  <article class="card svc svc--narrow" data-reveal data-spotlight style="--d:80ms">
-    <div class="svc__ic ic-violet"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="6" y="2.5" width="12" height="19" rx="2.5"></rect><line x1="10.5" y1="18.5" x2="13.5" y2="18.5"></line></svg></div>
-    <h3>Apps Móviles</h3>
-    <p>Aplicaciones iOS y Android nativas y multiplataforma con experiencias fluidas que tus usuarios amarán.</p>
-    <div class="svc__viz"><div class="mini-phone" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div></div>
-  </article>
-  <article class="card svc svc--half" data-reveal data-spotlight>
-    <div class="svc__ic ic-blue"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"></circle><line x1="21" y1="21" x2="15.3" y2="15.3"></line><polyline points="7.8 11.5 9.8 9 11.8 11 13.3 8.3"></polyline></svg></div>
-    <h3>SEO &amp; Posicionamiento</h3>
-    <p>Auditorías técnicas, contenido optimizado y link building para escalar posiciones en Google de forma sostenible.</p>
-    <div class="svc__viz">
-      <div class="ranks" data-ranks aria-hidden="true">
-        <div class="rank"><b>1</b>competidor-a.com</div>
-        <div class="rank"><b>2</b>competidor-b.com</div>
-        <div class="rank"><b>3</b>directorio.com</div>
-        <div class="rank is-you"><b>4</b>tu-marca.com</div>
-      </div>
-    </div>
-  </article>
-  <article class="card svc svc--half" data-reveal data-spotlight style="--d:80ms">
-    <div class="svc__ic ic-violet"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"></circle><polygon points="15.5 8.5 11 11 8.5 15.5 13 13 15.5 8.5"></polygon></svg></div>
-    <h3>Estrategia de Presencia Digital</h3>
-    <p>Branding, analítica, redes y embudos de conversión. Una hoja de ruta clara para que cada acción digital sume al crecimiento.</p>
-    <div class="svc__viz">
-      <div class="funnel" aria-hidden="true">
-        <div style="height:100%"><span>10K</span></div><div style="height:78%"><span>6.2K</span></div><div style="height:60%"><span>3.1K</span></div><div style="height:44%"><span>1.4K</span></div><div style="height:30%"><span>620</span></div><div style="height:22%"><span>240</span></div>
-      </div>
-    </div>
-  </article>
-  {more && (
-    <>
-      <article class="card svc svc--third" data-reveal data-spotlight>
-        <div class="svc__ic ic-green"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 3l2.5 5.5L20 11l-5.5 2.5L12 19l-2.5-5.5L4 11l5.5-2.5z"></path></svg></div>
-        <h3>Producto con IA</h3>
-        <p>Asistentes, búsqueda inteligente y automatizaciones integradas en tu producto, con foco en utilidad real.</p>
-      </article>
-      <article class="card svc svc--third" data-reveal data-spotlight style="--d:80ms">
-        <div class="svc__ic ic-cyan"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1.5"></rect><rect x="14" y="3" width="7" height="7" rx="1.5"></rect><rect x="3" y="14" width="7" height="7" rx="1.5"></rect><rect x="14" y="14" width="7" height="7" rx="1.5"></rect></svg></div>
-        <h3>Design Systems</h3>
-        <p>Librerías de componentes y guías de marca que mantienen tu producto consistente mientras crece.</p>
-      </article>
-      <article class="card svc svc--third" data-reveal data-spotlight style="--d:160ms">
-        <div class="svc__ic ic-blue"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M21 12a9 9 0 1 1-3-6.7"></path><polyline points="21 3 21 9 15 9"></polyline></svg></div>
-        <h3>Soporte y evolución</h3>
-        <p>Planes mensuales de mantenimiento, mejoras continuas y monitoreo para que nada se detenga.</p>
-      </article>
-    </>
-  )}
+  {layout.map(({ id, size }, i) => {
+    const s = by[id];
+    return (
+      <a href={`${base}soluciones/#${s.id}`} class={`card svc svc--${size}`} data-reveal data-spotlight style={`--d:${(i % 2) * 80}ms`}>
+        <div class="svc__head">
+          <div class={`svc__ic ic-${s.tone}`}><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" set:html={s.icon}></svg></div>
+          <span class="svc__file">{s.file}</span>
+        </div>
+        <h3>{s.name}</h3>
+        <p>{s.lead}</p>
+        <div class="tags">{s.stack.slice(0, 3).map((t) => <span class="tag">{t}</span>)}</div>
+        <div class="svc__viz" aria-hidden="true">
+          {s.viz === "code" && <div class="code" data-code></div>}
+          {s.viz === "phone" && <div class="mini-phone"><i></i><i></i><i></i><i></i><i></i></div>}
+          {s.viz === "ranks" && (
+            <div class="ranks" data-ranks>
+              <div class="rank"><b>1</b>competidor-a.com</div>
+              <div class="rank"><b>2</b>competidor-b.com</div>
+              <div class="rank"><b>3</b>directorio.com</div>
+              <div class="rank is-you"><b>4</b>tu-marca.com</div>
+            </div>
+          )}
+          {s.viz === "palette" && (
+            <div class="swatches" data-swatches>
+              {brandSwatches.map((c) => <i style={`--sw:${c}`} data-hex={c}></i>)}
+              <code class="swatches__token">--brand-accent: <b>#45E0FF</b>;</code>
+            </div>
+          )}
+        </div>
+        <span class="svc__more">Explorar {s.name.toLowerCase()} <span>→</span></span>
+      </a>
+    );
+  })}
 </div>

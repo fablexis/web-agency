@@ -1,29 +1,47 @@
 ---
 import Base from "../layouts/Base.astro";
 import ServicesBento from "../components/ServicesBento.astro";
-import CaseCards from "../components/CaseCards.astro";
+import Testimonials from "../components/Testimonials.astro";
+import AndyEffect from "../components/AndyEffect.astro";
+import BuddyEffect from "../components/BuddyEffect.astro";
+import LyappScrolly from "../components/LyappScrolly.astro";
+import BuildingCard from "../components/BuildingCard.astro";
 import PostCard from "../components/PostCard.astro";
 import Cta from "../components/Cta.astro";
-import { tech, posts } from "../data/site";
+import { site, tech, posts } from "../data/site";
+import { projects, upcoming } from "../data/projects";
 
 const base = import.meta.env.BASE_URL.replace(/\/?$/, "/");
-const sparks = [30, 45, 38, 60, 52, 74, 66, 88, 80, 96];
+const andy = projects.find((p) => p.slug === "simply-andy")!;
+const buddy = projects.find((p) => p.slug === "your-english-buddy")!;
+const schema = [
+  {
+    "@type": "ItemList",
+    name: "Proyectos de Forklia",
+    itemListElement: projects.map((p, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      url: new URL(`proyectos/${p.slug}/`, site.url).href,
+      name: p.name,
+    })),
+  },
+];
 ---
 
-<Base>
+<Base schema={schema} fonts="&family=Playfair+Display:wght@500;600&family=Archivo:wght@700&family=DM+Mono">
   <!-- ═════════════ HERO ═════════════ -->
   <header class="hero" id="top">
-    <a href={`${base}nosotros/`} class="badge" data-reveal>
+    <a href={`${base}proyectos/lyapp/`} class="badge" data-reveal>
       <span class="badge__tag"><span class="dot"></span>Nuevo</span>
-      Conoce al equipo detrás de Forklia →
+      Lyapp ya está en la App Store →
     </a>
     <h1 data-split>Construimos productos digitales que <span class="grad-text">crecen contigo</span></h1>
     <p class="lead" data-reveal style="--d:200ms">
       Diseñamos y desarrollamos sitios web, apps móviles y estrategias de posicionamiento que llevan a tu marca a lo más alto de los buscadores y al corazón de tus clientes.
     </p>
     <div class="hero__ctas" data-reveal style="--d:300ms">
-      <a href="#contacto" class="btn btn--primary" data-magnetic>Iniciar proyecto <span class="arrow">→</span></a>
-      <a href={`${base}casos/`} class="btn btn--ghost" data-magnetic>Ver casos de éxito</a>
+      <a href={`${base}cotizar/`} class="btn btn--primary" data-magnetic>Iniciar proyecto <span class="arrow">→</span></a>
+      <a href="#proyectos" class="btn btn--ghost" data-magnetic>Ver proyectos reales</a>
     </div>
     <div data-reveal style="--d:380ms">
       <div class="cli">
@@ -92,134 +110,113 @@ const sparks = [30, 45, 38, 60, 52, 74, 66, 88, 80, 96];
     </div>
 
     <div class="stats" data-reveal>
-      <div class="stat"><strong class="grad-text"><span data-count="120" data-suffix="+">0</span></strong><span>Proyectos entregados</span></div>
+      <div class="stat"><strong class="grad-text"><span data-count="48" data-suffix="h">0</span></strong><span>Para recibir tu propuesta</span></div>
       <div class="sep"></div>
-      <div class="stat"><strong class="grad-text"><span data-count="3" data-suffix="x">0</span></strong><span>Tráfico orgánico promedio</span></div>
+      <div class="stat"><strong class="grad-text"><span data-count="100" data-suffix="%">0</span></strong><span>Remoto, desde cualquier país</span></div>
       <div class="sep"></div>
-      <div class="stat"><strong class="grad-text"><span data-count="98" data-suffix="%">0</span></strong><span>Clientes que repiten</span></div>
+      <div class="stat"><strong class="grad-text">ES · EN</strong><span>Trabajamos en tu idioma</span></div>
     </div>
   </header>
 
-  <div class="marquee" style="margin-top: clamp(64px, 10vh, 110px);" aria-label="Tecnologías">
+  <div class="marquee" style="margin-top: clamp(64px, 10vh, 110px);" aria-label="Tecnologías que usamos">
     <div class="marquee__track">
       {[...tech, ...tech].map((t, i) => <span aria-hidden={i >= tech.length ? "true" : undefined}>{t}</span>)}
     </div>
   </div>
 
-  <!-- ═════════════ SERVICIOS ═════════════ -->
-  <section id="servicios" class="section">
+  <!-- ═════════════ TESTIMONIOS ═════════════ -->
+  <section class="section" id="testimonios" aria-labelledby="t-title">
+    <div class="wrap">
+      <div class="section-head">
+        <div class="eyebrow eyebrow--violet" data-reveal>// lo que dicen</div>
+        <h2 class="h2" id="t-title" data-split>Personas reales, productos reales</h2>
+      </div>
+    </div>
+    <Testimonials />
+  </section>
+
+  <!-- ═════════════ SUPERPODERES ═════════════ -->
+  <section id="superpoderes" class="section" style="padding-top: 0;" aria-labelledby="s-title">
     <div class="wrap">
       <div class="section-head section-head--row">
         <div style="max-width: 640px;">
-          <div class="eyebrow" data-reveal>Servicios</div>
-          <h2 class="h2" data-split>Todo lo que tu marca necesita para dominar lo digital</h2>
+          <div class="eyebrow" data-reveal>// superpoderes</div>
+          <h2 class="h2" id="s-title" data-split>Cuatro formas de hacer crecer tu marca</h2>
         </div>
-        <a href={`${base}servicios/`} class="link-arrow" data-reveal>Servicios y proceso <span>→</span></a>
+        <a href={`${base}soluciones/`} class="link-arrow" data-reveal>Ver cada superpoder <span>→</span></a>
       </div>
       <ServicesBento />
     </div>
   </section>
 
-  <!-- ═════════════ APPS (scrolly estilo The Tie) ═════════════ -->
-  <section class="scrolly" id="apps" data-scrolly>
-    <div class="scrolly__sticky">
-      <div class="scrolly__grid">
-        <div class="scrolly__steps">
-          <div class="eyebrow" style="position:absolute; top:-56px;">Apps · Producto</div>
-          <div class="sstep is-active">
-            <h3>Interfaces que se <span class="grad-text">sienten vivas</span></h3>
-            <p>Diseñamos apps con ritmo: estados claros, transiciones con intención y detalles que hacen que tus usuarios vuelvan cada día.</p>
-          </div>
-          <div class="sstep">
-            <h3>Tiempo real, <span class="grad-text">sin fricción</span></h3>
-            <p>Mensajería, notificaciones y colaboración en vivo. Arquitecturas que responden en milisegundos, en cualquier dispositivo.</p>
-          </div>
-          <div class="sstep">
-            <h3>Datos que <span class="grad-text">cuentan historias</span></h3>
-            <p>Dashboards y analítica integrados para que cada decisión de producto esté respaldada por lo que tus usuarios realmente hacen.</p>
-          </div>
-          <div class="scrolly__dots"><i class="is-on"></i><i></i><i></i></div>
+  <!-- ═════════════ EN PRODUCCIÓN ═════════════ -->
+  <section id="proyectos" class="section" style="padding-bottom: 0;" aria-labelledby="p-title">
+    <div class="wrap">
+      <div class="section-head section-head--row">
+        <div style="max-width: 640px;">
+          <div class="eyebrow" data-reveal>// en producción</div>
+          <h2 class="h2" id="p-title" data-split>Proyectos reales, cada uno con su propio pulso</h2>
+          <p class="lead" data-reveal style="--d:120ms">Interactúa con ellos: cada proyecto se presenta con un efecto de su propio mundo.</p>
         </div>
+        <a href={`${base}proyectos/`} class="link-arrow" data-reveal>Todos los proyectos <span>→</span></a>
+      </div>
 
-        <div class="phone-wrap">
-          <div class="phone" id="phone">
-            <div class="phone__screen">
-              <div class="phone__notch"></div>
-              <div class="phone__status"><span>9:41</span><span>●●● 100%</span></div>
-              <div class="screen is-active" data-screen="0">
-                <h6>Mensajes</h6>
-                <div class="search">⌕  Buscar personas, equipos…</div>
-                <div class="convo"><span class="av av--on" style="background:linear-gradient(120deg,#45E0FF,#9B6BFF)">NS</span><span><b>Nova Studio</b><small>¡El prototipo quedó increíble! 🚀</small></span><em>3</em></div>
-                <div class="convo"><span class="av av--on" style="background:linear-gradient(120deg,#9B6BFF,#3B6BFF)">LR</span><span><b>Lucía R.</b><small>Te comparto el brief actualizado</small></span><em>1</em></div>
-                <div class="convo"><span class="av" style="background:linear-gradient(120deg,#4BE3A0,#45E0FF)">EQ</span><span><b>Equipo Growth</b><small>Métricas de la semana listas 📈</small></span></div>
-                <div class="convo"><span class="av" style="background:linear-gradient(120deg,#3B6BFF,#45E0FF)">MK</span><span><b>Marco K.</b><small>¿Agendamos demo el jueves?</small></span></div>
-                <div class="convo"><span class="av av--on" style="background:linear-gradient(120deg,#B58CFF,#45E0FF)">AI</span><span><b>Asistente</b><small>Resumí 14 mensajes nuevos</small></span></div>
-              </div>
-              <div class="screen" data-screen="1">
-                <div class="chat-head"><span class="av av--on" style="background:linear-gradient(120deg,#45E0FF,#9B6BFF)">NS</span><span><b>Nova Studio</b><small>● en línea</small></span></div>
-                <div class="chat" id="chat"></div>
-                <div class="composer"><span>Escribe un mensaje…</span><i>↑</i></div>
-              </div>
-              <div class="screen" data-screen="2">
-                <h6>Resumen</h6>
-                <div class="ring">
-                  <svg viewBox="0 0 150 150" aria-hidden="true"><defs><linearGradient id="rg"><stop offset="0" stop-color="#45E0FF" /><stop offset="1" stop-color="#9B6BFF" /></linearGradient></defs><circle class="track" cx="75" cy="75" r="64"></circle><circle class="val" cx="75" cy="75" r="64"></circle></svg>
-                  <div><strong>78%</strong><small>retención D30</small></div>
-                </div>
-                <div class="mini-stats">
-                  <div><b>24.8K</b><small>usuarios activos</small></div>
-                  <div><b>4.9★</b><small>App Store</small></div>
-                </div>
-                <div class="spark">{sparks.map((h, i) => <i style={`--i:${i};--h:${h}%`}></i>)}</div>
-              </div>
-              <div class="tabbar"><i class="is-on"></i><i></i><i></i><i></i></div>
-            </div>
+      <article class="feat" aria-labelledby="feat-andy">
+        <div class="feat__copy" data-reveal>
+          <div class="proj-tag"><span class="proj-tag__sq" style="--sq:#864C24"></span><span>{andy.category}</span><em>{andy.status}</em></div>
+          <h3 id="feat-andy">{andy.name}: una marca con la que se puede <span class="andy-grad">jugar</span></h3>
+          <p>{andy.summary}</p>
+          <ul class="feat__list">
+            <li>Paleta de 7 colores con nombre y rol</li>
+            <li>Logo en 3 fondos aprobados</li>
+            <li>Generador de firma de correo</li>
+          </ul>
+          <div class="feat__ctas">
+            <a href={`${base}proyectos/${andy.slug}/`} class="btn btn--ghost btn--sm" data-magnetic>Ver el caso <span class="arrow">→</span></a>
+            <span class="feat__try">prueba los colores →</span>
           </div>
         </div>
+        <div data-reveal style="--d:120ms"><AndyEffect /></div>
+      </article>
 
-        <div class="side-cards">
-          <div class="scard">
-            <header><span class="av av--on" style="background:linear-gradient(120deg,#9B6BFF,#45E0FF)">NS</span><span><b>Nova Studio ✓</b><small>Perfil verificado</small></span></header>
-            <p>Equipo de 12 · Plan Pro · Activo hace 1 min</p>
-            <div class="pill-row"><span>Diseño</span><span>Producto</span><span>Brand</span></div>
-          </div>
-          <div class="scard">
-            <header><span class="float-chip__ic ic-cyan">🔔</span><span><b>Nueva mención</b><small>#lanzamiento · ahora</small></span></header>
-            <p>“@equipo el build de producción ya está listo para revisión.”</p>
-          </div>
-          <div class="scard">
-            <header><span class="float-chip__ic ic-green">⚡</span><span><b>Rendimiento</b><small>p95 · últimas 24h</small></span></header>
-            <p>60 fps constantes · 120 ms de latencia media</p>
-            <div class="meter" style="--w:92%"><i></i></div>
+      <article class="feat feat--rev" aria-labelledby="feat-buddy">
+        <div class="feat__copy" data-reveal>
+          <div class="proj-tag"><span class="proj-tag__sq" style="--sq:#185C60"></span><span>{buddy.category}</span><em>{buddy.status}</em></div>
+          <h3 id="feat-buddy">{buddy.name}: inglés para la <span class="buddy-grad">vida real</span></h3>
+          <p>{buddy.summary}</p>
+          <ul class="feat__list">
+            <li>Recorrido hacia la clase diagnóstica</li>
+            <li>Historias reales de estudiantes</li>
+            <li>Conversión directa por WhatsApp</li>
+          </ul>
+          <div class="feat__ctas">
+            <a href={`${base}proyectos/${buddy.slug}/`} class="btn btn--ghost btn--sm" data-magnetic>Ver el caso <span class="arrow">→</span></a>
           </div>
         </div>
+        <div data-reveal style="--d:120ms"><BuddyEffect /></div>
+      </article>
+    </div>
+  </section>
+
+  <LyappScrolly />
+
+  <section class="section" style="padding-top: clamp(24px, 4vh, 48px);" aria-label="Próximos proyectos">
+    <div class="wrap">
+      <div class="upcoming">
+        {upcoming.map((u, i) => <BuildingCard name={u.name} category={u.category} note={u.note} delay={i * 100} />)}
       </div>
     </div>
   </section>
 
-  <!-- ═════════════ CASOS ═════════════ -->
-  <section id="casos" class="section">
+  <!-- ═════════════ BITÁCORA ═════════════ -->
+  <section id="bitacora" class="section" style="padding-top: 0;" aria-labelledby="b-title">
     <div class="wrap">
       <div class="section-head section-head--row">
         <div style="max-width: 580px;">
-          <div class="eyebrow" data-reveal>Casos de éxito</div>
-          <h2 class="h2" data-split>Resultados que hablan por sí solos</h2>
+          <div class="eyebrow" data-reveal>// bitácora</div>
+          <h2 class="h2" id="b-title" data-split>Lo que aprendemos construyendo</h2>
         </div>
-        <a href={`${base}casos/`} class="link-arrow" data-reveal>Todos los casos <span>→</span></a>
-      </div>
-      <CaseCards limit={3} />
-    </div>
-  </section>
-
-  <!-- ═════════════ BLOG ═════════════ -->
-  <section id="blog" class="section" style="padding-top: 0;">
-    <div class="wrap">
-      <div class="section-head section-head--row">
-        <div style="max-width: 580px;">
-          <div class="eyebrow" data-reveal>Blog</div>
-          <h2 class="h2" data-split>Ideas, guías y aprendizajes</h2>
-        </div>
-        <a href={`${base}blog/`} class="link-arrow" data-reveal>Ver todos los artículos <span>→</span></a>
+        <a href={`${base}blog/`} class="link-arrow" data-reveal>Toda la bitácora <span>→</span></a>
       </div>
       <div class="posts">
         {posts.slice(0, 3).map((p, i) => <PostCard post={p} delay={i * 90} />)}

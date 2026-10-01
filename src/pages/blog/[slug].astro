@@ -13,10 +13,27 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, "/");
 const related = posts.filter((p) => p.slug !== post.slug).slice(0, 3);
 ---
 
-<Base title={`${post.title} — Blog Forklia`} description={post.excerpt}>
+<Base
+  title={`${post.title} | Bitácora Forklia`}
+  description={post.excerpt}
+  type="article"
+  noindex={post.placeholder}
+  breadcrumbs={[{ name: "Bitácora", path: "blog/" }, { name: post.title, path: `blog/${post.slug}/` }]}
+  schema={[
+    {
+      "@type": "BlogPosting",
+      headline: post.title,
+      description: post.excerpt,
+      datePublished: post.date,
+      author: { "@type": "Person", name: post.author },
+      publisher: { "@id": "https://fablexis.github.io/web-agency/#organization" },
+      inLanguage: "es",
+    },
+  ]}
+>
   <article class="section">
     <div class="wrap article">
-      <a href={`${base}blog/`} class="back" data-reveal>← Volver al blog</a>
+      <a href={`${base}blog/`} class="back" data-reveal>← Volver a la bitácora</a>
       <div class="post__meta" style="margin-top: 28px;" data-reveal><span class="cat">{post.category}</span><span>{formatDate(post.date)}</span><span>· {post.readTime} de lectura</span></div>
       <h1 data-split>{post.title}</h1>
       <p class="lead" data-reveal>{post.excerpt}</p>

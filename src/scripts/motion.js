@@ -221,29 +221,27 @@ if (feed) {
 }
 
 /* ───────── Services: code typing, ranks climbing ───────── */
-const code = $("[data-code]");
-if (code) {
-  const src = [
-    ['<span class="c">// app/page.tsx</span>', ""],
-    ['<span class="k">export default async function</span> <span class="f">Home</span>() {', ""],
-    ['  <span class="k">const</span> data = <span class="k">await</span> <span class="f">getProducts</span>()', ""],
-    ['  <span class="k">return</span> &lt;<span class="f">Store</span> items={data} seo=<span class="s">"optimizado"</span> /&gt;', ""],
-    ["}", ""],
-  ];
-  code.innerHTML = reduced ? src.map((l) => l[0]).join("\n") : "";
+const codeSrc = [
+  '<span class="c">// app/page.tsx</span>',
+  '<span class="k">export default async function</span> <span class="f">Home</span>() {',
+  '  <span class="k">const</span> data = <span class="k">await</span> <span class="f">getProducts</span>()',
+  '  <span class="k">return</span> &lt;<span class="f">Store</span> items={data} seo=<span class="s">"optimizado"</span> /&gt;',
+  "}",
+];
+$$("[data-code]").forEach((code) => {
+  code.innerHTML = reduced ? codeSrc.join("\n") : "";
   whenVisible(code, async () => {
     if (reduced) return;
     let html = "";
-    for (const [line] of src) {
+    for (const line of codeSrc) {
       html += line + "\n";
       code.innerHTML = html + '<span class="caret"></span>';
       await wait(420);
     }
   });
-}
+});
 
-const ranks = $("[data-ranks]");
-if (ranks) {
+$$("[data-ranks]").forEach((ranks) => {
   const climb = async () => {
     for (;;) {
       const you = $(".is-you", ranks);
@@ -263,7 +261,7 @@ if (ranks) {
     }
   };
   whenVisible(ranks, () => (reduced ? null : setTimeout(climb, 700)));
-}
+});
 
 /* ───────── Process tabs (autoplay with progress) ───────── */
 const proc = $("[data-proc]");
@@ -413,7 +411,9 @@ function scrollyUpdate() {
     phone.style.setProperty("--ps", `${0.88 + e * 0.12}`);
   }
 
-  const step = p < 0.34 ? 0 : p < 0.67 ? 1 : 2;
+  const nSteps = $$(".sstep", scrolly).length || 1;
+  const step = Math.min(nSteps - 1, Math.floor(p * nSteps));
+  if (phone.classList.contains("phone--ly")) setTiming(p > 0.02);
   if (step === scrollyStep) return;
   scrollyStep = step;
   $$(".sstep", scrolly).forEach((s, i) => s.classList.toggle("is-active", i === step));
@@ -421,7 +421,24 @@ function scrollyUpdate() {
   $$(".screen", scrolly).forEach((s, i) => { s.classList.toggle("is-active", i === step); s.classList.toggle("is-past", i < step); });
   $$(".tabbar i", scrolly).forEach((d, i) => d.classList.toggle("is-on", i === step));
   $$(".scard", scrolly).forEach((c, i) => c.classList.toggle("is-on", i <= step));
-  if (step === 1) playChat();
+  if (step === 1 && chat) playChat();
+}
+
+/* Lyapp: live sleep timer in the Dynamic Island */
+const timers = $$("[data-timer]");
+let timerStart = 0, timerRaf = 0;
+function setTiming(on) {
+  phone.classList.toggle("is-timing", on || timerRaf !== 0);
+  if (!timers.length || reduced || timerRaf) return;
+  if (!on) return;
+  timerStart = performance.now() - 754000;
+  const tick = (now) => {
+    const sec = Math.floor((now - timerStart) / 1000);
+    const txt = `${Math.floor(sec / 60)}:${String(sec % 60).padStart(2, "0")}`;
+    timers.forEach((t) => (t.textContent = txt));
+    timerRaf = requestAnimationFrame(tick);
+  };
+  timerRaf = requestAnimationFrame(tick);
 }
 
 /* ───────── Manifesto word highlight ───────── */
@@ -435,16 +452,253 @@ function manifestoUpdate() {
   mWords.forEach((w, i) => w.classList.toggle("is-lit", i < lit));
 }
 
-/* ───────── Blog filters ───────── */
-const filters = $("[data-filters]");
-if (filters) {
+/* ───────── Filters (blog + projects) ───────── */
+$$("[data-filters]").forEach((filters) => {
+  const scope = filters.closest("section") || document;
   filters.addEventListener("click", (e) => {
     const btn = e.target.closest("[data-filter]");
     if (!btn) return;
     const cat = btn.dataset.filter;
+    const all = cat === "Todos" || cat === "todos";
     $$("button", filters).forEach((b) => { b.classList.toggle("is-on", b === btn); b.setAttribute("aria-pressed", String(b === btn)); });
-    $$(".post[data-cat]").forEach((p) => p.classList.toggle("is-hidden", cat !== "Todos" && p.dataset.cat !== cat));
+    $$("[data-cat]", scope).forEach((el) => {
+      if (el === filters) return;
+      const cats = el.dataset.cat.split(" ");
+      el.classList.toggle("is-hidden", !all && !cats.includes(cat) && !(el.dataset.cat === "upcoming"));
+    });
   });
+});
+
+/* ───────── Tetris loader ───────── */
+const loader = $("#loader");
+if (loader && !document.documentElement.classList.contains("no-loader")) {
+  const pct = $("#loader-pct");
+  const t0 = performance.now();
+  const MIN = 1700;
+  let loaded = document.readyState === "complete";
+  addEventListener("load", () => (loaded = true), { once: true });
+  const step = (now) => {
+    const el = now - t0;
+    const p = Math.min(1, el / MIN) * (loaded ? 1 : 0.92);
+    if (pct) pct.textContent = `${Math.round(p * 100)}%`;
+    if ((el >= MIN && loaded) || el > 3200) {
+      if (pct) pct.textContent = "100%";
+      loader.classList.add("is-done");
+      setTimeout(() => loader.remove(), 700);
+      return;
+    }
+    requestAnimationFrame(step);
+  };
+  requestAnimationFrame(step);
+}
+
+/* ───────── Command palette (⌘K) ───────── */
+const pal = $("#palette");
+if (pal) {
+  const input = $("input", pal);
+  const items = $$("li", pal);
+  let sel = 0;
+  const visible = () => items.filter((li) => !li.hidden);
+  const mark = () => visible().forEach((li, i) => { li.classList.toggle("is-sel", i === sel); if (i === sel) li.scrollIntoView({ block: "nearest" }); });
+  const open = () => { pal.hidden = false; input.value = ""; filter(); input.focus(); document.body.style.overflow = "hidden"; };
+  const close = () => { pal.hidden = true; document.body.style.overflow = ""; };
+  const filter = () => {
+    const q = input.value.trim().toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
+    items.forEach((li) => (li.hidden = q && !li.dataset.search.normalize("NFD").replace(/[̀-ͯ]/g, "").includes(q)));
+    sel = 0; mark();
+  };
+  const go = (li) => {
+    if (!li) return;
+    const href = li.dataset.href;
+    if (href.startsWith("copy:")) {
+      navigator.clipboard?.writeText(href.slice(5));
+      $("b", li).textContent = "✓ Correo copiado";
+      setTimeout(close, 700);
+      return;
+    }
+    close();
+    location.href = href;
+  };
+  input.addEventListener("input", filter);
+  pal.addEventListener("click", (e) => { if (e.target === pal) close(); const li = e.target.closest("li"); if (li) go(li); });
+  pal.addEventListener("keydown", (e) => {
+    const v = visible();
+    if (e.key === "ArrowDown") { e.preventDefault(); sel = (sel + 1) % v.length; mark(); }
+    if (e.key === "ArrowUp") { e.preventDefault(); sel = (sel - 1 + v.length) % v.length; mark(); }
+    if (e.key === "Enter") { e.preventDefault(); go(v[sel]); }
+    if (e.key === "Escape") close();
+  });
+  addEventListener("keydown", (e) => {
+    if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") { e.preventDefault(); pal.hidden ? open() : close(); }
+  });
+  $$("[data-palette-open]").forEach((b) => b.addEventListener("click", open));
+}
+
+/* ───────── Brand swatches (tetris shuffle) ───────── */
+$$("[data-swatches]").forEach((box) => {
+  const token = $(".swatches__token b", box);
+  const pick = (sw) => { $$("i", box).forEach((x) => x.classList.toggle("is-pick", x === sw)); token.textContent = sw.dataset.hex; };
+  box.addEventListener("click", (e) => { const sw = e.target.closest("i"); if (sw) pick(sw); });
+  if (reduced) return;
+  let timer = 0;
+  const shuffle = () => {
+    const sw = $$("i", box);
+    const before = new Map(sw.map((el) => [el, el.getBoundingClientRect()]));
+    const a = sw[Math.floor(Math.random() * sw.length)];
+    const b = sw[Math.floor(Math.random() * sw.length)];
+    if (a !== b) { const na = a.nextSibling; box.insertBefore(a, b); box.insertBefore(b, na); }
+    sw.forEach((el) => {
+      const r0 = before.get(el), r1 = el.getBoundingClientRect();
+      el.style.transition = "none";
+      el.style.transform = `translate(${r0.left - r1.left}px, ${r0.top - r1.top}px)`;
+      requestAnimationFrame(() => requestAnimationFrame(() => { el.style.transition = ""; el.style.transform = ""; }));
+    });
+    pick(a);
+  };
+  new IntersectionObserver(([e]) => {
+    clearInterval(timer);
+    if (e.isIntersecting) timer = setInterval(shuffle, 1500);
+  }).observe(box);
+});
+
+/* ───────── Simply Andy: brand playground ───────── */
+$$("[data-fx-andy]").forEach((fx) => {
+  const combos = JSON.parse(fx.dataset.combos);
+  const codeVal = (k) => $(`[data-k="${k}"]`, fx);
+  let auto = !reduced, idx = 0, timer = 0;
+  const flash = (el, v) => { el.textContent = v; el.classList.remove("is-flash"); void el.offsetWidth; el.classList.add("is-flash"); setTimeout(() => el.classList.remove("is-flash"), 500); };
+  const apply = (i) => {
+    idx = i;
+    const c = combos[i];
+    fx.style.setProperty("--a-bg", c.bg); fx.style.setProperty("--a-fg", c.fg); fx.style.setProperty("--a-ugc", c.ugc);
+    flash(codeVal("name"), c.name); flash(codeVal("bg"), c.bg); flash(codeVal("fg"), c.fg);
+    $$("[data-combo]", fx).forEach((b) => b.classList.toggle("is-on", +b.dataset.combo === i));
+  };
+  const setDot = (hex) => {
+    fx.style.setProperty("--a-dot", hex);
+    flash(codeVal("dot"), hex);
+    $$("[data-dot]", fx).forEach((b) => b.classList.toggle("is-on", b.dataset.dot === hex));
+    fx.classList.remove("is-bump"); void fx.offsetWidth; fx.classList.add("is-bump");
+    setTimeout(() => fx.classList.remove("is-bump"), 400);
+  };
+  const stop = () => { auto = false; clearInterval(timer); };
+  $$("[data-combo]", fx).forEach((b) => b.addEventListener("click", () => { stop(); apply(+b.dataset.combo); }));
+  $$("[data-dot]", fx).forEach((b) => b.addEventListener("click", () => { stop(); setDot(b.dataset.dot); }));
+  $$("[data-dot]", fx).find((b) => b.dataset.dot === "#864C24")?.classList.add("is-on");
+  new IntersectionObserver(([e]) => {
+    clearInterval(timer);
+    if (e.isIntersecting && auto) timer = setInterval(() => apply((idx + 1) % combos.length), 2600);
+  }, { threshold: 0.4 }).observe(fx);
+});
+
+/* ───────── English Buddy: scramble translator ───────── */
+$$("[data-fx-buddy]").forEach((fx) => {
+  const pairs = JSON.parse(fx.dataset.pairs);
+  const es = $("[data-es]", fx), en = $("[data-en]", fx);
+  const lv = $$(".fx-buddy__levels span", fx), bar = $(".fx-buddy__bar b", fx);
+  const glyphs = "abcdefghijklmnopqrstuvwxyz¿?¡!'";
+  let k = 0, timer = 0;
+  const scramble = (el, text) => new Promise((res) => {
+    if (reduced) { el.textContent = text; return res(); }
+    const start = performance.now(), dur = 900;
+    const tick = (now) => {
+      const p = Math.min(1, (now - start) / dur);
+      const n = Math.floor(p * text.length);
+      el.textContent = text.slice(0, n) + Array.from(text.slice(n), (ch) => (ch === " " || ch === '"' ? ch : glyphs[Math.floor(Math.random() * glyphs.length)])).join("");
+      p < 1 ? requestAnimationFrame(tick) : res();
+    };
+    requestAnimationFrame(tick);
+  });
+  const next = async () => {
+    k = (k + 1) % pairs.length;
+    const [a, b] = pairs[k];
+    await scramble(es, `"${a}"`);
+    await wait(250);
+    await scramble(en, `"${b}"`);
+    const level = Math.min(lv.length, 1 + k);
+    lv.forEach((s, i) => s.classList.toggle("is-on", i < level));
+    bar.style.width = `${((k + 1) / pairs.length) * 100}%`;
+  };
+  new IntersectionObserver(([e]) => {
+    clearInterval(timer);
+    if (e.isIntersecting && !reduced) timer = setInterval(next, 3200);
+  }, { threshold: 0.4 }).observe(fx);
+});
+
+/* ───────── Soluciones: scrollspy explorer ───────── */
+const spyLinks = $$("[data-spy]");
+const spySecs = spyLinks.map((a) => document.getElementById(a.dataset.spy)).filter(Boolean);
+const spyBar = $(".sol__progress i");
+function solSpy() {
+  if (!spySecs.length) return;
+  let cur = spySecs[0];
+  spySecs.forEach((sec) => { if (sec.getBoundingClientRect().top < innerHeight * 0.4) cur = sec; });
+  spyLinks.forEach((a) => a.classList.toggle("is-active", a.dataset.spy === cur.id));
+  if (spyBar) {
+    const first = spySecs[0].getBoundingClientRect().top + scrollY;
+    const last = spySecs[spySecs.length - 1];
+    const end = last.getBoundingClientRect().bottom + scrollY - innerHeight;
+    spyBar.style.transform = `scaleX(${clamp((scrollY - first + 120) / (end - first + 120))})`;
+  }
+}
+
+/* ───────── Footer: playable F ───────── */
+const fplay = $("#fplay");
+if (fplay) {
+  const box = $(".fplay__f", fplay);
+  const cells = $$("i", box).map((el) => ({ el, fork: el.classList.contains("is-fork"), x: 0, y: 0, r: 0, vx: 0, vy: 0, vr: 0, tx: 0, ty: 0, tr: 0 }));
+  let pointer = null, dropping = false, running = false, inView = false, idleFrames = 0;
+  const unit = () => box.getBoundingClientRect().height / 32;
+  const home = (c) => { const b = box.getBoundingClientRect(); const r = c.el.getBoundingClientRect(); return { x: r.left - c.x + r.width / 2 - b.left, y: r.top - c.y + r.height / 2 - b.top }; };
+  const frame = () => {
+    const u = unit();
+    const b = box.getBoundingClientRect();
+    let energy = 0;
+    cells.forEach((c) => {
+      let tx = c.tx, ty = c.ty, tr = c.tr;
+      if (!dropping && pointer) {
+        const h = home(c);
+        const px = pointer.x - b.left, py = pointer.y - b.top;
+        if (c.fork) {
+          tx = (px - h.x) * 0.9; ty = (py - h.y) * 0.9; tr = tx * 0.4;
+        } else {
+          const dx = h.x - px, dy = h.y - py, d = Math.hypot(dx, dy) || 1, R = 14 * u;
+          if (d < R) { const f = (1 - d / R) * 9 * u; tx = (dx / d) * f; ty = (dy / d) * f; tr = (dx / d) * 18; }
+          c.el.classList.toggle("is-hot", d < R * 0.8);
+        }
+      } else c.el.classList.remove("is-hot");
+      const k = dropping ? 0.06 : 0.12, damp = dropping ? 0.82 : 0.78;
+      c.vx = (c.vx + (tx - c.x) * k) * damp; c.vy = (c.vy + (ty - c.y) * k) * damp; c.vr = (c.vr + (tr - c.r) * k) * damp;
+      c.x += c.vx; c.y += c.vy; c.r += c.vr;
+      energy += Math.abs(c.vx) + Math.abs(c.vy) + Math.abs(tx - c.x) + Math.abs(ty - c.y);
+      c.el.style.transform = `translate(${c.x.toFixed(2)}px, ${c.y.toFixed(2)}px) rotate(${c.r.toFixed(1)}deg)`;
+    });
+    idleFrames = energy < 0.5 && !pointer ? idleFrames + 1 : 0;
+    if (inView && idleFrames < 30) requestAnimationFrame(frame);
+    else running = false;
+  };
+  const kick = () => { if (!running && inView) { running = true; idleFrames = 0; requestAnimationFrame(frame); } };
+  if (!reduced) {
+    fplay.addEventListener("pointermove", (e) => { pointer = { x: e.clientX, y: e.clientY }; kick(); });
+    fplay.addEventListener("pointerleave", () => { pointer = null; kick(); });
+    fplay.addEventListener("click", () => {
+      if (dropping) return;
+      dropping = true;
+      const u = unit();
+      const floor = 32 * u + 4 * u;
+      const cols = [0, 0, 0, 0, 0];
+      cells.forEach((c, i) => {
+        const h = home(c);
+        const col = i % 5;
+        const x = (col - 2) * 6.5 * u + 12.75 * u;
+        cols[col] += 1;
+        c.tx = x - h.x; c.ty = floor - cols[col] * 6.5 * u - h.y + 3 * u; c.tr = (Math.random() > 0.5 ? 90 : 0);
+      });
+      kick();
+      setTimeout(() => { cells.forEach((c) => { c.tx = 0; c.ty = 0; c.tr = 0; }); kick(); setTimeout(() => (dropping = false), 900); }, 1500);
+    });
+  }
+  new IntersectionObserver(([e]) => { inView = e.isIntersecting; if (inView) kick(); }).observe(fplay);
 }
 
 /* ───────── Scroll loop ───────── */
@@ -457,6 +711,7 @@ const onScroll = () => {
     heroScroll();
     scrollyUpdate();
     manifestoUpdate();
+    solSpy();
     ticking = false;
   });
 };

@@ -1,0 +1,201 @@
+---
+import Base from "../../layouts/Base.astro";
+import Cta from "../../components/Cta.astro";
+import AndyEffect from "../../components/AndyEffect.astro";
+import BuddyEffect from "../../components/BuddyEffect.astro";
+import LyappScrolly from "../../components/LyappScrolly.astro";
+import { site, testimonials } from "../../data/site";
+import { projects, serviceNames, type Project } from "../../data/projects";
+
+export function getStaticPaths() {
+  return projects.map((project) => ({ params: { slug: project.slug }, props: { project } }));
+}
+
+const { project: p } = Astro.props as { project: Project };
+const base = import.meta.env.BASE_URL.replace(/\/?$/, "/");
+const idx = projects.findIndex((x) => x.slug === p.slug);
+const next = projects[(idx + 1) % projects.length];
+const quote = testimonials.find((t) => t.project === p.slug);
+const pageUrl = new URL(`proyectos/${p.slug}/`, site.url).href;
+const org = { "@id": new URL("#organization", site.url).href };
+
+const work =
+  p.effect === "phone"
+    ? {
+        "@type": "SoftwareApplication",
+        name: p.name,
+        description: p.summary,
+        operatingSystem: "iOS",
+        applicationCategory: "HealthApplication",
+        offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+        url: p.links[0].href,
+        image: new URL(p.images[0].src, site.url).href,
+        inLanguage: ["en", "es"],
+      }
+    : {
+        "@type": "WebSite",
+        name: p.name,
+        description: p.summary,
+        url: p.links[0].href,
+        inLanguage: "es",
+      };
+const schema = [
+  {
+    "@type": "CreativeWork",
+    "@id": `${pageUrl}#caso`,
+    name: `Caso ${p.name}`,
+    headline: `${p.name}: ${p.category}`,
+    description: p.summary,
+    url: pageUrl,
+    image: new URL(p.images[0].src, site.url).href,
+    creator: org,
+    dateCreated: p.year,
+    about: work,
+  },
+];
+const title = `${p.name}: ${p.category.toLowerCase()} | Caso Forklia`;
+---
+
+<Base
+  title={title}
+  description={p.summary.length > 158 ? p.summary.slice(0, 155).replace(/\s\S*$/, "") + "…" : p.summary}
+  image={p.images[0].src}
+  imageAlt={p.images[0].alt}
+  type="article"
+  breadcrumbs={[{ name: "En producción", path: "proyectos/" }, { name: p.name, path: `proyectos/${p.slug}/` }]}
+  schema={schema}
+  fonts={p.effect === "phone" ? "&family=Playfair+Display:wght@500;600" : p.effect === "palette" ? "&family=Archivo:wght@700&family=DM+Mono" : ""}
+>
+  <article class="case-page" style={`--pa:${p.accent}`}>
+    <header class="page-hero case-hero">
+      <div class="wrap">
+        <nav class="crumbs" aria-label="Ruta" data-reveal>
+          <a href={base}>Inicio</a><span>/</span><a href={`${base}proyectos/`}>En producción</a><span>/</span><span aria-current="page">{p.name}</span>
+        </nav>
+        <div class="case-hero__top" data-reveal>
+          {p.icon && <img class="case-hero__icon" src={base + p.icon} alt={`Ícono de ${p.name}`} width="64" height="64" />}
+          <span class={`pcard__status${p.live ? " is-live" : ""}`}><span class="dot"></span>{p.status}</span>
+          <span class="case-hero__cat">{p.category}</span>
+        </div>
+        <h1 data-split>{p.name}</h1>
+        <p class="lead" data-reveal style="--d:200ms">{p.summary}</p>
+        <div class="hero__ctas case-hero__ctas" data-reveal style="--d:280ms">
+          {p.links.map((l, i) => (
+            <a href={l.href} class={`btn ${i === 0 ? "btn--primary" : "btn--ghost"}`} target="_blank" rel="noopener" data-magnetic>{l.label} <span class="arrow">↗</span></a>
+          ))}
+        </div>
+        <dl class="case-facts" data-reveal style="--d:340ms">
+          <div><dt>Cliente</dt><dd>{p.client}</dd></div>
+          <div><dt>Superpoderes</dt><dd>{p.services.map((s) => serviceNames[s]).join(" · ")}</dd></div>
+          <div><dt>Año</dt><dd>{p.year}</dd></div>
+          <div><dt>Stack</dt><dd>{p.stack.slice(0, 3).join(" · ")}</dd></div>
+        </dl>
+      </div>
+    </header>
+
+    <section class="wrap case-media" data-reveal aria-label="Capturas del proyecto">
+      {p.images[0].kind === "desktop" ? (
+        <div class="case-browser">
+          <div class="window__bar"><div class="window__dots"><i></i><i></i><i></i></div><div class="window__url"><b>●</b> {p.links[0].href.replace(/^https?:\/\//, "")}</div></div>
+          <img src={base + p.images[0].src} alt={p.images[0].alt} width="1280" height="800" fetchpriority="high" />
+        </div>
+      ) : (
+        <div class="case-phones">
+          {p.images.map((im, i) => <img src={base + im.src} alt={im.alt} width="600" height="1298" style={`--i:${i}`} loading={i ? "lazy" : "eager"} />)}
+        </div>
+      )}
+    </section>
+
+    <section class="section">
+      <div class="wrap case-grid">
+        <div class="case-sticky">
+          <div class="eyebrow" data-reveal>// el reto</div>
+          <h2 class="h2" data-split>El punto de partida</h2>
+        </div>
+        <p class="case-text" data-reveal>{p.challenge}</p>
+      </div>
+    </section>
+
+    {p.effect === "phone" && <LyappScrolly />}
+
+    {(p.effect === "palette" || p.effect === "translate") && (
+      <section class="section" style="padding-top: 0;" aria-label="Demo interactiva">
+        <div class="wrap case-demo">
+          <div class="eyebrow" data-reveal>// pruébalo</div>
+          <div data-reveal>{p.effect === "palette" ? <AndyEffect /> : <BuddyEffect />}</div>
+        </div>
+      </section>
+    )}
+
+    <section class="section" style="padding-top: 0;">
+      <div class="wrap">
+        <div class="section-head">
+          <div class="eyebrow eyebrow--violet" data-reveal>// lo que hicimos</div>
+          <h2 class="h2" data-split>Qué construimos</h2>
+        </div>
+        <div class="did">
+          {p.whatWeDid.map((w, i) => (
+            <div class="card did__item" data-reveal data-spotlight style={`--d:${(i % 3) * 80}ms`}>
+              <span class="did__file">{`${String(i + 1).padStart(2, "0")}.${w.title.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "")}`}</span>
+              <h3>{w.title}</h3>
+              <p>{w.text}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    {p.images.length > 1 && p.images[0].kind === "desktop" && (
+      <section class="section" style="padding-top: 0;" aria-label="Más capturas">
+        <div class="wrap gallery">
+          {p.images.slice(1).map((im, i) => (
+            <figure class="case-browser case-browser--sm" data-reveal style={`--d:${i * 80}ms`}>
+              <div class="window__bar"><div class="window__dots"><i></i><i></i><i></i></div></div>
+              <img src={base + im.src} alt={im.alt} width="1280" height="800" loading="lazy" decoding="async" />
+              <figcaption>{im.alt}</figcaption>
+            </figure>
+          ))}
+        </div>
+      </section>
+    )}
+
+    <section class="section" style="padding-top: 0;">
+      <div class="wrap">
+        <div class="impact card" data-reveal>
+          <div>
+            <div class="eyebrow">// impacto</div>
+            <h2 class="h2">Qué cambió</h2>
+            <ul class="checks">{p.impact.map((x) => <li>{x}</li>)}</ul>
+          </div>
+          <div class="impact__nums">
+            {p.numbers.map((n) => <div><strong class="grad-text">{n.value}</strong><span>{n.label}</span></div>)}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    {quote && (
+      <section class="section" style="padding-top: 0;">
+        <div class="wrap">
+          <figure class="card tfeat" data-reveal>
+            <div class="tfeat__mark" aria-hidden="true">“</div>
+            <blockquote><p>{quote.q}</p></blockquote>
+            <figcaption><span class="av" style={`background:${quote.g}`}>{quote.i}</span><span><b>{quote.n}</b><small>{quote.r}</small></span></figcaption>
+          </figure>
+        </div>
+      </section>
+    )}
+
+    <section class="section" style="padding-top: 0;">
+      <div class="wrap">
+        <a href={`${base}proyectos/${next.slug}/`} class="card next-case" data-reveal data-spotlight>
+          <small>// siguiente proyecto</small>
+          <span class="next-case__name">{next.name} <span class="arrow">→</span></span>
+          <span class="next-case__cat">{next.category}</span>
+        </a>
+      </div>
+    </section>
+  </article>
+
+  <Cta />
+</Base>

@@ -1,0 +1,19 @@
+---
+interface Props {
+  to: string;
+}
+const base = import.meta.env.BASE_URL.replace(/\/?$/, "/");
+const target = base + Astro.props.to;
+const abs = new URL(target, Astro.site).href;
+---
+
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <title>Redirigiendo…</title>
+    <meta name="robots" content="noindex" />
+    <link rel="canonical" href={abs} />
+    <meta http-equiv="refresh" content={`0; url=${target}`} />
+  </head>
+  <body><a href={target}>Esta página se movió. Continuar →</a></body>
+</html>

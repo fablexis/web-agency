@@ -2,7 +2,7 @@
 import Base from "../../layouts/Base.astro";
 import PageHero from "../../components/PageHero.astro";
 import Cta from "../../components/Cta.astro";
-import { founders } from "../../data/site";
+import { site, founders } from "../../data/site";
 
 const base = import.meta.env.BASE_URL.replace(/\/?$/, "/");
 
@@ -17,11 +17,30 @@ const values = [
 ];
 ---
 
-<Base title="Nosotros — Forklia" description="Conoce a Fabian Pernía y Fabio Pernía, fundadores de Forklia.">
+<Base
+  title="Mentes detrás del código: Fabian y Fabio Pernía | Forklia"
+  description="Fabian Pernía, Full Stack Engineer, y Fabio Pernía, Creative Director y Head of Sales: los fundadores de Forklia, un estudio remoto de apps, webs y marcas."
+  type="profile"
+  breadcrumbs={[{ name: "Mentes detrás", path: "nosotros/" }]}
+  schema={[
+    {
+      "@type": "AboutPage",
+      name: "Mentes detrás de Forklia",
+      url: new URL("nosotros/", site.url).href,
+      mainEntity: founders.map((f) => ({
+        "@type": "Person",
+        name: f.name,
+        jobTitle: f.role.replace("Co-founder · ", ""),
+        image: new URL(f.photo, site.url).href,
+        worksFor: { "@id": new URL("#organization", site.url).href },
+      })),
+    },
+  ]}
+>
   <PageHero
-    eyebrow="Nosotros"
+    eyebrow="Mentes detrás"
     violet
-    title='Las personas detrás de <span class="grad-text">Forklia</span>'
+    title='Las mentes detrás <span class="grad-text">del código</span>'
     lead="Un estudio de producto digital fundado por dos perfiles complementarios: ingeniería de punta a punta y dirección creativa con visión comercial."
   />
 
@@ -32,7 +51,7 @@ const values = [
           <article class="card founder" data-reveal data-spotlight style={`--d:${i * 120}ms; --fc:${f.accent === "cyan" ? "#45E0FF" : "#9B6BFF"}`}>
             <div class="founder__photo">
               {f.photo ? (
-                <img src={base + f.photo} alt={`Retrato de ${f.name}`} width="880" height="1172" loading="lazy" decoding="async" />
+                <img src={base + f.photo} alt={`Retrato en blanco y negro de ${f.name}, ${f.role.replace("Co-founder · ", "")} de Forklia`} width="880" height="1172" loading="lazy" decoding="async" />
               ) : (
                 <div class="founder__ph"><b>{f.initials}</b><small>Foto próximamente</small></div>
               )}
@@ -60,7 +79,7 @@ const values = [
   <section class="section" style="padding-top: 0;">
     <div class="wrap">
       <div class="section-head">
-        <div class="eyebrow" data-reveal>Cómo trabajamos</div>
+        <div class="eyebrow" data-reveal>// cómo trabajamos</div>
         <h2 class="h2" data-split>Principios que no negociamos</h2>
       </div>
       <div class="values">

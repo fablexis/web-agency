@@ -1,20 +1,37 @@
 ---
 import { testimonials } from "../data/site";
+
+const base = import.meta.env.BASE_URL.replace(/\/?$/, "/");
+const featured = testimonials.find((t) => t.real);
+const rest = testimonials.filter((t) => !t.real);
 ---
 
-<div class="tmarquee" data-reveal>
-  {[0, 1].map((row) => {
-    const list = row === 0 ? testimonials : [...testimonials].reverse();
-    return (
-      <div class={`tmarquee__row${row ? " tmarquee__row--rev" : ""}`}>
-        {[...list, ...list].map((t, i) => (
-          <figure class="card tcard" data-spotlight aria-hidden={i >= list.length || row === 1 ? "true" : undefined}>
-            <div class="stars">★★★★★</div>
-            <p>“{t.q}”</p>
-            <footer><span class="av" style={`background:${t.g}`}>{t.i}</span><span><b>{t.n}</b><small>{t.r}</small></span></footer>
-          </figure>
-        ))}
-      </div>
-    );
-  })}
+<div class="tgrid">
+  {featured && (
+    <figure class="card tfeat" data-reveal data-spotlight>
+      <div class="tfeat__mark" aria-hidden="true">“</div>
+      <blockquote><p>{featured.q}</p></blockquote>
+      <figcaption>
+        <span class="av" style={`background:${featured.g}`}>{featured.i}</span>
+        <span><b>{featured.n}</b><small>{featured.r}</small></span>
+        {featured.project && <a href={`${base}proyectos/${featured.project}/`} class="link-arrow">Ver su proyecto <span>→</span></a>}
+      </figcaption>
+    </figure>
+  )}
+  <div class="tmarquee" data-reveal style="--d:120ms">
+    {[0, 1].map((row) => {
+      const list = row === 0 ? rest : [...rest].reverse();
+      return (
+        <div class={`tmarquee__row${row ? " tmarquee__row--rev" : ""}`}>
+          {[...list, ...list].map((t, i) => (
+            <figure class="card tcard" data-spotlight aria-hidden={i >= list.length || row === 1 ? "true" : undefined}>
+              <div class="stars" aria-label="5 de 5">★★★★★</div>
+              <p>“{t.q}”</p>
+              <footer><span class="av" style={`background:${t.g}`}>{t.i}</span><span><b>{t.n}</b><small>{t.r}</small></span></footer>
+            </figure>
+          ))}
+        </div>
+      );
+    })}
+  </div>
 </div>

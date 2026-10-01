@@ -1,20 +1,27 @@
 export const site = {
   name: "Forklia",
+  legalName: "Forklia Studio",
+  url: "https://fablexis.github.io/web-agency/",
   email: "hola@vertice.studio",
   whatsapp: "https://wa.me/",
-  title: "Forklia — Agencia de desarrollo y growth digital",
+  title: "Forklia — Estudio de apps, webs, SEO y sistemas de marca",
   description:
-    "Diseñamos y desarrollamos sitios web, apps móviles y estrategias de posicionamiento.",
+    "Forklia diseña y desarrolla apps móviles, sitios web, estrategias SEO y sistemas de marca interactivos para marcas de cualquier país, en español e inglés.",
+  socials: [
+    { label: "LinkedIn", href: "https://www.linkedin.com/", icon: "linkedin" },
+    { label: "Instagram", href: "https://www.instagram.com/", icon: "instagram" },
+    { label: "TikTok", href: "https://www.tiktok.com/", icon: "tiktok" },
+  ],
 };
 
 export const nav = [
-  { label: "Servicios", href: "servicios/" },
-  { label: "Casos", href: "casos/" },
-  { label: "Nosotros", href: "nosotros/" },
-  { label: "Blog", href: "blog/" },
+  { label: "Superpoderes", hint: "soluciones", href: "soluciones/" },
+  { label: "En producción", hint: "proyectos", href: "proyectos/" },
+  { label: "Mentes detrás", hint: "nosotros", href: "nosotros/" },
+  { label: "Bitácora", hint: "blog", href: "blog/" },
 ];
 
-export const tech = ["React", "Next.js", "Astro", "Flutter", "Swift", "Node.js", "Supabase", "Figma", "Google Analytics", "Webflow", "Vercel", "OpenAI"];
+export const tech = ["Swift", "React", "Next.js", "Astro", "Node.js", "Supabase", "Vercel", "Figma", "Google Search Console", "Schema.org", "OpenAI", "GitHub Actions"];
 
 export const steps = [
   { title: "Descubrimiento", c: "#5EE3FF", text: "Entendemos tu negocio, tus objetivos y a tu audiencia para convertirlos en una especificación clara y accionable.", icon: '<circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.5" y2="16.5"></line>' },
@@ -23,37 +30,35 @@ export const steps = [
   { title: "Crecimiento", c: "#4BE3A0", text: "Lanzamos, medimos y optimizamos. Posicionamos tu marca y la hacemos crecer mes a mes.", icon: '<polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline>' },
 ];
 
-export const cases = [
-  { metric: "+320% tráfico", cat: "E-commerce · SEO", title: "Tienda de moda online", text: "Rediseño completo + estrategia SEO que triplicó el tráfico orgánico en 6 meses.", c: "#45E0FF", g: "rgba(69,224,255,.14)" },
-  { metric: "50K descargas", cat: "App Móvil · iOS / Android", title: "App de delivery local", text: "Una app intuitiva que alcanzó 50K descargas y 4.8★ en su primer trimestre.", c: "#9B6BFF", g: "rgba(155,107,255,.14)" },
-  { metric: "-60% rebote", cat: "SaaS · Web + Estrategia", title: "Plataforma B2B", text: "Nueva web + embudo de conversión que redujo la tasa de rebote un 60%.", c: "#5B86FF", g: "rgba(59,107,255,.16)" },
-  { metric: "2.4x leads", cat: "Servicios · Web + SEO", title: "Clínica dental premium", text: "Sitio rápido, reservas online y SEO local que duplicaron las citas mensuales.", c: "#4BE3A0", g: "rgba(75,227,160,.14)" },
-  { metric: "4.9★ rating", cat: "App Móvil · Fintech", title: "Billetera de ahorro", text: "Una app de finanzas personales que la gente disfruta abrir todos los días.", c: "#B58CFF", g: "rgba(181,140,255,.14)" },
-  { metric: "1.1s carga", cat: "Media · Performance", title: "Portal de noticias", text: "Migración a arquitectura estática que redujo el tiempo de carga un 70%.", c: "#5EE3FF", g: "rgba(94,227,255,.14)" },
-];
+export type Testimonial = { q: string; n: string; r: string; i: string; g: string; real?: boolean; project?: string };
 
-export const testimonials = [
-  { q: "Transformaron por completo nuestra presencia digital. En meses pasamos de ser invisibles a aparecer primeros en Google.", n: "Laura Méndez", r: "CEO · Boutique Aurora", i: "LM", g: "linear-gradient(120deg,#45E0FF,#9B6BFF)" },
-  { q: "El equipo entendió nuestra visión desde el día uno. La app que desarrollaron superó todas nuestras expectativas.", n: "Carlos Rivas", r: "Fundador · DeliGo", i: "CR", g: "linear-gradient(120deg,#9B6BFF,#3B6BFF)" },
-  { q: "Profesionales, rápidos y siempre disponibles. Más que una agencia, son nuestro socio estratégico de crecimiento.", n: "Ana Torres", r: "CMO · Nexus B2B", i: "AT", g: "linear-gradient(120deg,#3B6BFF,#45E0FF)" },
-  { q: "Cada entrega llegó antes de lo prometido y con un nivel de detalle que no habíamos visto en otra agencia.", n: "Diego Salas", r: "COO · Fintrack", i: "DS", g: "linear-gradient(120deg,#4BE3A0,#45E0FF)" },
-  { q: "Nuestra tasa de conversión se duplicó con el rediseño. Los datos hablan solos.", n: "Mariana Gil", r: "Head of Growth · Lumo", i: "MG", g: "linear-gradient(120deg,#9B6BFF,#45E0FF)" },
-  { q: "Hicieron que un producto complejo se sintiera simple. Nuestros usuarios lo notaron desde el primer día.", n: "Pablo Ortiz", r: "CTO · Stackly", i: "PO", g: "linear-gradient(120deg,#45E0FF,#3B6BFF)" },
+export const testimonials: Testimonial[] = [
+  {
+    q: "Quería una web que se sintiera como yo: cercana, cálida y sin filtro. Forklia no solo la construyó, me dio un sistema de marca con el que juego todos los días, desde mis colores hasta la firma de mi correo.",
+    n: "Andreina Luna",
+    r: "UGC Creator · Simply Andy",
+    i: "AL",
+    g: "linear-gradient(120deg,#864C24,#E9E2D0)",
+    real: true,
+    project: "simply-andy",
+  },
+  { q: "Nuestra tienda por fin se ve tan premium como nuestro producto, y carga en un segundo desde el celular.", n: "Fundadora", r: "Marca de skincare · E-commerce", i: "SK", g: "linear-gradient(120deg,#45E0FF,#9B6BFF)" },
+  { q: "Pasamos de una app que nadie abría a una que nuestros clientes usan cada mañana para pedir su café.", n: "Head of Product", r: "Cadena de café de especialidad · App", i: "CF", g: "linear-gradient(120deg,#9B6BFF,#3B6BFF)" },
+  { q: "El SEO técnico que hicieron nos puso en el top 3 para las búsquedas que de verdad traen clientes.", n: "Director comercial", r: "Clínica dental · Web + SEO", i: "CD", g: "linear-gradient(120deg,#3B6BFF,#45E0FF)" },
+  { q: "Nos entregaron un design system que nuestro equipo interno puede extender sin romper nada.", n: "CTO", r: "Startup fintech · Sistema de marca", i: "FT", g: "linear-gradient(120deg,#4BE3A0,#45E0FF)" },
+  { q: "Trabajamos desde tres zonas horarias distintas y nunca se sintió así. Comunicación impecable.", n: "COO", r: "SaaS B2B · Plataforma web", i: "SB", g: "linear-gradient(120deg,#9B6BFF,#45E0FF)" },
 ];
 
 export const faqs = [
-  { q: "¿Cuánto tarda un proyecto típico?", a: "Una landing de alto impacto toma de 2 a 3 semanas; un sitio corporativo o e-commerce, de 4 a 8; una app móvil o plataforma a medida, de 8 a 16 semanas. Te damos un calendario detallado desde la propuesta." },
-  { q: "¿Trabajan con empresas fuera de mi país?", a: "Sí. Trabajamos de forma remota con clientes en Latinoamérica, Estados Unidos y Europa, con reuniones semanales y un canal directo con el equipo." },
-  { q: "¿Qué pasa después del lanzamiento?", a: "Ofrecemos planes de crecimiento mensuales: SEO continuo, optimización de conversión, nuevas funcionalidades y soporte técnico con tiempos de respuesta garantizados." },
-  { q: "¿Puedo ver avances durante el desarrollo?", a: "Siempre. Tendrás un entorno de staging actualizado en cada sprint y acceso a nuestro tablero de tareas para seguir el progreso en tiempo real." },
-  { q: "¿Cómo se define el presupuesto?", a: "Tras una llamada de descubrimiento gratuita, enviamos una propuesta con alcance, entregables y precio cerrado en menos de 48 horas. Sin sorpresas." },
-];
-
-export const ticker = [
-  "Nuevo → Forklia Labs: prototipos funcionales en 10 días",
-  "Agenda abierta para proyectos Q4",
-  "Lighthouse 100 en el 92% de nuestros lanzamientos",
-  "Ahora también apps con IA integrada",
+  { q: "¿Trabajan con clientes de cualquier país?", a: "Sí. Somos un estudio 100% remoto y trabajamos con marcas de cualquier país, en español o en inglés. No importa dónde estés: adaptamos reuniones a tu zona horaria y aseguramos al menos unas horas de solapamiento diario." },
+  { q: "¿Cómo nos comunicamos si estamos en zonas horarias distintas?", a: "Una llamada semanal de seguimiento, un canal directo (Slack, WhatsApp o el que prefieras) y actualizaciones por escrito en cada entrega. Respondemos en menos de 24 horas hábiles." },
+  { q: "¿En qué moneda cotizan y cómo se paga desde otro país?", a: "Cotizamos en dólares estadounidenses y aceptamos pagos internacionales por transferencia, tarjeta o plataformas como Wise o PayPal. Trabajamos con un anticipo y pagos por hitos claros." },
+  { q: "¿Cuánto tarda un proyecto típico?", a: "Una landing de alto impacto toma de 2 a 3 semanas; un sitio corporativo o e-commerce, de 4 a 8; un sistema de marca, de 3 a 5; una app móvil o plataforma a medida, de 8 a 16 semanas. Te damos un calendario detallado desde la propuesta." },
+  { q: "¿Cómo se define el presupuesto?", a: "Después de una llamada de descubrimiento gratuita te enviamos una propuesta con alcance, entregables y precio cerrado en menos de 48 horas. Sin letra pequeña ni cobros sorpresa." },
+  { q: "¿Necesito tener todo definido para empezar?", a: "No. Muchos proyectos empiezan con una idea y una necesidad. La fase de descubrimiento existe justamente para convertirla en un plan concreto contigo." },
+  { q: "¿El código, los diseños y las cuentas son míos?", a: "Sí. Al cerrar el proyecto te transferimos el repositorio, los archivos de diseño, los dominios y todos los accesos. Nada queda atado a nosotros." },
+  { q: "¿Firman acuerdos de confidencialidad?", a: "Sí, firmamos un NDA antes de conocer los detalles de tu idea si lo necesitas." },
+  { q: "¿Qué pasa después del lanzamiento?", a: "Ofrecemos planes mensuales de evolución: SEO continuo, mejoras de conversión, nuevas funcionalidades y soporte técnico con tiempos de respuesta garantizados." },
 ];
 
 export const founders = [
@@ -86,6 +91,7 @@ export type Post = {
   readTime: string;
   author: string;
   hue: number;
+  placeholder?: boolean;
 };
 
 export const posts: Post[] = [
@@ -98,6 +104,7 @@ export const posts: Post[] = [
     readTime: "6 min",
     author: "Fabian Pernía",
     hue: 190,
+    placeholder: true,
   },
   {
     slug: "seo-tecnico-en-2026",
@@ -108,6 +115,7 @@ export const posts: Post[] = [
     readTime: "8 min",
     author: "Fabio Pernía",
     hue: 262,
+    placeholder: true,
   },
   {
     slug: "microinteracciones-que-venden",
@@ -118,6 +126,7 @@ export const posts: Post[] = [
     readTime: "5 min",
     author: "Fabio Pernía",
     hue: 225,
+    placeholder: true,
   },
   {
     slug: "stack-moderno-para-startups",
@@ -128,6 +137,7 @@ export const posts: Post[] = [
     readTime: "7 min",
     author: "Fabian Pernía",
     hue: 170,
+    placeholder: true,
   },
   {
     slug: "de-visitas-a-clientes",
@@ -138,6 +148,7 @@ export const posts: Post[] = [
     readTime: "6 min",
     author: "Fabio Pernía",
     hue: 280,
+    placeholder: true,
   },
   {
     slug: "apps-que-se-sienten-vivas",
@@ -148,6 +159,7 @@ export const posts: Post[] = [
     readTime: "5 min",
     author: "Fabian Pernía",
     hue: 205,
+    placeholder: true,
   },
 ];
 

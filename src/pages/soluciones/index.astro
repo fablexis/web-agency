@@ -1,0 +1,135 @@
+---
+import Base from "../../layouts/Base.astro";
+import PageHero from "../../components/PageHero.astro";
+import ProcessTabs from "../../components/ProcessTabs.astro";
+import Faq from "../../components/Faq.astro";
+import Cta from "../../components/Cta.astro";
+import { site, faqs } from "../../data/site";
+import { services } from "../../data/services";
+import { projects } from "../../data/projects";
+
+const base = import.meta.env.BASE_URL.replace(/\/?$/, "/");
+const pageUrl = new URL("soluciones/", site.url).href;
+const brandSwatches = ["#45E0FF", "#9B6BFF", "#3B6BFF", "#4BE3A0", "#E9E2D0", "#864C24", "#E8805A", "#185C60"];
+
+const schema = [
+  ...services.map((s) => ({
+    "@type": "Service",
+    "@id": `${pageUrl}#${s.id}`,
+    name: s.name,
+    description: s.lead,
+    provider: { "@id": new URL("#organization", site.url).href },
+    areaServed: "Worldwide",
+    availableLanguage: ["es", "en"],
+    url: `${pageUrl}#${s.id}`,
+  })),
+  {
+    "@type": "FAQPage",
+    mainEntity: faqs.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })),
+  },
+];
+---
+
+<Base
+  title="Superpoderes: apps, webs, SEO y sistemas de marca | Forklia"
+  description="Apps móviles, sitios web, SEO y GEO, y sistemas de marca interactivos para marcas de cualquier país. Qué incluye cada servicio, plazos y stack."
+  breadcrumbs={[{ name: "Superpoderes", path: "soluciones/" }]}
+  schema={schema}
+>
+  <PageHero
+    eyebrow="Superpoderes"
+    title='Cuatro superpoderes, <span class="grad-text">un mismo equipo</span>'
+    lead="Elige uno o combínalos. Cada servicio tiene entregables claros, un stack probado y un proyecto real que lo respalda."
+  />
+
+  <section class="section" style="padding-top: 0;">
+    <div class="wrap sol">
+      <aside class="sol__nav" aria-label="Servicios">
+        <div class="sol__explorer">
+          <div class="sol__explorer-head">EXPLORADOR · superpoderes/</div>
+          {services.map((s, i) => (
+            <a href={`#${s.id}`} data-spy={s.id} class={i === 0 ? "is-active" : undefined}>
+              <span class={`sol__dot ic-${s.tone}`}></span>
+              <span class="sol__file">{s.file}</span>
+              <span class="sol__name">{s.name}</span>
+            </a>
+          ))}
+          <div class="sol__progress"><i></i></div>
+        </div>
+        <a href={`${base}cotizar/`} class="btn btn--primary btn--sm sol__cta">Iniciar proyecto <span class="arrow">→</span></a>
+      </aside>
+
+      <div class="sol__body">
+        {services.map((s) => {
+          const proj = projects.find((p) => p.slug === s.project);
+          return (
+            <section class="svc-sec" id={s.id} aria-labelledby={`${s.id}-t`}>
+              <header class="svc-sec__head" data-reveal>
+                <span class="svc-sec__file"><span class={`sol__dot ic-${s.tone}`}></span>{s.file}</span>
+                <div class={`svc__ic ic-${s.tone}`}><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" set:html={s.icon}></svg></div>
+                <h2 id={`${s.id}-t`}><small>{s.name}</small>{s.title}</h2>
+                <p class="lead">{s.lead}</p>
+              </header>
+
+              <div class="svc-sec__grid">
+                <div class="card svc-sec__inc" data-reveal data-spotlight>
+                  <h3>Qué incluye</h3>
+                  <ul class="checks">{s.includes.map((x) => <li>{x}</li>)}</ul>
+                </div>
+                <div class="card svc-sec__viz" data-reveal data-spotlight style="--d:80ms" aria-hidden="true">
+                  {s.viz === "code" && <div class="code" data-code></div>}
+                  {s.viz === "phone" && <div class="mini-phone mini-phone--big"><i></i><i></i><i></i><i></i><i></i></div>}
+                  {s.viz === "ranks" && (
+                    <div class="ranks" data-ranks>
+                      <div class="rank"><b>1</b>competidor-a.com</div>
+                      <div class="rank"><b>2</b>competidor-b.com</div>
+                      <div class="rank"><b>3</b>directorio.com</div>
+                      <div class="rank is-you"><b>4</b>tu-marca.com</div>
+                    </div>
+                  )}
+                  {s.viz === "palette" && (
+                    <div class="swatches" data-swatches>
+                      {brandSwatches.map((c) => <i style={`--sw:${c}`} data-hex={c}></i>)}
+                      <code class="swatches__token">--brand-accent: <b>#45E0FF</b>;</code>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              <div class="svc-sec__meta" data-reveal>
+                <div><small>Ideal para</small><p>{s.forWho}</p></div>
+                <div><small>Plazo típico</small><p>{s.timeline}</p></div>
+                {s.outcomes.map((o) => <div><small>{o.label}</small><p class="svc-sec__num">{o.value}</p></div>)}
+              </div>
+
+              <div class="svc-sec__foot" data-reveal>
+                <div class="tags">{s.stack.map((t) => <span class="tag">{t}</span>)}</div>
+                <div class="svc-sec__links">
+                  {proj && <a href={`${base}proyectos/${proj.slug}/`} class="link-arrow">Caso real: {proj.name} <span>→</span></a>}
+                  <a href={`${base}cotizar/?servicio=${s.id}`} class="btn btn--ghost btn--sm" data-magnetic>Cotizar {s.name.toLowerCase()} <span class="arrow">→</span></a>
+                </div>
+              </div>
+            </section>
+          );
+        })}
+      </div>
+    </div>
+  </section>
+
+  <section id="proceso" class="section" style="padding-top: 0;">
+    <div class="wrap">
+      <div class="section-head">
+        <div class="eyebrow eyebrow--violet" data-reveal>// proceso</div>
+        <h2 class="h2" data-split>Del brief al lanzamiento, con estructura</h2>
+        <p class="lead" data-reveal style="--d:120ms">Convertimos ideas en especificaciones, especificaciones en diseño y diseño en producto en producción. Cada paso es visible, medible y tuyo.</p>
+      </div>
+      <ProcessTabs />
+    </div>
+  </section>
+
+  <section id="faq" class="section" style="padding-top: 0;">
+    <Faq />
+  </section>
+
+  <Cta />
+</Base>

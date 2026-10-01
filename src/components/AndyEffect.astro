@@ -1,0 +1,48 @@
+---
+const combos = [
+  { name: "Índigo", bg: "#1F2C44", fg: "#E9E2D0", dot: "#864C24", ugc: "#E9E2D0" },
+  { name: "Blanco", bg: "#FFFFFF", fg: "#1F2C44", dot: "#864C24", ugc: "#51091B" },
+  { name: "Bordó", bg: "#51091B", fg: "#E9E2D0", dot: "#864C24", ugc: "#E9E2D0" },
+];
+const colors = [
+  ["Eggshell", "#E9E2D0"], ["Cuero", "#864C24"], ["Terracota", "#8F3F23"], ["Oliva", "#61603A"],
+  ["Tinta", "#2A2620"], ["Bordó", "#51091B"], ["Índigo", "#1F2C44"],
+];
+const c = combos[0];
+---
+
+<div class="fx-andy" data-fx-andy data-combos={JSON.stringify(combos)} style={`--a-bg:${c.bg};--a-fg:${c.fg};--a-dot:${c.dot};--a-ugc:${c.ugc}`}>
+  <div class="fx-andy__stage">
+    <svg class="andy-logo" viewBox="0 0 256 76" role="img" aria-label="Logo andy UGC Creator">
+      <text x="0" y="58" font-family="Archivo, Helvetica, Arial, sans-serif" font-weight="700" font-size="76" letter-spacing="-3.42" class="andy-logo__word">andy</text>
+      <circle cx="177" cy="29" r="7.5" class="andy-logo__dot"></circle>
+      <text x="188" y="25.5" font-family="'DM Mono', ui-monospace, monospace" font-size="11.5" letter-spacing="1.84" class="andy-logo__ugc">UGC</text>
+      <text x="188" y="42" font-family="'DM Mono', ui-monospace, monospace" font-size="11.5" letter-spacing="1.84" class="andy-logo__ugc">CREATOR</text>
+    </svg>
+    <div class="andy-sig">
+      <div class="andy-sig__row">
+        <svg class="andy-sig__mini" viewBox="0 0 256 76" aria-hidden="true"><text x="0" y="58" font-family="Archivo, Helvetica, Arial, sans-serif" font-weight="700" font-size="76" letter-spacing="-3.42" fill="#1F2C44">andy</text><circle cx="177" cy="29" r="7.5" class="andy-logo__dot"></circle><text x="188" y="25.5" font-family="'DM Mono', ui-monospace, monospace" font-size="11.5" letter-spacing="1.84" fill="#51091B">UGC</text><text x="188" y="42" font-family="'DM Mono', ui-monospace, monospace" font-size="11.5" letter-spacing="1.84" fill="#51091B">CREATOR</text></svg>
+        <span class="andy-sig__who"><b>Andreina Luna</b><small>UGC CREATOR</small></span>
+      </div>
+      <div class="andy-sig__links"><span>Portfolio</span><span>TikTok</span><span>Instagram</span></div>
+    </div>
+    <span class="fx-andy__label">firma.html · hecha con el brand kit</span>
+  </div>
+  <div class="fx-andy__panel">
+    <div class="fx-andy__file"><i></i>brand-kit.css</div>
+    <pre class="fx-andy__code"><span class="c">/* combinación aprobada: <b data-k="name">{c.name}</b> */</span>
+<span class="k">.logo</span> {"{"}
+  background: <b data-k="bg">{c.bg}</b>;
+  color: <b data-k="fg">{c.fg}</b>;
+  --punto: <b data-k="dot">{c.dot}</b>;
+{"}"}</pre>
+    <div class="fx-andy__combos" role="group" aria-label="Fondos aprobados del logo">
+      {combos.map((k, i) => (
+        <button type="button" data-combo={i} class={i === 0 ? "is-on" : undefined} style={`--sw:${k.bg}`}>{k.name}</button>
+      ))}
+    </div>
+    <div class="fx-andy__dots" role="group" aria-label="Color del punto">
+      {colors.map(([n, hex]) => <button type="button" data-dot={hex} style={`--sw:${hex}`} aria-label={`Punto en ${n}`} title={n}></button>)}
+    </div>
+  </div>
+</div>

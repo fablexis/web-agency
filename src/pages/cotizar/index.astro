@@ -1,0 +1,173 @@
+---
+import Base from "../../layouts/Base.astro";
+import { site } from "../../data/site";
+import { services } from "../../data/services";
+
+const base = import.meta.env.BASE_URL.replace(/\/?$/, "/");
+const files = [
+  { id: "contacto", file: "01-contacto.ts", label: "Contacto" },
+  { id: "proyecto", file: "02-proyecto.ts", label: "Proyecto" },
+  { id: "alcance", file: "03-alcance.ts", label: "Alcance" },
+  { id: "extras", file: "04-extras.ts", label: "Extras" },
+];
+const budgets = ["< 3k", "3k – 8k", "8k – 20k", "20k +", "aún no sé"];
+const timelines = ["ASAP", "1 – 2 meses", "3 – 6 meses", "flexible"];
+const channels = ["email", "whatsapp", "videollamada"];
+const sources = ["Google", "Instagram", "TikTok", "LinkedIn", "Recomendación", "Otro"];
+---
+
+<Base
+  title="Iniciar proyecto: cotiza tu app, web o marca | Forklia"
+  description="Cuéntanos tu proyecto en un editor interactivo y recibe una propuesta con alcance, plazos y precio cerrado en menos de 48 horas, estés en el país que estés."
+  breadcrumbs={[{ name: "Iniciar proyecto", path: "cotizar/" }]}
+>
+  <section class="quote-page">
+    <div class="wrap">
+      <nav class="crumbs" aria-label="Ruta" data-reveal><a href={base}>Inicio</a><span>/</span><span aria-current="page">Iniciar proyecto</span></nav>
+      <div class="quote-head">
+        <div>
+          <div class="eyebrow" data-reveal>// iniciar proyecto</div>
+          <h1 data-split>Compilemos tu <span class="grad-text">idea</span></h1>
+        </div>
+        <p class="lead" data-reveal style="--d:160ms">Completa las variables, ejecuta <code>enviar()</code> y te respondemos en menos de 24 horas hábiles. Propuesta cerrada en 48 horas, desde cualquier país.</p>
+      </div>
+
+      <div class="vsc" data-vsc data-reveal style="--d:200ms" data-email={site.email} data-wa={site.whatsapp}>
+        <div class="vsc__title">
+          <div class="window__dots"><i></i><i></i><i></i></div>
+          <span>propuesta.ts — forklia-workspace</span>
+          <kbd class="vsc__hot">⌘ ↵ enviar</kbd>
+        </div>
+
+        <div class="vsc__body">
+          <nav class="vsc__activity" aria-hidden="true">
+            <i class="is-on"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="14 3 14 9 20 9"></polyline></svg></i>
+            <i><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.5" y2="16.5"></line></svg></i>
+            <i><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="6" cy="6" r="2.5"></circle><circle cx="6" cy="18" r="2.5"></circle><circle cx="18" cy="9" r="2.5"></circle><path d="M6 8.5v7M18 11.5c0 3-4 3-9.5 5"></path></svg></i>
+            <i><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><polygon points="6 4 20 12 6 20 6 4"></polygon></svg></i>
+          </nav>
+
+          <aside class="vsc__side" aria-label="Secciones del formulario">
+            <div class="vsc__side-head">EXPLORADOR</div>
+            <div class="vsc__folder">▾ propuesta</div>
+            {files.map((f, i) => (
+              <a href={`#q-${f.id}`} class={`vsc__file${i === 0 ? " is-on" : ""}`} data-file={f.id}>
+                <span class="vsc__ts">TS</span>{f.file}<i class="vsc__state" data-state={f.id} aria-label="pendiente"></i>
+              </a>
+            ))}
+            <div class="vsc__file vsc__file--json"><span class="vsc__js">{"{}"}</span>propuesta.json</div>
+          </aside>
+
+          <div class="vsc__main">
+            <div class="vsc__tabs" role="tablist" aria-label="Archivos">
+              {files.map((f, i) => <a href={`#q-${f.id}`} class={i === 0 ? "is-on" : undefined} data-tab={f.id}><span class="vsc__ts">TS</span>{f.file}</a>)}
+            </div>
+            <form class="vsc__editor" id="quote-form" novalidate>
+              <div class="cl c">// Forklia · propuesta de proyecto. Los campos con * son obligatorios.</div>
+              <div class="cl"><span class="k">import</span> {"{ propuesta }"} <span class="k">from</span> <span class="s">"@forklia/estudio"</span>;</div>
+              <div class="cl"></div>
+
+              <fieldset id="q-contacto" data-block="contacto" aria-label="01 · contacto.ts: ¿quién eres?">
+                <div class="cl c" aria-hidden="true">// 01 · contacto.ts: ¿quién eres?</div>
+                <div class="cl"><label for="f-nombre"><span class="k">const</span> <span class="v">nombre</span>*<span class="t">: string</span> = </label><span class="s">"</span><input id="f-nombre" name="nombre" required autocomplete="name" placeholder="Tu nombre" /><span class="s">"</span>;</div>
+                <div class="cl"><label for="f-email"><span class="k">const</span> <span class="v">email</span>*<span class="t">: string</span> = </label><span class="s">"</span><input id="f-email" name="email" type="email" required autocomplete="email" placeholder="tu@empresa.com" /><span class="s">"</span>;</div>
+                <div class="cl"><label for="f-empresa"><span class="k">const</span> <span class="v">empresa</span><span class="t">?: string</span> = </label><span class="s">"</span><input id="f-empresa" name="empresa" autocomplete="organization" placeholder="Opcional" /><span class="s">"</span>;</div>
+                <div class="cl"><label for="f-pais"><span class="k">const</span> <span class="v">pais</span><span class="t">: string</span> = </label><span class="s">"</span><input id="f-pais" name="pais" autocomplete="country-name" placeholder="Cualquier país 🌎" /><span class="s">"</span>;</div>
+              </fieldset>
+
+              <fieldset id="q-proyecto" data-block="proyecto" aria-label="02 · proyecto.ts: ¿qué construimos?">
+                <div class="cl c" aria-hidden="true">// 02 · proyecto.ts: ¿qué construimos?</div>
+                <div class="cl cl--wrap">
+                  <span id="l-super"><span class="k">const</span> <span class="v">superpoderes</span>*<span class="t">: Superpoder[]</span> = [</span>
+                  <span class="chips" role="group" aria-labelledby="l-super">
+                    {services.map((s) => (
+                      <label class="chip"><input type="checkbox" name="superpoderes" value={s.id} data-label={s.name} /><span>"{s.id}"</span></label>
+                    ))}
+                  </span>
+                  <span>];</span>
+                </div>
+                <div class="cl cl--wrap">
+                  <label for="f-idea"><span class="k">const</span> <span class="v">idea</span>*<span class="t">: string</span> = <span class="s">`</span></label>
+                  <textarea id="f-idea" name="idea" rows="4" required minlength="20" placeholder="Cuéntanos qué quieres construir, para quién y qué problema resuelve…"></textarea>
+                  <span class="s">`</span>;
+                </div>
+                <div class="cl"><label for="f-link"><span class="k">const</span> <span class="v">referencia</span><span class="t">?: URL</span> = </label><span class="s">"</span><input id="f-link" name="referencia" type="url" placeholder="https:// (opcional)" /><span class="s">"</span>;</div>
+              </fieldset>
+
+              <fieldset id="q-alcance" data-block="alcance" aria-label="03 · alcance.ts: presupuesto y tiempos (en USD)">
+                <div class="cl c" aria-hidden="true">// 03 · alcance.ts: presupuesto y tiempos (en USD)</div>
+                <div class="cl cl--wrap">
+                  <span id="l-budget"><span class="k">const</span> <span class="v">presupuesto</span><span class="t">: USD</span> =</span>
+                  <span class="chips" role="radiogroup" aria-labelledby="l-budget">
+                    {budgets.map((b) => <label class="chip"><input type="radio" name="presupuesto" value={b} /><span>"{b}"</span></label>)}
+                  </span>;
+                </div>
+                <div class="cl cl--wrap">
+                  <span id="l-plazo"><span class="k">const</span> <span class="v">plazo</span><span class="t">: Plazo</span> =</span>
+                  <span class="chips" role="radiogroup" aria-labelledby="l-plazo">
+                    {timelines.map((b) => <label class="chip"><input type="radio" name="plazo" value={b} /><span>"{b}"</span></label>)}
+                  </span>;
+                </div>
+              </fieldset>
+
+              <fieldset id="q-extras" data-block="extras" aria-label="04 · extras.ts: los detalles">
+                <div class="cl c" aria-hidden="true">// 04 · extras.ts: los detalles</div>
+                <div class="cl"><label for="f-canal"><span class="k">const</span> <span class="v">canal</span><span class="t">: Canal</span> = </label>
+                  <select id="f-canal" name="canal">{channels.map((c) => <option value={c}>"{c}"</option>)}</select>;
+                </div>
+                <div class="cl"><label for="f-fuente"><span class="k">const</span> <span class="v">nosConociste</span><span class="t">: Fuente</span> = </label>
+                  <select id="f-fuente" name="fuente"><option value="">— elige —</option>{sources.map((c) => <option value={c}>"{c}"</option>)}</select>;
+                </div>
+              </fieldset>
+
+              <div class="cl"></div>
+              <div class="cl"><span class="k">await</span> propuesta.<span class="f">enviar</span>(); <span class="c">// ⌘ + Enter</span></div>
+              <div class="vsc__run">
+                <button type="submit" class="btn btn--primary" data-magnetic>▶ Ejecutar enviar()</button>
+                <button type="button" class="btn btn--ghost btn--sm" data-reset>Limpiar</button>
+              </div>
+            </form>
+          </div>
+
+          <aside class="vsc__panel" aria-label="Terminal y vista previa">
+            <div class="vsc__ptabs" role="tablist">
+              <button type="button" class="is-on" data-ptab="term" role="tab" aria-selected="true">TERMINAL</button>
+              <button type="button" data-ptab="json" role="tab" aria-selected="false">propuesta.json</button>
+            </div>
+            <div class="vsc__term" data-pane="term" aria-live="polite">
+              <div class="tl"><span class="p">forklia ~ %</span> npm run propuesta</div>
+              <div class="tl m">› watching for changes…</div>
+            </div>
+            <pre class="vsc__json" data-pane="json" hidden></pre>
+            <div class="vsc__done" hidden>
+              <b>✓ Propuesta lista</b>
+              <p>Abrimos tu correo con todo prellenado. Si no se abrió, envíala desde aquí:</p>
+              <div class="vsc__done-btns">
+                <a class="btn btn--primary btn--sm" data-mailto href="#">Abrir en mi correo</a>
+                <a class="btn btn--ghost btn--sm" data-wa href="#" target="_blank" rel="noopener">Enviar por WhatsApp</a>
+                <button type="button" class="btn btn--ghost btn--sm" data-copy-json>Copiar JSON</button>
+              </div>
+            </div>
+          </aside>
+        </div>
+
+        <div class="vsc__status">
+          <span>⎇ main</span>
+          <span data-status-errors>⊘ 0 ⚠ 0</span>
+          <span class="vsc__status-prog"><i><b data-prog></b></i><em data-prog-txt>0 / 5</em></span>
+          <span class="hide-sm">Ln <b data-ln>1</b>, Col <b data-col>1</b></span>
+          <span class="hide-sm">UTF-8</span>
+          <span>TypeScript</span>
+        </div>
+      </div>
+
+      <div class="quote-next">
+        <div class="card" data-reveal data-spotlight><b>01</b><h2>Te respondemos</h2><p>En menos de 24 horas hábiles, en español o inglés.</p></div>
+        <div class="card" data-reveal data-spotlight style="--d:80ms"><b>02</b><h2>Llamada de descubrimiento</h2><p>30 minutos por videollamada, en el horario de tu país.</p></div>
+        <div class="card" data-reveal data-spotlight style="--d:160ms"><b>03</b><h2>Propuesta cerrada</h2><p>Alcance, plazos y precio en menos de 48 horas.</p></div>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<script src="../../scripts/quote.js"></script>

@@ -1,0 +1,20 @@
+# Forklia
+
+> Forklia es un estudio remoto de producto digital fundado por Fabian Pernía (Full Stack Engineer) y Fabio Pernía (Creative Director & Head of Sales). Diseña y desarrolla apps móviles, sitios web, estrategias SEO/GEO y sistemas de marca interactivos para clientes de cualquier país, en español e inglés.
+
+## Superpoderes (servicios)
+
+- [Apps móviles](https://fablexis.github.io/web-agency/soluciones/#apps): apps iOS nativas y multiplataforma, de descubrimiento a publicación en App Store y Google Play.
+- [Desarrollo web](https://fablexis.github.io/web-agency/soluciones/#web): landing pages, sitios corporativos, e-commerce y plataformas a medida.
+- [SEO & GEO](https://fablexis.github.io/web-agency/soluciones/#seo): SEO técnico, contenido, datos estructurados y optimización para motores de respuesta con IA.
+- [Sistemas de marca](https://fablexis.github.io/web-agency/soluciones/#branding): logo, paleta, tipografía y brand kits interactivos con generador de firma de correo.
+
+## Proyectos
+
+- [Lyapp](https://fablexis.github.io/web-agency/proyectos/lyapp/): app iOS para registrar el sueño, la alimentación y la salud del primer año de un bebé. Disponible en App Store.
+- [Simply Andy](https://fablexis.github.io/web-agency/proyectos/simply-andy/): identidad, portafolio bilingüe y brand kit interactivo para una creadora de UGC.
+- [Your English Buddy](https://fablexis.github.io/web-agency/proyectos/your-english-buddy/): sitio de una academia de inglés práctico para hispanohablantes.
+
+## Contacto
+
+- [Iniciar proyecto](https://fablexis.github.io/web-agency/cotizar/): propuesta con alcance, plazo y precio cerrado en menos de 48 horas.

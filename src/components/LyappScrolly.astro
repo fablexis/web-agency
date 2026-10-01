@@ -1,0 +1,106 @@
+---
+const base = import.meta.env.BASE_URL.replace(/\/?$/, "/");
+const week = [
+  ["Sáb", 13.5], ["Dom", 12.8], ["Lun", 15.0], ["Mar", 14.4], ["Mié", 13.7], ["Jue", 13.1], ["Vie", 12.5],
+] as const;
+const steps = [
+  { t: "Su sueño,", g: "de un vistazo", p: "Un toque inicia la siesta o la noche. El temporizador sigue vivo en la pantalla de bloqueo y en la Dynamic Island." },
+  { t: "¿Es normal", g: "para su edad?", p: "El resumen semanal compara cada noche con los rangos típicos por edad de la American Academy of Pediatrics." },
+  { t: "Patrones que", g: "se te escaparían", p: "El Coach lee los registros y te cuenta qué cambió esta semana. La IA solo responde si tú la autorizas." },
+  { t: "Un PDF para", g: "el pediatra", p: "Tomas, sueño, vacunas y medicación en un reporte listo para compartir. Todo vive en tu teléfono: sin cuentas ni nube." },
+];
+---
+
+<section class="scrolly scrolly--ly" id="lyapp-demo" data-scrolly aria-label="Demo interactiva de Lyapp">
+  <div class="scrolly__sticky">
+    <div class="scrolly__grid">
+      <div class="scrolly__steps">
+        <div class="proj-tag"><img src={`${base}projects/lyapp-icon.webp`} alt="" width="28" height="28" loading="lazy" /><span>Lyapp · App iOS</span><em>Disponible en App Store</em></div>
+        {steps.map((s, i) => (
+          <div class={`sstep${i === 0 ? " is-active" : ""}`}>
+            <h3>{s.t} <span class="ly-grad">{s.g}</span></h3>
+            <p>{s.p}</p>
+            <a href={`${base}proyectos/lyapp/`} class="link-arrow">Ver el caso completo <span>→</span></a>
+          </div>
+        ))}
+        <div class="scrolly__dots">{steps.map((_, i) => <i class={i === 0 ? "is-on" : undefined}></i>)}</div>
+      </div>
+
+      <div class="phone-wrap">
+        <div class="phone phone--ly" id="phone">
+          <div class="phone__screen">
+            <div class="phone__notch"><span class="island-timer" data-island><i></i><b data-timer>0:00</b></span></div>
+            <div class="phone__status"><span>5:55</span><span>●●● 100%</span></div>
+
+            <div class="screen ly is-active" data-screen="0">
+              <div class="ly-hello"><span class="ly-av">L</span><span><small>Buenas tardes</small><b>Lua · 14 meses</b></span></div>
+              <div class="ly-card ly-feed"><span class="ly-ic">✧</span><span>Última toma hace 0 min: <b>20 min · pecho</b><small>Hoy: 2 siestas · 5 tomas · 1 sólido</small></span></div>
+              <div class="ly-card ly-sleep">
+                <div class="ly-ring"><svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="42" class="tr"></circle><circle cx="50" cy="50" r="42" class="vl"></circle></svg><div><b>12.5h</b><small>típico 11–14 h</small></div></div>
+                <div class="ly-sleep__meta"><small>SUEÑO · HOY</small><div><span><small>NOCHE</small><b class="ly-blue">10h 30m</b></span><span><small>SIESTAS</small><b class="ly-coral">2h</b></span></div><em>☾ Próximo sueño ~6:52 PM</em></div>
+                <button class="ly-btn" type="button" tabindex="-1">▶ Iniciar temporizador</button>
+              </div>
+              <div class="ly-tiles">
+                <div><span class="ly-ic ly-ic--peach">🍼</span><b>Tomas</b><small class="ly-coral">hace 0 min</small></div>
+                <div><span class="ly-ic ly-ic--blue">▦</span><b>Calendario</b><small class="ly-blue">Control 9 meses</small></div>
+              </div>
+            </div>
+
+            <div class="screen ly" data-screen="1">
+              <small class="ly-back">‹ Resumen</small>
+              <h6 class="ly-title">Resumen</h6>
+              <small class="ly-sub">Semana del 12 al 18 sep</small>
+              <div class="ly-card ly-week">
+                <div class="ly-week__top"><span><small>TOTAL DIARIO</small><b>13.6h</b> <small>prom.</small></span><em>✓ En rango</em></div>
+                <div class="ly-bars">
+                  <span class="ly-band"></span>
+                  {week.map(([d, h], i) => <i style={`--h:${(h / 16) * 100}%;--i:${i}`} class={i === 6 ? "is-today" : undefined}><small>{h}</small><em>{d}</em></i>)}
+                </div>
+              </div>
+              <div class="ly-card ly-norm"><small>VS. NORMA A LOS 14 MESES</small><div class="ly-norm__bar"><i></i><b></b></div><p>Los bebés de 14 meses suelen dormir <b>11–14 h</b>. Lua está en rango.</p></div>
+            </div>
+
+            <div class="screen ly" data-screen="2">
+              <small class="ly-back">‹ Inicio</small>
+              <h6 class="ly-title">Coach</h6>
+              <div class="ly-card ly-coach-hi"><span class="ly-ic">✧</span><span><b>Buenas noches, Lua.</b><small>Durmió 10h 30m: 2 despertares cortos. 5 tomas hoy.</small></span></div>
+              <small class="ly-section">COSAS QUE NOTÉ <em>4 nuevas</em></small>
+              <div class="ly-insight ly-insight--blue"><b>☾ Algunos despertares más</b><small>3 de las últimas 7 noches tuvieron dos o más.</small></div>
+              <div class="ly-insight ly-insight--blue"><b>▦ Algo en el calendario</b><small>Control de 9 meses en 2 días, 10:30 AM.</small></div>
+              <div class="ly-insight ly-insight--green"><b>◷ Encontrando un ritmo de siestas</b><small>Empiezan en una ventana de 15 minutos.</small></div>
+            </div>
+
+            <div class="screen ly" data-screen="3">
+              <small class="ly-back">‹ Inicio</small>
+              <h6 class="ly-title">Reporte</h6>
+              <small class="ly-sub">Para compartir con el pediatra</small>
+              <div class="ly-row ly-row--blue"><span>☾</span><b>12h 30m hoy</b><small>Sueño</small></div>
+              <div class="ly-row ly-row--peach"><span>🍼</span><b>310 ml · 5 tomas</b><small>Alimentación</small></div>
+              <div class="ly-row ly-row--blue"><span>▦</span><b>Control de 9 meses</b><small>Próxima cita · 20 sep</small></div>
+              <div class="ly-row ly-row--cream"><span>⇪</span><b>Reporte PDF</b><small>Comparte tus registros</small></div>
+              <div class="ly-pdf"><i></i><i></i><i></i><b>lua-reporte-sep.pdf</b></div>
+            </div>
+
+            <div class="tabbar tabbar--ly"><i class="is-on"></i><i></i><i></i><i></i></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="side-cards">
+        <div class="scard">
+          <header><span class="float-chip__ic ic-violet">◉</span><span><b>Live Activity</b><small>Dynamic Island · en vivo</small></span></header>
+          <p>Siesta en curso: <b class="mono" data-timer>0:00</b></p>
+        </div>
+        <div class="scard">
+          <header><span class="float-chip__ic ic-green">✓</span><span><b>Rango AAP</b><small>14 meses · 11–14 h</small></span></header>
+          <p>Promedio semanal 13.6 h, dentro del rango típico.</p>
+          <div class="meter" style="--w:78%"><i></i></div>
+        </div>
+        <div class="scard">
+          <header><span class="float-chip__ic ic-cyan">🔒</span><span><b>Privacidad por diseño</b><small>datos locales</small></span></header>
+          <div class="pill-row"><span>0 cuentas</span><span>0 nube</span><span>0 anuncios</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

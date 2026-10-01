@@ -9,10 +9,14 @@ const categories = ["Todos", ...new Set(posts.map((p) => p.category))];
 const [featured, ...rest] = posts;
 ---
 
-<Base title="Blog — Forklia" description="Ideas, guías y aprendizajes sobre producto digital, diseño, SEO y growth.">
+<Base
+  title="Bitácora: guías de apps, webs, SEO y marca | Forklia"
+  description="La bitácora de Forklia: lo que aprendemos construyendo apps, sitios web, estrategias SEO y sistemas de marca. Guías prácticas, sin humo."
+  breadcrumbs={[{ name: "Bitácora", path: "blog/" }]}
+>
   <PageHero
-    eyebrow="Blog"
-    title='Ideas, guías y <span class="grad-text">aprendizajes</span>'
+    eyebrow="Bitácora"
+    title='El changelog de <span class="grad-text">lo que aprendemos</span>'
     lead="Lo que aprendemos construyendo productos digitales, contado sin humo. Contenido de ejemplo mientras publicamos los primeros artículos."
   />
 
