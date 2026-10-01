@@ -1,5 +1,5 @@
 ---
-import { href, base, type Lang } from "../i18n";
+import { href, base, type Lang, srcset2x } from "../i18n";
 
 interface Props { lang: Lang }
 const { lang } = Astro.props;
@@ -52,7 +52,7 @@ const rowIc = ["☾", "🍼", "▦", "⇪"];
   <div class="scrolly__sticky">
     <div class="scrolly__grid">
       <div class="scrolly__steps">
-        <div class="proj-tag"><img src={`${base}projects/lyapp-icon.webp`} alt="" width="28" height="28" loading="lazy" /><span>{L.tag}</span><em>{L.live}</em></div>
+        <div class="proj-tag"><img src={`${base}projects/lyapp-icon.webp`} srcset={srcset2x("projects/lyapp-icon.webp")} alt="" width="28" height="28" loading="lazy" /><span>{L.tag}</span><em>{L.live}</em></div>
         {L.steps.map((s, i) => (
           <div class={`sstep${i === 0 ? " is-active" : ""}`}>
             <h3>{s.t} <span class="ly-grad">{s.g}</span></h3>

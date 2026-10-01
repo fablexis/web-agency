@@ -6,7 +6,7 @@ import BuddyEffect from "../components/BuddyEffect.astro";
 import LyappScrolly from "../components/LyappScrolly.astro";
 import { site, testimonials } from "../data/site";
 import { projects, serviceNames } from "../data/projects";
-import { href, route, loc, base, type Lang } from "../i18n";
+import { href, route, loc, base, type Lang, srcset2x } from "../i18n";
 import { avatarSvg } from "../lib/avatar";
 
 interface Props { lang: Lang; slug: string }
@@ -40,7 +40,7 @@ const fonts = raw.effect === "phone" ? "&family=Playfair+Display:wght@500;600" :
       <div class="wrap">
         <nav class="crumbs" aria-label="Breadcrumb" data-reveal><a href={href("home", lang)}>~</a><span>/</span><a href={href("work", lang)}>deploys</a><span>/</span><span aria-current="page">{p.slug}</span></nav>
         <div class="case-hero__top" data-reveal>
-          {p.icon && <img class="case-hero__icon" src={base + p.icon} alt={`${p.name} icon`} width="64" height="64" />}
+          {p.icon && <img class="case-hero__icon" src={base + p.icon} srcset={srcset2x(p.icon)} alt={`${p.name} icon`} width="64" height="64" />}
           <span class={`pcard__status${p.live ? " is-live" : ""}`}><span class="dot"></span>{p.status}</span>
           <span class="case-hero__cat">{p.category}</span>
         </div>
@@ -62,10 +62,10 @@ const fonts = raw.effect === "phone" ? "&family=Playfair+Display:wght@500;600" :
       {p.images[0].kind === "desktop" ? (
         <div class="case-browser">
           <div class="window__bar"><div class="window__dots"><i></i><i></i><i></i></div><div class="window__url"><b>●</b> {p.links[0].href.replace(/^https?:\/\//, "")}</div></div>
-          <img src={base + p.images[0].src} alt={p.images[0].alt} width="1280" height="800" fetchpriority="high" />
+          <img src={base + p.images[0].src} srcset={srcset2x(p.images[0].src)} alt={p.images[0].alt} width="1280" height="800" fetchpriority="high" />
         </div>
       ) : (
-        <div class="case-phones">{p.images.map((im: any, i: number) => <img src={base + im.src} alt={im.alt} width="600" height="1298" style={`--i:${i}`} loading={i ? "lazy" : "eager"} />)}</div>
+        <div class="case-phones">{p.images.map((im: any, i: number) => <img src={base + im.src} srcset={srcset2x(im.src)} alt={im.alt} width="600" height="1298" style={`--i:${i}`} loading={i ? "lazy" : "eager"} />)}</div>
       )}
     </section>
 
@@ -104,7 +104,7 @@ const fonts = raw.effect === "phone" ? "&family=Playfair+Display:wght@500;600" :
           {p.images.slice(1).map((im: any, i: number) => (
             <figure class="case-browser case-browser--sm" data-reveal style={`--d:${i * 80}ms`}>
               <div class="window__bar"><div class="window__dots"><i></i><i></i><i></i></div></div>
-              <img src={base + im.src} alt={im.alt} width="1280" height="800" loading="lazy" decoding="async" />
+              <img src={base + im.src} srcset={srcset2x(im.src)} alt={im.alt} width="1280" height="800" loading="lazy" decoding="async" />
               <figcaption>{im.alt}</figcaption>
             </figure>
           ))}
@@ -144,7 +144,7 @@ const fonts = raw.effect === "phone" ? "&family=Playfair+Display:wght@500;600" :
             <span class="nextdeploy__bar"><i></i><em class="nextdeploy__b1">{c.building}</em><em class="nextdeploy__b2">{c.ready}</em></span>
           </div>
           <div class={`nextdeploy__shot nextdeploy__shot--${next.images[0].kind}`} aria-hidden="true">
-            {next.images[0].kind === "desktop" ? <img src={base + next.images[0].src} alt="" width="1280" height="800" loading="lazy" /> : next.images.slice(0, 2).map((im: any) => <img src={base + im.src} alt="" width="600" height="1298" loading="lazy" />)}
+            {next.images[0].kind === "desktop" ? <img src={base + next.images[0].src} srcset={srcset2x(next.images[0].src)} alt="" width="1280" height="800" loading="lazy" /> : next.images.slice(0, 2).map((im: any) => <img src={base + im.src} srcset={srcset2x(im.src)} alt="" width="600" height="1298" loading="lazy" />)}
           </div>
         </a>
       </div>

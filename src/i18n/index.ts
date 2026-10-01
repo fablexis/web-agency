@@ -131,3 +131,6 @@ export const nav: { key: RouteKey; tokens: L<{ t: string; c: string }[]>; hint: 
 ];
 
 export const navPlain = (key: RouteKey, lang: Lang) => nav.find((n) => n.key === key)!.tokens[lang].map((x) => x.t).join("");
+
+/** srcset for project images exported at 1x and @2x. */
+export const srcset2x = (src: string) => `${base}${src} 1x, ${base}${src.replace(/\.webp$/, "@2x.webp")} 2x`;

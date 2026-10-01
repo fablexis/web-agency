@@ -7,7 +7,7 @@ import Cta from "../components/Cta.astro";
 import { site, faqs } from "../data/site";
 import { services } from "../data/services";
 import { projects } from "../data/projects";
-import { href, route, loc, base, ui, type Lang } from "../i18n";
+import { href, route, loc, base, ui, type Lang, srcset2x } from "../i18n";
 
 interface Props { lang: Lang }
 const { lang } = Astro.props;
@@ -97,8 +97,8 @@ const schema = [
                 <a href={href("case", lang, proj.slug)} class="realcase" data-reveal data-spotlight style={`--pa:${proj.accent}`}>
                   <div class="realcase__shot">
                     {proj.images[0].kind === "desktop"
-                      ? <img src={base + proj.images[0].src} alt={proj.images[0].alt} width="1280" height="800" loading="lazy" decoding="async" />
-                      : <div class="realcase__phones">{proj.images.slice(0, 2).map((im: any) => <img src={base + im.src} alt={im.alt} width="600" height="1298" loading="lazy" decoding="async" />)}</div>}
+                      ? <img src={base + proj.images[0].src} srcset={srcset2x(proj.images[0].src)} alt={proj.images[0].alt} width="1280" height="800" loading="lazy" decoding="async" />
+                      : <div class="realcase__phones">{proj.images.slice(0, 2).map((im: any) => <img src={base + im.src} srcset={srcset2x(im.src)} alt={im.alt} width="600" height="1298" loading="lazy" decoding="async" />)}</div>}
                   </div>
                   <div class="realcase__body">
                     <span class="realcase__kicker"><span class="tk tk--kw">import</span> {"{ "}{proj.slug}{" }"} <span class="tk tk--kw">from</span> <span class="tk tk--s">"deploys"</span></span>

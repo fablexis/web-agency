@@ -1,6 +1,6 @@
 ---
 import type { Project } from "../data/projects";
-import { ui, href, loc, base, type Lang } from "../i18n";
+import { ui, href, loc, base, type Lang, srcset2x } from "../i18n";
 
 interface Props {
   project: Project;
@@ -15,10 +15,10 @@ const img = p.images[0];
 <a href={href("case", lang, p.slug)} class="card pcard" data-reveal data-spotlight data-tilt style={`--d:${delay}ms; --pa:${p.accent}`}>
   <div class={`pcard__art pcard__art--${img.kind}`} style={`--p1:${p.palette[0]};--p2:${p.palette[1]};--p3:${p.palette[2] ?? p.palette[0]}`}>
     {img.kind === "desktop" ? (
-      <div class="pcard__browser"><span><i></i><i></i><i></i></span><img src={base + img.src} alt={img.alt} width="1280" height="800" loading="lazy" decoding="async" /></div>
+      <div class="pcard__browser"><span><i></i><i></i><i></i></span><img src={base + img.src} srcset={srcset2x(img.src)} alt={img.alt} width="1280" height="800" loading="lazy" decoding="async" /></div>
     ) : (
       <div class="pcard__phones">
-        {p.images.slice(0, 3).map((im: any) => <img src={base + im.src} alt={im.alt} width="600" height="1298" loading="lazy" decoding="async" />)}
+        {p.images.slice(0, 3).map((im: any) => <img src={base + im.src} srcset={srcset2x(im.src)} alt={im.alt} width="600" height="1298" loading="lazy" decoding="async" />)}
       </div>
     )}
     <span class={`pcard__status${p.live ? " is-live" : ""}`}><span class="dot"></span>{p.status}</span>
