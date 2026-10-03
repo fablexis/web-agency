@@ -21,7 +21,7 @@ export const site = {
   ],
 };
 
-export const tech = ["Swift", "React", "Next.js", "Astro", "Node.js", "Supabase", "Vercel", "Figma", "Google Search Console", "Schema.org", "OpenAI", "GitHub Actions"];
+export const tech = ["React Native", "React", "Next.js", "Astro", "Node.js", "Supabase", "Vercel", "Figma", "Google Search Console", "Schema.org", "OpenAI", "GitHub Actions"];
 
 export const steps = [
   { title: { en: "Discovery", es: "Descubrimiento" }, c: "#5EE3FF", text: { en: "We learn your business, goals and audience and turn them into a clear, actionable spec.", es: "Entendemos tu negocio, tus objetivos y a tu audiencia para convertirlos en una especificación clara y accionable." }, icon: '<circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.5" y2="16.5"></line>' },

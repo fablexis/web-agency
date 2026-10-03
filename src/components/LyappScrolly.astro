@@ -60,7 +60,9 @@ const rowIc = ["☾", "🍼", "▦", "⇪"];
             <a href={href("case", lang, "lyapp")} class="link-arrow">{L.full} <span>→</span></a>
           </div>
         ))}
-        <div class="scrolly__dots">{L.steps.map((_, i) => <i class={i === 0 ? "is-on" : undefined}></i>)}</div>
+        <div class="scrolly__dots" role="tablist">
+          {L.steps.map((s, i) => <button type="button" class={i === 0 ? "is-on" : undefined} aria-label={`${s.t} ${s.g}`} aria-current={i === 0 ? "true" : "false"}></button>)}
+        </div>
       </div>
 
       <div class="phone-wrap">

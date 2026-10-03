@@ -20,19 +20,19 @@ export type Service = {
 export const services: Service[] = [
   {
     id: "apps",
-    file: "apps.swift",
+    file: "apps.tsx",
     name: { en: "Mobile apps", es: "Apps móviles" },
     title: { en: "Apps people open every day", es: "Apps que la gente abre todos los días" },
     lead: {
-      en: "We design and build native iOS and cross-platform apps with clear states, purposeful motion and the speed that makes an app feel like yours.",
-      es: "Diseñamos y construimos apps iOS nativas y multiplataforma con estados claros, animaciones con intención y la velocidad que hace que una app se sienta tuya.",
+      en: "We design and build React Native apps for iOS and Android, with clear states, purposeful motion and the speed that makes an app feel like yours.",
+      es: "Diseñamos y construimos apps en React Native para iOS y Android, con estados claros, animaciones con intención y la velocidad que hace que una app se sienta tuya.",
     },
     icon: '<rect x="6" y="2.5" width="12" height="19" rx="2.5"></rect><line x1="10.5" y1="18.5" x2="13.5" y2="18.5"></line>',
     tone: "violet",
     includes: [
       { en: "Product discovery and an MVP feature map", es: "Descubrimiento de producto y mapa de funcionalidades del MVP" },
       { en: "UX/UI design in Figma with clickable prototypes", es: "Diseño UX/UI en Figma con prototipos navegables" },
-      { en: "Native iOS or cross-platform development", es: "Desarrollo iOS nativo o multiplataforma" },
+      { en: "React Native for iOS and Android, from one codebase", es: "React Native para iOS y Android, desde una sola base de código" },
       { en: "Widgets, Live Activities, notifications and offline mode", es: "Widgets, Live Activities, notificaciones y modo offline" },
       { en: "AI integrations when they add real value", es: "Integraciones con IA cuando suman valor real" },
       { en: "Publishing to the App Store and Google Play", es: "Publicación en App Store y Google Play" },
@@ -45,7 +45,7 @@ export const services: Service[] = [
       { value: "8–16", label: { en: "weeks to launch", es: "semanas al lanzamiento" } },
       { value: "60 fps", label: { en: "as the standard", es: "como estándar" } },
     ],
-    stack: ["Swift", "SwiftUI", "React Native", "Supabase", "App Store Connect"],
+    stack: ["React Native", "TypeScript", "Supabase", "App Store Connect", "Google Play"],
     timeline: { en: "8 to 16 weeks", es: "8 a 16 semanas" },
     project: "lyapp",
     viz: "phone",

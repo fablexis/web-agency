@@ -417,12 +417,26 @@ function scrollyUpdate() {
   if (step === scrollyStep) return;
   scrollyStep = step;
   $$(".sstep", scrolly).forEach((s, i) => s.classList.toggle("is-active", i === step));
-  $$(".scrolly__dots i", scrolly).forEach((d, i) => d.classList.toggle("is-on", i === step));
+  $$(".scrolly__dots button", scrolly).forEach((d, i) => {
+    d.classList.toggle("is-on", i === step);
+    d.setAttribute("aria-current", String(i === step));
+  });
   $$(".screen", scrolly).forEach((s, i) => { s.classList.toggle("is-active", i === step); s.classList.toggle("is-past", i < step); });
   $$(".tabbar i", scrolly).forEach((d, i) => d.classList.toggle("is-on", i === step));
   $$(".scard", scrolly).forEach((c, i) => c.classList.toggle("is-on", i <= step));
   if (step === 1 && chat) playChat();
 }
+
+if (scrolly) $$(".scrolly__dots button", scrolly).forEach((btn, i) => {
+  btn.addEventListener("click", () => {
+    if (!scrolly) return;
+    const n = $$(".sstep", scrolly).length || 1;
+    const r = scrolly.getBoundingClientRect();
+    const total = r.height - innerHeight;
+    const p = (i + 0.45) / n;
+    window.scrollTo({ top: window.scrollY + r.top + p * total, behavior: reduced ? "auto" : "smooth" });
+  });
+});
 
 /* Lyapp: live sleep timer in the Dynamic Island */
 const timers = $$("[data-timer]");
@@ -480,14 +494,14 @@ const loader = $("#loader");
 if (loader && !document.documentElement.classList.contains("no-loader")) {
   const pct = $("#loader-pct");
   const t0 = performance.now();
-  const MIN = 1300;
+  const MIN = 2150;
   let loaded = document.readyState === "complete";
   addEventListener("load", () => (loaded = true), { once: true });
   const step = (now) => {
     const el = now - t0;
     const p = Math.min(1, el / MIN) * (loaded ? 1 : 0.92);
     if (pct) pct.textContent = `${Math.round(p * 100)}%`;
-    if ((el >= MIN && loaded) || el > 3200) {
+    if ((el >= MIN && loaded) || el > 2650) {
       if (pct) pct.textContent = "100%";
       loader.classList.add("is-done");
       setTimeout(() => loader.remove(), 700);

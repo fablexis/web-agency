@@ -51,12 +51,12 @@ if (h1 && !reduced) {
   h1.classList.add("is-typing");
   setTimeout(async () => {
     // command line types in parallel
-    if (heroCmd) (async () => { for (let i = 1; i <= full.length; i++) { heroCmd.textContent = full.slice(0, i); await wait(24); } })();
+    if (heroCmd) (async () => { for (let i = 1; i <= full.length; i++) { heroCmd.textContent = full.slice(0, i); await wait(40); } })();
     // line 1: typed with a block caret
-    for (const s of l1s) { s.classList.add("is-on", "is-cur"); await wait(75); s.classList.remove("is-cur"); }
+    for (const s of l1s) { s.classList.add("is-on", "is-cur"); await wait(120); s.classList.remove("is-cur"); }
     // line 2: written as code first…
-    for (let i = 1; i <= code.length; i++) { l2.textContent = code.slice(0, i); await wait(45); }
-    await wait(550);
+    for (let i = 1; i <= code.length; i++) { l2.textContent = code.slice(0, i); await wait(76); }
+    await wait(880);
     // …then compiled letter by letter into the headline
     l2.classList.remove("is-code");
     const l2s = letters(l2, t2);
@@ -69,10 +69,10 @@ if (h1 && !reduced) {
     });
     h1.classList.remove("is-typing");
     h1.classList.add("is-compiled");
-    await wait(l2s.length * 50 + 800);
+    await wait(l2s.length * 82 + 1200);
     l2.textContent = t2;
     l1.textContent = t1;
-  }, noLoader() ? 150 : 1400);
+  }, noLoader() ? 150 : 2250);
 } else if (heroCmd) heroCmd.textContent = heroCmd.dataset.text;
 
 /* ───────── Hero: live coding playground ───────── */
@@ -121,7 +121,7 @@ if (live) {
   }
   new IntersectionObserver(([e]) => {
     visible = e.isIntersecting;
-    if (visible && !started) { started = true; setTimeout(play, noLoader() ? 500 : 2300); }
+    if (visible && !started) { started = true; setTimeout(play, noLoader() ? 500 : 3150); }
   }, { threshold: 0.2 }).observe(live);
 }
 

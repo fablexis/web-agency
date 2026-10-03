@@ -15,7 +15,7 @@ const c = {
     chips: [["Build passed", "prod · 2s ago"], ["Lighthouse 100", "perf · a11y · seo"], ["Shipped to App Store", "Lyapp · v1.1"]],
     compiling: "compiling…", compiled: "compiled in", hot: "hot reload",
     scenes: [
-      { file: "App.swift", label: "mobile app", title: "Sleep · today", btn: "Start timer", tiles: ["Feeds", "Calendar"] },
+      { file: "App.tsx", label: "mobile app", hi: "Good morning", title: "Today", card: "This week", btn: "Get started", tiles: [["Tasks", "3 open"], ["Inbox", "2 new"]] },
       { file: "Landing.tsx", label: "website", title: "Ship faster", sub: "Your product, live in weeks.", plans: ["Starter", "Pro", "Scale"] },
       { file: "brand.css", label: "brand system", word: "your-brand", btn: "Get started" },
     ],
@@ -29,7 +29,7 @@ const c = {
     chips: [["Build exitoso", "prod · hace 2s"], ["Lighthouse 100", "perf · a11y · seo"], ["Publicada en App Store", "Lyapp · v1.1"]],
     compiling: "compilando…", compiled: "compilado en", hot: "hot reload",
     scenes: [
-      { file: "App.swift", label: "app móvil", title: "Sueño · hoy", btn: "Iniciar temporizador", tiles: ["Tomas", "Calendario"] },
+      { file: "App.tsx", label: "app móvil", hi: "Buenos días", title: "Hoy", card: "Esta semana", btn: "Empezar", tiles: [["Tareas", "3 abiertas"], ["Mensajes", "2 nuevos"]] },
       { file: "Landing.tsx", label: "sitio web", title: "Lanza más rápido", sub: "Tu producto, en vivo en semanas.", plans: ["Starter", "Pro", "Scale"] },
       { file: "brand.css", label: "sistema de marca", word: "tu-marca", btn: "Empezar" },
     ],
@@ -42,15 +42,15 @@ const scenes = [
     file: s[0].file,
     label: s[0].label,
     code: [
-      `<span class="k">struct</span> <span class="f">Today</span>: <span class="t">View</span> {`,
-      `  <span class="k">var</span> body: <span class="k">some</span> <span class="t">View</span> {`,
-      `    <span class="f">SleepRing</span>(hours: <span class="n">12.5</span>)`,
-      `    <span class="f">Button</span>(<span class="s">"${s[0].btn}"</span>) { timer.<span class="f">start</span>() }`,
-      `    <span class="f">Grid</span>([.<span class="v">feeds</span>, .<span class="v">calendar</span>])`,
-      `  }`,
+      `<span class="k">export default function</span> <span class="f">Home</span>() {`,
+      `  <span class="k">return</span> &lt;<span class="t">Screen</span> title=<span class="s">"${s[0].title}"</span>&gt;`,
+      `    &lt;<span class="t">Stats</span> range=<span class="s">"week"</span> days={<span class="n">7</span>} /&gt;`,
+      `    &lt;<span class="t">Button</span> title=<span class="s">"${s[0].btn}"</span> onPress={<span class="f">start</span>} /&gt;`,
+      `    &lt;<span class="t">Tiles</span> items={[<span class="s">"tasks"</span>, <span class="s">"inbox"</span>]} /&gt;`,
+      `  &lt;/<span class="t">Screen</span>&gt;;`,
       `}`,
     ],
-    steps: [0, 0, 1, 2, 3, 3, 3],
+    steps: [0, 1, 2, 3, 4, 4, 4],
   },
   {
     file: s[1].file,
@@ -112,7 +112,7 @@ const scenes = [
   <div class="stage" data-reveal style="--d:450ms">
     <div class="stage__glow"></div>
     {c.chips.map(([a, b], i) => (
-      <div class={`float-chip chip-${"abc"[i]}`} data-parallax={["-0.08", "0.1", "-0.05"][i]}>
+      <div class={`float-chip chip-${"abc"[i]}`} data-parallax="0">
         <div><span class={`float-chip__ic ${["ic-green", "ic-cyan", "ic-violet"][i]}`}>{["✓", "↑", "★"][i]}</span><span>{a}<small>{b}</small></span></div>
       </div>
     ))}
@@ -126,13 +126,17 @@ const scenes = [
         <div class="live__body">
           <pre class="live__code" data-live-code></pre>
           <div class="live__preview" data-live-preview>
-            <div class="live__scene" data-scene="0">
+            <div class="live__scene is-on" data-scene="0">
               <div class="pv-phone">
-                <div class="pv-island"></div>
-                <div class="pv-step" data-step="0"><small>{s[0].title}</small></div>
-                <div class="pv-step pv-ring" data-step="1"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="40"></circle><circle cx="50" cy="50" r="40"></circle></svg><b>12.5h</b></div>
-                <div class="pv-step pv-btn" data-step="2">▶ {s[0].btn}</div>
-                <div class="pv-step pv-tiles" data-step="3"><span>🍼 {s[0].tiles[0]}</span><span>▦ {s[0].tiles[1]}</span></div>
+                <div class="pv-status"><b>9:41</b><i></i></div>
+                <div class="pv-step pv-head" data-step="1"><span><small>{s[0].hi}</small><b>{s[0].title}</b></span><i></i></div>
+                <div class="pv-step pv-stats" data-step="2">
+                  <small>{s[0].card}</small><b>84%</b>
+                  <div class="pv-bars">{[38, 62, 46, 80, 54, 92, 70].map((h) => <i style={`--h:${h}%`}></i>)}</div>
+                </div>
+                <div class="pv-step pv-btn" data-step="3">{s[0].btn}</div>
+                <div class="pv-step pv-tiles" data-step="4">{s[0].tiles.map(([a, b], i) => <span><i class={i ? "is-v" : undefined}></i><b>{a}</b><small>{b}</small></span>)}</div>
+                <div class="pv-tab"><i class="is-on"></i><i></i><i></i><i></i></div>
               </div>
             </div>
             <div class="live__scene" data-scene="1">
