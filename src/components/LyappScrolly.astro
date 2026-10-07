@@ -1,5 +1,6 @@
 ---
 import { href, base, type Lang, srcset2x } from "../i18n";
+import Icon from "./Icon.astro";
 
 interface Props { lang: Lang }
 const { lang } = Astro.props;
@@ -14,11 +15,11 @@ const L = {
     ],
     week: ["Sat", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri"],
     hello: "Good afternoon", baby: "Lua · 14 months", feed: "Last feed 0m ago:", feedB: "20 min · breast", today: "Today: 2 naps · 5 feeds · 1 solid",
-    sleepToday: "SLEEP · TODAY", night: "NIGHT", naps: "NAPS", typical: "typical 11–14 h", next: "☾ Next sleep ~6:52 PM", start: "▶ Start sleep timer",
+    sleepToday: "SLEEP · TODAY", night: "NIGHT", naps: "NAPS", typical: "typical 11–14 h", next: "Next sleep ~6:52 PM", start: "▶ Start sleep timer",
     tiles: [["Feed", "0m ago"], ["Calendar", "9-month check"]],
     summary: "Summary", week2: "Week of Sep 12–18", daily: "DAILY TOTAL", avg: "avg", inRange: "✓ In range", norm: "VS. 14-MONTH NORM", normP: "Babies at 14 months typically sleep", normB: "11–14 hours", normE: "Lua is in that range.",
     back: "‹ Home", backS: "‹ Summary", coach: "Coach", hi: "Good evening, Lua.", hiS: "Slept 10h 30m: 2 short stirs. 5 feeds logged today.", noticed: "THINGS I NOTICED", news: "4 new",
-    ins: [["☾ A few more stirs overnight", "3 of the last 7 nights had two or more."], ["▦ Something on the calendar", "9-month check in 2 days, 10:30 AM."], ["◷ You're finding a nap rhythm", "Naps start within a 15-minute window."]],
+    ins: [["A few more stirs overnight", "3 of the last 7 nights had two or more."], ["Something on the calendar", "9-month check in 2 days, 10:30 AM."], ["You're finding a nap rhythm", "Naps start within a 15-minute window."]],
     report: "Report", reportS: "To share with the pediatrician", rows: [["12h 30m today", "Sleep"], ["310 ml · 5 feeds", "Feed"], ["9-month well-baby check", "Next event · Sep 20"], ["PDF report", "Share your logs"]], pdf: "lua-report-sep.pdf",
     cards: [["Live Activity", "Dynamic Island · live", "Nap in progress:"], ["AAP range", "14 months · 11–14 h", "Weekly average 13.6 h, inside the typical range."], ["Privacy by design", "local data"]],
     zero: ["0 accounts", "0 cloud", "0 ads"],
@@ -33,11 +34,11 @@ const L = {
     ],
     week: ["Sáb", "Dom", "Lun", "Mar", "Mié", "Jue", "Vie"],
     hello: "Buenas tardes", baby: "Lua · 14 meses", feed: "Última toma hace 0 min:", feedB: "20 min · pecho", today: "Hoy: 2 siestas · 5 tomas · 1 sólido",
-    sleepToday: "SUEÑO · HOY", night: "NOCHE", naps: "SIESTAS", typical: "típico 11–14 h", next: "☾ Próximo sueño ~6:52 PM", start: "▶ Iniciar temporizador",
+    sleepToday: "SUEÑO · HOY", night: "NOCHE", naps: "SIESTAS", typical: "típico 11–14 h", next: "Próximo sueño ~6:52 PM", start: "▶ Iniciar temporizador",
     tiles: [["Tomas", "hace 0 min"], ["Calendario", "Control 9 meses"]],
     summary: "Resumen", week2: "Semana del 12 al 18 sep", daily: "TOTAL DIARIO", avg: "prom.", inRange: "✓ En rango", norm: "VS. NORMA A LOS 14 MESES", normP: "Los bebés de 14 meses suelen dormir", normB: "11–14 h", normE: "Lua está en rango.",
     back: "‹ Inicio", backS: "‹ Resumen", coach: "Coach", hi: "Buenas noches, Lua.", hiS: "Durmió 10h 30m: 2 despertares cortos. 5 tomas hoy.", noticed: "COSAS QUE NOTÉ", news: "4 nuevas",
-    ins: [["☾ Algunos despertares más", "3 de las últimas 7 noches tuvieron dos o más."], ["▦ Algo en el calendario", "Control de 9 meses en 2 días, 10:30 AM."], ["◷ Encontrando un ritmo de siestas", "Empiezan en una ventana de 15 minutos."]],
+    ins: [["Algunos despertares más", "3 de las últimas 7 noches tuvieron dos o más."], ["Algo en el calendario", "Control de 9 meses en 2 días, 10:30 AM."], ["Encontrando un ritmo de siestas", "Empiezan en una ventana de 15 minutos."]],
     report: "Reporte", reportS: "Para compartir con el pediatra", rows: [["12h 30m hoy", "Sueño"], ["310 ml · 5 tomas", "Alimentación"], ["Control de 9 meses", "Próxima cita · 20 sep"], ["Reporte PDF", "Comparte tus registros"]], pdf: "lua-reporte-sep.pdf",
     cards: [["Live Activity", "Dynamic Island · en vivo", "Siesta en curso:"], ["Rango AAP", "14 meses · 11–14 h", "Promedio semanal 13.6 h, dentro del rango típico."], ["Privacidad por diseño", "datos locales"]],
     zero: ["0 cuentas", "0 nube", "0 anuncios"],
@@ -45,7 +46,8 @@ const L = {
 }[lang];
 const hours = [13.5, 12.8, 15.0, 14.4, 13.7, 13.1, 12.5];
 const rowCls = ["ly-row--blue", "ly-row--peach", "ly-row--blue", "ly-row--cream"];
-const rowIc = ["☾", "🍼", "▦", "⇪"];
+const rowIc = ["moon", "bottle", "calendar", "share"];
+const insIc = ["moon", "calendar", "clock"];
 ---
 
 <section class="scrolly scrolly--ly" id="lyapp-demo" data-scrolly aria-label={L.aria}>
@@ -73,15 +75,15 @@ const rowIc = ["☾", "🍼", "▦", "⇪"];
 
             <div class="screen ly is-active" data-screen="0">
               <div class="ly-hello"><span class="ly-av">L</span><span><small>{L.hello}</small><b>{L.baby}</b></span></div>
-              <div class="ly-card ly-feed"><span class="ly-ic">✧</span><span>{L.feed} <b>{L.feedB}</b><small>{L.today}</small></span></div>
+              <div class="ly-card ly-feed"><span class="ly-ic"><Icon name="spark" size={15} /></span><span>{L.feed} <b>{L.feedB}</b><small>{L.today}</small></span></div>
               <div class="ly-card ly-sleep">
                 <div class="ly-ring"><svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="42" class="tr"></circle><circle cx="50" cy="50" r="42" class="vl"></circle></svg><div><b>12.5h</b><small>{L.typical}</small></div></div>
-                <div class="ly-sleep__meta"><small>{L.sleepToday}</small><div><span><small>{L.night}</small><b class="ly-blue">10h 30m</b></span><span><small>{L.naps}</small><b class="ly-coral">2h</b></span></div><em>{L.next}</em></div>
+                <div class="ly-sleep__meta"><small>{L.sleepToday}</small><div><span><small>{L.night}</small><b class="ly-blue">10h 30m</b></span><span><small>{L.naps}</small><b class="ly-coral">2h</b></span></div><em><Icon name="moon" size={12} />{L.next}</em></div>
                 <button class="ly-btn" type="button" tabindex="-1">{L.start}</button>
               </div>
               <div class="ly-tiles">
-                <div><span class="ly-ic ly-ic--peach">🍼</span><b>{L.tiles[0][0]}</b><small class="ly-coral">{L.tiles[0][1]}</small></div>
-                <div><span class="ly-ic ly-ic--blue">▦</span><b>{L.tiles[1][0]}</b><small class="ly-blue">{L.tiles[1][1]}</small></div>
+                <div><span class="ly-ic ly-ic--peach"><Icon name="bottle" size={17} /></span><b>{L.tiles[0][0]}</b><small class="ly-coral">{L.tiles[0][1]}</small></div>
+                <div><span class="ly-ic ly-ic--blue"><Icon name="calendar" size={15} /></span><b>{L.tiles[1][0]}</b><small class="ly-blue">{L.tiles[1][1]}</small></div>
               </div>
             </div>
 
@@ -102,16 +104,16 @@ const rowIc = ["☾", "🍼", "▦", "⇪"];
             <div class="screen ly" data-screen="2">
               <small class="ly-back">{L.back}</small>
               <h6 class="ly-title">{L.coach}</h6>
-              <div class="ly-card ly-coach-hi"><span class="ly-ic">✧</span><span><b>{L.hi}</b><small>{L.hiS}</small></span></div>
+              <div class="ly-card ly-coach-hi"><span class="ly-ic"><Icon name="spark" size={15} /></span><span><b>{L.hi}</b><small>{L.hiS}</small></span></div>
               <small class="ly-section">{L.noticed} <em>{L.news}</em></small>
-              {L.ins.map(([a, b], i) => <div class={`ly-insight ly-insight--${i < 2 ? "blue" : "green"}`}><b>{a}</b><small>{b}</small></div>)}
+              {L.ins.map(([a, b], i) => <div class={`ly-insight ly-insight--${i < 2 ? "blue" : "green"}`}><b><Icon name={insIc[i]} size={13} />{a}</b><small>{b}</small></div>)}
             </div>
 
             <div class="screen ly" data-screen="3">
               <small class="ly-back">{L.back}</small>
               <h6 class="ly-title">{L.report}</h6>
               <small class="ly-sub">{L.reportS}</small>
-              {L.rows.map(([a, b], i) => <div class={`ly-row ${rowCls[i]}`}><span>{rowIc[i]}</span><b>{a}</b><small>{b}</small></div>)}
+              {L.rows.map(([a, b], i) => <div class={`ly-row ${rowCls[i]}`}><span><Icon name={rowIc[i]} size={15} /></span><b>{a}</b><small>{b}</small></div>)}
               <div class="ly-pdf"><i></i><i></i><i></i><b>{L.pdf}</b></div>
             </div>
 
@@ -131,7 +133,7 @@ const rowIc = ["☾", "🍼", "▦", "⇪"];
           <div class="meter" style="--w:78%"><i></i></div>
         </div>
         <div class="scard">
-          <header><span class="float-chip__ic ic-cyan">🔒</span><span><b>{L.cards[2][0]}</b><small>{L.cards[2][1]}</small></span></header>
+          <header><span class="float-chip__ic ic-cyan"><Icon name="lock" size={18} /></span><span><b>{L.cards[2][0]}</b><small>{L.cards[2][1]}</small></span></header>
           <div class="pill-row">{L.zero.map((z) => <span>{z}</span>)}</div>
         </div>
       </div>

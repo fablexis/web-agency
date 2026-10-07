@@ -1615,3 +1615,22 @@ img { -webkit-user-drag: none; user-select: none; -webkit-user-select: none; }
 @media (max-width: 560px) { .mapp__tag { display: none; } .mapp__item { grid-template-columns: 22px 1fr; } }
 .sol__body { min-width: 0; }
 @media (max-width: 1000px) { .sol { grid-template-columns: minmax(0, 1fr); } }
+
+/* ─────────────  Forklia line icons  ───────────── */
+.ic { display: block; flex: none; }
+.ic .ic-fill { fill: currentColor; fill-opacity: .3; stroke: none; }
+.ic .ic-dot { fill: currentColor; stroke: none; }
+.ic .ic-thin { stroke-width: 1.4; opacity: .7; }
+.ly-ic { color: #c9603d; }
+.ly-ic--peach { color: #c9603d; background: #F6E1D3; }
+.ly-ic--blue { color: var(--ly-blue, #4E5D85); }
+.ly-sleep__meta em { display: inline-flex; align-items: center; gap: 5px; }
+.ly-insight b { display: flex; align-items: center; gap: 6px; }
+.ly-row span { color: inherit; }
+.ly-row--peach span { color: #c9603d; }
+.fx-buddy__ic { width: 34px; height: 34px; border-radius: 11px; display: grid; place-items: center; background: #185C60; color: #C8E47C; }
+.fx-buddy__ic .ic-dot { animation: icType 1.3s ease-in-out infinite; }
+.fx-buddy__ic .ic-dot:nth-of-type(2) { animation-delay: .15s; } .fx-buddy__ic .ic-dot:nth-of-type(3) { animation-delay: .3s; }
+@keyframes icType { 0%, 60%, 100% { opacity: .35; } 30% { opacity: 1; } }
+.float-chip__ic .ic--lock .ic-dot { animation: pulseDot 2.4s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+@media (prefers-reduced-motion: reduce) { .fx-buddy__ic .ic-dot, .float-chip__ic .ic--lock .ic-dot { animation: none; } }

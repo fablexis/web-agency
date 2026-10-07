@@ -1,5 +1,6 @@
 ---
 import type { Lang } from "../i18n";
+import Icon from "./Icon.astro";
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 const L = {
@@ -35,5 +36,5 @@ const levels = ["A1", "A2", "B1", "B2", "C1"];
       <i class="fx-buddy__bar"><b style="width:30%"></b></i>
     </div>
   </div>
-  <div class="fx-buddy__chip"><span>💬</span>{L.chipA} <b>{L.chipB}</b></div>
+  <div class="fx-buddy__chip"><span class="fx-buddy__ic"><Icon name="chat" size={18} /></span>{L.chipA} <b>{L.chipB}</b></div>
 </div>
