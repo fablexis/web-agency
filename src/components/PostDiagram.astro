@@ -1,0 +1,91 @@
+---
+/** Static, generic illustrations that accompany each article. Pure SVG/HTML, themeable. */
+import type { Lang } from "../i18n";
+interface Props { lang: Lang; type: string }
+const { lang, type } = Astro.props;
+const es = lang === "es";
+---
+
+<div class={`pd pd--${type}`} data-reveal>
+  {type === "timeline" && (
+    <div class="pd-timeline">
+      {(es
+        ? [["Semana 1", "Descubrimiento", "spec.md · lista de lanzamiento"], ["Semana 2", "Diseño", "flujo principal en Figma"], ["Semana 3", "Desarrollo", "flujo completo con datos reales"], ["Semana 4", "Prueba y lanzamiento", "dispositivos reales · publicación"]]
+        : [["Week 1", "Discovery", "spec.md · launch list"], ["Week 2", "Design", "main flow in Figma"], ["Week 3", "Build", "full flow with real data"], ["Week 4", "Test & launch", "real devices · publish"]]
+      ).map(([w, t, d], i) => (
+        <div class="pd-week" style={`--i:${i}`}>
+          <span class="pd-week__n">{w}</span>
+          <i class="pd-week__bar"><b></b></i>
+          <b class="pd-week__t">{t}</b>
+          <small>{d}</small>
+        </div>
+      ))}
+      <div class="pd-ship">v1.0 {es ? "publicada" : "shipped"} ✓</div>
+    </div>
+  )}
+
+  {type === "weight" && (
+    <div class="pd-weight">
+      {[[es ? "Página lenta" : "Slow page", [["img", 3.2], ["js", 1.1], ["font", 0.4], ["css", 0.2]], "4.9 MB"], [es ? "Optimizada" : "Optimized", [["img", 0.38], ["js", 0.16], ["font", 0.06], ["css", 0.04]], "0.64 MB"]].map(([label, parts, total]: any) => (
+        <div class="pd-weight__row">
+          <span class="pd-weight__l">{label}</span>
+          <div class="pd-weight__bar">{parts.map(([k, mb]: any) => <i class={`w-${k}`} style={`--w:${(mb / 4.9) * 100}%`} title={`${k} ${mb} MB`}></i>)}</div>
+          <b>{total}</b>
+        </div>
+      ))}
+      <div class="pd-legend">{[["img", es ? "imágenes" : "images"], ["js", "JavaScript"], ["font", es ? "fuentes" : "fonts"], ["css", "CSS"]].map(([k, n]) => <span><i class={`w-${k}`}></i>{n}</span>)}</div>
+    </div>
+  )}
+
+  {type === "states" && (
+    <div class="pd-states">
+      {(es ? [["reposo", "Pagar", "idle"], ["hover", "Pagar", "hover"], ["presionado", "Pagar", "press"], ["cargando", "Procesando…", "load"], ["éxito", "Pagado ✓", "ok"], ["error", "Reintentar", "err"]]
+           : [["idle", "Pay now", "idle"], ["hover", "Pay now", "hover"], ["pressed", "Pay now", "press"], ["loading", "Processing…", "load"], ["success", "Paid ✓", "ok"], ["error", "Try again", "err"]]
+      ).map(([n, label, k], i) => (
+        <div class="pd-state" style={`--i:${i}`}>
+          <span class={`pd-btn pd-btn--${k}`}>{k === "load" && <i class="pd-spin"></i>}{label}</span>
+          <small>{n}</small>
+        </div>
+      ))}
+    </div>
+  )}
+
+  {type === "layers" && (
+    <div class="pd-layers">
+      {(es
+        ? [["Interfaz", "Astro · React Native", "c"], ["Lógica y API", "TypeScript · Edge Functions", "v"], ["Datos y acceso", "Supabase · Postgres · RLS", "g"], ["Hosting", "Vercel · App Store · Google Play", "b"]]
+        : [["Interface", "Astro · React Native", "c"], ["Logic & API", "TypeScript · Edge Functions", "v"], ["Data & access", "Supabase · Postgres · RLS", "g"], ["Hosting", "Vercel · App Store · Google Play", "b"]]
+      ).map(([t, d, k], i) => (
+        <div class={`pd-layer pd-layer--${k}`} style={`--i:${i}`}><b>{t}</b><span>{d}</span></div>
+      ))}
+    </div>
+  )}
+
+  {type === "stages" && (
+    <div class="pd-stages">
+      {(es
+        ? [["Visitas", "2.000", "página lenta", 100], ["Leen la oferta", "1.200", "tres llamados a la acción", 74], ["Empiezan el formulario", "200", "demasiados campos", 46], ["Contactos", "80", "sin pruebas ni precios", 30], ["Clientes", "20", "", 18]]
+        : [["Visits", "2,000", "slow page", 100], ["Read the offer", "1,200", "three calls to action", 74], ["Start the form", "200", "too many fields", 46], ["Leads", "80", "no proof or pricing", 30], ["Customers", "20", "", 18]]
+      ).map(([t, n, leak, w], i) => (
+        <div class="pd-stage" style={`--i:${i}; --w:${w}%`}>
+          <div class="pd-stage__bar"><b>{n}</b><span>{t}</span></div>
+          {leak && <em class="pd-stage__leak">↘ {leak}</em>}
+        </div>
+      ))}
+    </div>
+  )}
+
+  {type === "thumb" && (
+    <div class="pd-thumb">
+      <div class="pd-thumb__phone">
+        <i class="z z--hard"></i><i class="z z--stretch"></i><i class="z z--easy"></i>
+        <span class="pd-thumb__btn">{es ? "▶ Acción principal" : "▶ Main action"}</span>
+      </div>
+      <ul class="pd-legend pd-legend--col">
+        <li><i class="z-easy"></i>{es ? "Fácil: acciones principales" : "Easy: main actions"}</li>
+        <li><i class="z-stretch"></i>{es ? "Estiramiento: acciones secundarias" : "Stretch: secondary actions"}</li>
+        <li><i class="z-hard"></i>{es ? "Difícil: ajustes, acciones raras" : "Hard: settings, rare actions"}</li>
+      </ul>
+    </div>
+  )}
+</div>

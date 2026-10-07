@@ -1,43 +1,48 @@
 ---
 import { testimonials } from "../data/site";
 import { href, loc, type Lang } from "../i18n";
-import { avatarSvg } from "../lib/avatar";
+import { faceSvg } from "../lib/avatar";
 
 interface Props { lang: Lang }
 const { lang } = Astro.props;
-const list = testimonials.map((t) => ({ ...loc(t, lang), avatar: avatarSvg(t.seed, t.colors, 56), mini: avatarSvg(t.seed, t.colors, 26) }));
+const all = testimonials.map((t) => ({ ...loc(t, lang), face: faceSvg(t.face, 52), big: faceSvg(t.face, 76) }));
+const feat = all.find((t) => t.real)!;
+const rest = all.filter((t) => !t.real);
 const c = {
-  en: { cmd: "git log --oneline --reviews", real: "verified client", see: "See her project", aria: "Testimonials" },
-  es: { cmd: "git log --oneline --reseñas", real: "cliente verificado", see: "Ver su proyecto", aria: "Testimonios" },
+  en: { cmd: "gh pr reviews --state approved", approved: "approved", verified: "verified client", see: "See her project", rev: "reviewed the release" },
+  es: { cmd: "gh pr reviews --state approved", approved: "aprobó", verified: "cliente verificado", see: "Ver su proyecto", rev: "revisó el lanzamiento" },
 }[lang];
+const cols = [rest.filter((_, i) => i % 2 === 0), rest.filter((_, i) => i % 2 === 1)];
 ---
 
-<div class="tlog" data-tlog>
-  <div class="tlog__stage">
-    {list.map((t, i) => (
-      <figure class={`tlog__q${i === 0 ? " is-active" : ""}`} id={`tq-${i}`} role="tabpanel" aria-labelledby={`tt-${i}`} hidden={i !== 0 ? true : undefined}>
-        <blockquote><p data-decode>“{t.q}”</p></blockquote>
-        <figcaption>
-          <span class="tlog__av" set:html={t.avatar} />
-          <span class="tlog__who"><b>{t.n}</b><small>{t.r}</small></span>
-          {t.real && t.project && <a class="link-arrow" href={href("case", lang, t.project)}>{c.see} <span>→</span></a>}
-        </figcaption>
-      </figure>
-    ))}
-  </div>
-  <div class="tlog__side">
-    <div class="tlog__cmd"><span class="tk tk--p">$</span> {c.cmd}</div>
-    <div class="tlog__list" role="tablist" aria-label={c.aria}>
-      {list.map((t, i) => (
-        <button type="button" role="tab" id={`tt-${i}`} aria-controls={`tq-${i}`} aria-selected={i === 0 ? "true" : "false"} class={i === 0 ? "is-active" : undefined}>
-          <span class="tlog__node" aria-hidden="true"></span>
-          <code class="tlog__sha">{t.sha}</code>
-          <span class="tlog__mini" set:html={t.mini} />
-          <span class="tlog__name">{t.n}<small>{t.r}</small></span>
-          {i === 0 && <em class="tlog__head">HEAD</em>}
-          {t.real && <em class="tlog__real">{c.real}</em>}
-          <i class="tlog__prog" aria-hidden="true"><b></b></i>
-        </button>
+<div class="trev">
+  <figure class="trev__feat" data-reveal>
+    <div class="trev__feathead">
+      <span class="trev__bigface" set:html={feat.big} />
+      <span><b>{feat.n}</b><small>{feat.r}</small></span>
+      <em class="trev__ok">✓ {c.verified}</em>
+    </div>
+    <blockquote><p>“{feat.q}”</p></blockquote>
+    <figcaption><code>{feat.sha}</code><span>{feat.tag}</span>{feat.project && <a class="link-arrow" href={href("case", lang, feat.project)}>{c.see} <span>→</span></a>}</figcaption>
+  </figure>
+
+  <div class="trev__wall" data-trev>
+    <div class="trev__cmd"><span class="tk tk--p">$</span> {c.cmd}</div>
+    <div class="trev__cols">
+      {cols.map((col, ci) => (
+        <div class="trev__col" data-speed={ci ? "0.06" : "-0.04"}>
+          {col.map((t, i) => (
+            <figure class="trev__card" data-reveal style={`--d:${(ci + i * 2) * 90}ms; --f:${(ci * 2 + i) * 1.3}s`}>
+              <header>
+                <span class="trev__face" set:html={t.face} />
+                <span class="trev__who"><b>{t.n}</b><small>{t.r}</small></span>
+                <em class="trev__pill">✓ {c.approved}</em>
+              </header>
+              <blockquote><p>“{t.q}”</p></blockquote>
+              <footer><code>{t.sha}</code><span class="trev__tag">+ {t.tag}</span></footer>
+            </figure>
+          ))}
+        </div>
       ))}
     </div>
   </div>

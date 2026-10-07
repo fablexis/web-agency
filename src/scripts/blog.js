@@ -103,20 +103,15 @@ $$("[data-pw]").forEach((w) => {
   }
 
   if (type === "stack") {
-    const code = $(".pw-stack__code", w), stacks = JSON.parse(code.dataset.stacks);
-    const btns = $$(".pw-stack__types button", w);
-    let token = 0;
-    const render = async (k) => {
-      const my = ++token;
-      const lines = ["export default {", `  project: "${k}",`, "  stack: [", ...stacks[k].map((s) => `    "${s}",`), "  ],", "};"];
-      code.textContent = "";
-      for (const ln of lines) {
-        for (let i = 1; i <= ln.length; i++) { if (my !== token) return; code.textContent = code.textContent.replace(/[^\n]*$/, ln.slice(0, i)); await wait(8); }
-        code.textContent += "\n";
-      }
-    };
-    btns.forEach((b) => b.addEventListener("click", () => { btns.forEach((x) => { x.classList.toggle("is-on", x === b); x.setAttribute("aria-pressed", String(x === b)); }); render(b.dataset.type); }));
-    render(btns[0].dataset.type);
+    const box = $(".pw-stack", w), stacks = JSON.parse(box.dataset.stacks);
+    const btns = $$(".pw-stack__types button", w), vals = $$("[data-layer]", w);
+    btns.forEach((b) => b.addEventListener("click", () => {
+      btns.forEach((x) => { x.classList.toggle("is-on", x === b); x.setAttribute("aria-pressed", String(x === b)); });
+      vals.forEach((v, i) => {
+        v.classList.remove("is-swap"); void v.offsetWidth;
+        setTimeout(() => { v.textContent = stacks[b.dataset.type][i]; v.classList.add("is-swap"); }, reduced ? 0 : i * 70);
+      });
+    }));
   }
 
   if (type === "funnel") {
@@ -156,4 +151,30 @@ $$("[data-pw]").forEach((w) => {
       const d = new Date(); $("[data-clock]", w).textContent = `${d.getHours()}:${String(d.getMinutes()).padStart(2, "0")}`;
     });
   }
+});
+
+/* ───────── Table of contents: active section + reading progress ───────── */
+const article = $("[data-article]");
+const tocLinks = $$("[data-toc]");
+if (article && tocLinks.length) {
+  const heads = tocLinks.map((a) => document.getElementById(a.dataset.toc)).filter(Boolean);
+  const prog = $(".toc__prog b");
+  let raf = 0;
+  const upd = () => {
+    raf = 0;
+    let cur = heads[0];
+    heads.forEach((h) => { if (h.getBoundingClientRect().top < innerHeight * 0.3) cur = h; });
+    tocLinks.forEach((a) => { const on = a.dataset.toc === cur.id; a.classList.toggle("is-on", on); if (on) a.setAttribute("aria-current", "location"); else a.removeAttribute("aria-current"); });
+    const r = article.getBoundingClientRect();
+    const p = Math.min(1, Math.max(0, (innerHeight * 0.3 - r.top) / (r.height - innerHeight * 0.5)));
+    if (prog) prog.style.transform = `scaleY(${p})`;
+  };
+  addEventListener("scroll", () => { if (!raf) raf = requestAnimationFrame(upd); }, { passive: true });
+  upd();
+}
+const copyLink = $("[data-copy-link]");
+copyLink?.addEventListener("click", async () => {
+  const label = copyLink.textContent;
+  try { await navigator.clipboard.writeText(location.href.split("#")[0]); copyLink.textContent = copyLink.dataset.copied; } catch {}
+  setTimeout(() => (copyLink.textContent = label), 1600);
 });

@@ -7,7 +7,7 @@ import LyappScrolly from "../components/LyappScrolly.astro";
 import { site, testimonials } from "../data/site";
 import { projects, serviceNames } from "../data/projects";
 import { href, route, loc, base, type Lang, srcset2x } from "../i18n";
-import { avatarSvg } from "../lib/avatar";
+import { faceSvg } from "../lib/avatar";
 
 interface Props { lang: Lang; slug: string }
 const { lang, slug } = Astro.props;
@@ -17,7 +17,7 @@ const p = loc(raw, lang) as any;
 const idx = projects.findIndex((x) => x.slug === slug);
 const next = loc(projects[(idx + 1) % projects.length], lang) as any;
 const qt = testimonials.find((t) => t.project === slug);
-const quote = qt ? { ...loc(qt, lang), av: avatarSvg(qt.seed, qt.colors, 56) } : null;
+const quote = qt ? { ...loc(qt, lang), av: faceSvg(qt.face, 64) } : null;
 const pageUrl = new URL(route("case", lang, slug), site.url).href;
 const c = {
   en: { case: "Case", crumb: "deploys/", client: "Client", modules: "Modules", year: "Year", stack: "Stack", challenge: "// the challenge", challengeT: "Where we started", try: "// try it", did: "// what we built", didT: "What we shipped", impact: "// impact", impactT: "What changed", next: "// next deploy", building: "building next deploy…", ready: "ready · open ↵", more: "More screenshots", demo: "Interactive demo" },
@@ -142,8 +142,7 @@ const fonts = raw.effect === "phone" ? "&family=Playfair+Display:wght@500;600" :
     <section class="section" style="padding-top: 0;">
       <div class="wrap">
         <a href={href("case", lang, next.slug)} class="nextdeploy" data-reveal style={`--na:${next.accent}`}>
-          <div class="nextdeploy__blocks" aria-hidden="true">{next.palette.concat(next.palette).slice(0, 8).map((col: string, i: number) => <i style={`--c:${col};--i:${i}`}></i>)}</div>
-          <div class="nextdeploy__main">
+                    <div class="nextdeploy__main">
             <span class="nextdeploy__term"><span class="tk tk--p">$</span> git checkout <b>{next.repo}</b><i class="hero2__caret"></i></span>
             <small>{c.next}</small>
             <span class="nextdeploy__name" aria-label={next.name}>{next.name.split(" ").map((w: string, wi: number) => <span class="nd-w" aria-hidden="true">{[...w].map((ch: string, i: number) => <span style={`--i:${wi * 6 + i}`}>{ch}</span>)}</span>)}</span>
@@ -151,7 +150,11 @@ const fonts = raw.effect === "phone" ? "&family=Playfair+Display:wght@500;600" :
             <span class="nextdeploy__bar"><i></i><em class="nextdeploy__b1">{c.building}</em><em class="nextdeploy__b2">{c.ready}</em></span>
           </div>
           <div class={`nextdeploy__shot nextdeploy__shot--${next.images[0].kind}`} aria-hidden="true">
-            {next.images[0].kind === "desktop" ? <img src={base + next.images[0].src} srcset={srcset2x(next.images[0].src)} alt="" width="1280" height="800" loading="lazy" /> : next.images.slice(0, 2).map((im: any) => <img src={base + im.src} srcset={srcset2x(im.src)} alt="" width="600" height="1298" loading="lazy" />)}
+            {next.images[0].kind === "desktop" ? (
+              <div class="ndframe"><div class="ndframe__bar"><i></i><i></i><i></i><span>{next.links[0].href.replace(/^https?:\/\//, "").replace(/\/$/, "")}</span></div><img src={base + next.images[0].src} srcset={srcset2x(next.images[0].src)} alt="" width="1280" height="800" loading="lazy" /></div>
+            ) : (
+              <div class="ndphones">{next.images.slice(0, 2).map((im: any) => <img src={base + im.src} srcset={srcset2x(im.src)} alt="" width="600" height="1298" loading="lazy" />)}</div>
+            )}
           </div>
         </a>
       </div>

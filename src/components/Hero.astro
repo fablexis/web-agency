@@ -1,5 +1,5 @@
 ---
-import { ui, href, type Lang } from "../i18n";
+import { ui, href, base, srcset2x, type Lang } from "../i18n";
 
 interface Props { lang: Lang }
 const { lang } = Astro.props;
@@ -14,11 +14,7 @@ const c = {
     see: "See shipped work",
     chips: [["Build passed", "prod · 2s ago"], ["Lighthouse 100", "perf · a11y · seo"], ["Shipped to App Store", "Lyapp · v1.1"]],
     compiling: "compiling…", compiled: "compiled in", hot: "hot reload",
-    scenes: [
-      { file: "App.tsx", label: "mobile app", hi: "Good morning", title: "Today", card: "This week", btn: "Get started", tiles: [["Tasks", "3 open"], ["Inbox", "2 new"]] },
-      { file: "Landing.tsx", label: "website", title: "Ship faster", sub: "Your product, live in weeks.", plans: ["Starter", "Pro", "Scale"] },
-      { file: "brand.css", label: "brand system", word: "your-brand", btn: "Get started" },
-    ],
+    proj: [["Lyapp", "Live on the App Store", "View case"], ["Your English Buddy", "Website · in staging", "View case"], ["Simply Andy", "Brand system · in staging", "View case"]],
   },
   es: {
     badge: "Nuevo", badgeText: "Lyapp ya está en la App Store",
@@ -28,59 +24,52 @@ const c = {
     see: "Ver proyectos reales",
     chips: [["Build exitoso", "prod · hace 2s"], ["Lighthouse 100", "perf · a11y · seo"], ["Publicada en App Store", "Lyapp · v1.1"]],
     compiling: "compilando…", compiled: "compilado en", hot: "hot reload",
-    scenes: [
-      { file: "App.tsx", label: "app móvil", hi: "Buenos días", title: "Hoy", card: "Esta semana", btn: "Empezar", tiles: [["Tareas", "3 abiertas"], ["Mensajes", "2 nuevos"]] },
-      { file: "Landing.tsx", label: "sitio web", title: "Lanza más rápido", sub: "Tu producto, en vivo en semanas.", plans: ["Starter", "Pro", "Scale"] },
-      { file: "brand.css", label: "sistema de marca", word: "tu-marca", btn: "Empezar" },
-    ],
+    proj: [["Lyapp", "Disponible en App Store", "Ver caso"], ["Your English Buddy", "Sitio web · en prueba", "Ver caso"], ["Simply Andy", "Sistema de marca · en prueba", "Ver caso"]],
   },
 }[lang];
 
-const s = c.scenes;
 const scenes = [
   {
-    file: s[0].file,
-    label: s[0].label,
+    file: "lyapp/Today.tsx", slug: "lyapp",
+    code: [
+      `<span class="k">export default function</span> <span class="f">Today</span>() {`,
+      `  <span class="k">return</span> &lt;<span class="t">Screen</span> title=<span class="s">"Lua · 14 months"</span>&gt;`,
+      `    &lt;<span class="t">SleepRing</span> hours={<span class="n">12.5</span>} range=<span class="s">"11–14h"</span> /&gt;`,
+      `    &lt;<span class="t">Button</span> title=<span class="s">"Start sleep timer"</span> onPress={<span class="f">timer.start</span>} /&gt;`,
+      `    &lt;<span class="t">LiveActivity</span> island=<span class="s">"sleep"</span> /&gt;`,
+      `    &lt;<span class="t">Tiles</span> items={[<span class="s">"feed"</span>, <span class="s">"calendar"</span>]} /&gt;`,
+      `  &lt;/<span class="t">Screen</span>&gt;;`,
+    ],
+    reveal: [0.16, 0.3, 0.46, 0.62, 0.76, 0.9, 1],
+  },
+  {
+    file: "english-buddy/Home.tsx", slug: "your-english-buddy",
     code: [
       `<span class="k">export default function</span> <span class="f">Home</span>() {`,
-      `  <span class="k">return</span> &lt;<span class="t">Screen</span> title=<span class="s">"${s[0].title}"</span>&gt;`,
-      `    &lt;<span class="t">Stats</span> range=<span class="s">"week"</span> days={<span class="n">7</span>} /&gt;`,
-      `    &lt;<span class="t">Button</span> title=<span class="s">"${s[0].btn}"</span> onPress={<span class="f">start</span>} /&gt;`,
-      `    &lt;<span class="t">Tiles</span> items={[<span class="s">"tasks"</span>, <span class="s">"inbox"</span>]} /&gt;`,
-      `  &lt;/<span class="t">Screen</span>&gt;;`,
-      `}`,
+      `  <span class="k">return</span> &lt;<span class="t">Page</span> lang=<span class="s">"es"</span>&gt;`,
+      `    &lt;<span class="t">Nav</span> cta=<span class="s">"Contacto"</span> /&gt;`,
+      `    &lt;<span class="t">Badge</span>&gt;Clase diagnóstica personalizada&lt;/<span class="t">Badge</span>&gt;`,
+      `    &lt;<span class="t">Hero</span> title=<span class="s">"Bienvenido a Your English Buddy"</span> /&gt;`,
+      `    &lt;<span class="t">Cta</span> href=<span class="s">"/diagnostico"</span>&gt;Empieza mi viaje&lt;/<span class="t">Cta</span>&gt;`,
+      `  &lt;/<span class="t">Page</span>&gt;;`,
     ],
-    steps: [0, 1, 2, 3, 4, 4, 4],
+    reveal: [0.04, 0.1, 0.16, 0.3, 0.52, 0.8, 1],
   },
   {
-    file: s[1].file,
-    label: s[1].label,
-    code: [
-      `<span class="k">export default function</span> <span class="f">Landing</span>() {`,
-      `  <span class="k">return</span> &lt;<span class="t">Page</span> theme=<span class="s">"dark"</span>&gt;`,
-      `    &lt;<span class="t">Hero</span> title=<span class="s">"${s[1].title}"</span> /&gt;`,
-      `    &lt;<span class="t">Pricing</span> plans={<span class="n">3</span>} /&gt;`,
-      `    &lt;<span class="t">Cta</span> href=<span class="s">"/start"</span> /&gt;`,
-      `  &lt;/<span class="t">Page</span>&gt;`,
-      `}`,
-    ],
-    steps: [0, 1, 2, 3, 4, 4, 4],
-  },
-  {
-    file: s[2].file,
-    label: s[2].label,
+    file: "simply-andy/brand.css", slug: "simply-andy",
     code: [
       `<span class="t">:root</span> {`,
-      `  <span class="v">--accent</span>: <span class="n">#45E0FF</span>;`,
-      `  <span class="v">--ink</span>: <span class="n">#9B6BFF</span>;`,
-      `  <span class="v">--radius</span>: <span class="n">14px</span>;`,
-      `  <span class="v">--type</span>: <span class="s">"Space Grotesk"</span>;`,
+      `  <span class="v">--eggshell</span>: <span class="n">#E9E2D0</span>;`,
+      `  <span class="v">--cuero</span>: <span class="n">#864C24</span>;`,
+      `  <span class="v">--indigo</span>: <span class="n">#1F2C44</span>;`,
+      `  <span class="v">--head</span>: <span class="s">"Big Shoulders"</span>;`,
       `}`,
-      `<span class="t">.btn</span> { <span class="k">background</span>: <span class="f">var</span>(<span class="v">--accent</span>); }`,
+      `<span class="t">.hero</span> { <span class="k">background</span>: <span class="f">var</span>(<span class="v">--cuero</span>); }`,
     ],
-    steps: [0, 1, 2, 3, 4, 4, 5],
+    reveal: [0.08, 0.2, 0.36, 0.5, 0.7, 0.84, 1],
   },
 ];
+const shots = ["projects/lyapp-hoy.webp", "projects/your-english-buddy.webp", "projects/simply-andy-portfolio.webp"];
 ---
 
 <header class="hero2" id="top">
@@ -126,38 +115,21 @@ const scenes = [
         <div class="live__body">
           <pre class="live__code" data-live-code></pre>
           <div class="live__preview" data-live-preview>
-            <div class="live__scene is-on" data-scene="0">
-              <div class="pv-phone">
-                <div class="pv-status"><b>9:41</b><i></i></div>
-                <div class="pv-step pv-head" data-step="1"><span><small>{s[0].hi}</small><b>{s[0].title}</b></span><i></i></div>
-                <div class="pv-step pv-stats" data-step="2">
-                  <small>{s[0].card}</small><b>84%</b>
-                  <div class="pv-bars">{[38, 62, 46, 80, 54, 92, 70].map((h) => <i style={`--h:${h}%`}></i>)}</div>
+            {scenes.map((sc, i) => (
+              <div class={`live__scene${i === 0 ? " is-on" : ""}`} data-scene={i}>
+                <div class={`pv-frame ${i === 0 ? "pv-frame--phone" : "pv-frame--web"}`} style="--rv:0">
+                  {i > 0 && <div class="pv-frame__bar"><i></i><i></i><i></i><span>{["", "your-english-buddy.app", "simply-andy.ugc"][i]}</span></div>}
+                  <div class="pv-frame__view">
+                    <div class="pv-blueprint"></div>
+                    <img class="pv-shot" src={base + shots[i]} srcset={srcset2x(shots[i])} alt="" width={i === 0 ? 600 : 1280} height={i === 0 ? 1298 : 800} loading={i === 0 ? "eager" : "lazy"} decoding="async" />
+                    <i class="pv-scan"></i>
+                  </div>
                 </div>
-                <div class="pv-step pv-btn" data-step="3">{s[0].btn}</div>
-                <div class="pv-step pv-tiles" data-step="4">{s[0].tiles.map(([a, b], i) => <span><i class={i ? "is-v" : undefined}></i><b>{a}</b><small>{b}</small></span>)}</div>
-                <div class="pv-tab"><i class="is-on"></i><i></i><i></i><i></i></div>
+                <a class="pv-proj" href={href("case", lang, sc.slug)} tabindex="-1">
+                  <span class="pv-proj__dot"></span><b>{c.proj[i][0]}</b><small>{c.proj[i][1]}</small><em>{c.proj[i][2]} →</em>
+                </a>
               </div>
-            </div>
-            <div class="live__scene" data-scene="1">
-              <div class="pv-site">
-                <div class="pv-step pv-nav" data-step="1"><i></i><span></span><span></span><span></span></div>
-                <div class="pv-step pv-hero" data-step="2"><b>{s[1].title}</b><small>{s[1].sub}</small></div>
-                <div class="pv-step pv-plans" data-step="3">{s[1].plans.map((p, i) => <span class={i === 1 ? "is-pro" : undefined}><b>{p}</b><i></i><i></i></span>)}</div>
-                <div class="pv-step pv-cta" data-step="4">{t.start} →</div>
-              </div>
-            </div>
-            <div class="live__scene" data-scene="2">
-              <div class="pv-brand">
-                <div class="pv-sw">
-                  <span class="pv-step" data-step="1" style="--sw:#45E0FF"></span>
-                  <span class="pv-step" data-step="2" style="--sw:#9B6BFF"></span>
-                  <span class="pv-step" data-step="3" style="--sw:#3B6BFF"></span>
-                </div>
-                <div class="pv-step pv-word" data-step="4">{s[2].word}<i></i></div>
-                <div class="pv-step pv-bbtn" data-step="5">{s[2].btn}</div>
-              </div>
-            </div>
+            ))}
             <div class="live__wipe" data-live-wipe></div>
           </div>
         </div>

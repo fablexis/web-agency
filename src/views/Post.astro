@@ -3,12 +3,13 @@ import Base from "../layouts/Base.astro";
 import PostCard from "../components/PostCard.astro";
 import PostCover from "../components/PostCover.astro";
 import PostWidget from "../components/PostWidget.astro";
+import PostDiagram from "../components/PostDiagram.astro";
 import Cta from "../components/Cta.astro";
 import { site, posts, formatDate, type Post } from "../data/site";
-import { articles, readTime } from "../data/articles";
-import { fCells, fork } from "../lib/logo";
+import { articles, readTime, wordCount, slugifyHeading } from "../data/articles";
 import { projects } from "../data/projects";
 import { href, route, loc, base, srcset2x, type Lang } from "../i18n";
+import { fCells, fork } from "../lib/logo";
 
 interface Props { lang: Lang; post: Post }
 const { lang, post } = Astro.props;
@@ -16,56 +17,83 @@ const other: Lang = lang === "en" ? "es" : "en";
 const p = loc(post, lang) as any;
 const art = articles[post.slug.en];
 const body = art.body[lang];
+const meta = art.meta[lang];
 const proj = loc(projects.find((x) => x.slug === art.project)!, lang) as any;
 const related = posts.filter((x) => x !== post).slice(0, 3);
 const c = {
-  en: { back: "← iterating++", read: "read", by: "Forklia Team", crumb: "iterating++", more: "Keep reading", seen: "Built by Forklia", see: "See the project", start: "Start a project like this" },
-  es: { back: "← iterando++", read: "de lectura", by: "Equipo de Forklia", crumb: "iterando++", more: "Sigue leyendo", seen: "Hecho por Forklia", see: "Ver el proyecto", start: "Iniciar un proyecto así" },
+  en: { back: "iterating++", read: "read", by: "Forklia Team", byRole: "Remote product studio", toc: "On this page", more: "Keep reading", seen: "Built by Forklia", see: "See the project", fig: "Figure", share: "Copy link", copied: "Link copied", top: "Back to top", updated: "Published" },
+  es: { back: "iterando++", read: "de lectura", by: "Equipo de Forklia", byRole: "Estudio remoto de producto", toc: "En esta página", more: "Sigue leyendo", seen: "Hecho por Forklia", see: "Ver el proyecto", fig: "Figura", share: "Copiar enlace", copied: "Enlace copiado", top: "Volver arriba", updated: "Publicado" },
 }[lang];
 const url = new URL(route("post", lang, p.slug), site.url).href;
-const words = body.map((b) => `${b.h ?? ""} ${b.p ?? ""}`).join(" ").split(/\s+/).length;
+const toc = body.filter((b): b is { h: string } => "h" in b).map((b) => ({ id: slugifyHeading(b.h), text: b.h }));
+let figN = 0;
 ---
 
-<Base lang={lang} alt={route("post", other, post.slug[other])} title={`${p.title} | Forklia`} description={p.excerpt} type="article"
-  breadcrumbs={[{ name: c.crumb, path: route("blog", lang) }, { name: p.title, path: route("post", lang, p.slug) }]}
-  schema={[{ "@type": "BlogPosting", "@id": `${url}#post`, headline: p.title, description: p.excerpt, datePublished: p.date, dateModified: p.date, wordCount: words, url, mainEntityOfPage: url, author: { "@type": "Organization", name: c.by, url: site.url }, publisher: { "@id": new URL("#organization", site.url).href }, inLanguage: lang, about: proj.name }]}>
-  <article class="section">
-    <div class="wrap article">
-      <a href={href("blog", lang)} class="back" data-reveal>{c.back}</a>
-      <div class="post__meta" style="margin-top: 28px;" data-reveal><span class="cat">{p.category}</span><span>{formatDate(p.date, lang)}</span><span>· {readTime(post.slug.en, lang)} {c.read}</span></div>
+<Base lang={lang} alt={route("post", other, post.slug[other])} title={meta.title} description={meta.desc} type="article" image="og.png"
+  breadcrumbs={[{ name: c.back, path: route("blog", lang) }, { name: p.title, path: route("post", lang, p.slug) }]}
+  schema={[{ "@type": "BlogPosting", "@id": `${url}#post`, headline: p.title, description: meta.desc, datePublished: p.date, dateModified: p.date, wordCount: wordCount(post.slug.en, lang), url, mainEntityOfPage: url, articleSection: p.category, author: { "@type": "Organization", name: c.by, url: site.url }, publisher: { "@id": new URL("#organization", site.url).href }, inLanguage: lang, about: proj.name }]}>
+  <article class="blogpost">
+    <header class="blogpost__head wrap">
+      <nav class="crumbs" aria-label="Breadcrumb" data-reveal><a href={href("home", lang)}>~</a><span>/</span><a href={href("blog", lang)}>{c.back}</a><span>/</span><span aria-current="page">{p.category}</span></nav>
+      <div class="post__meta" data-reveal><span class="cat">{p.category}</span><span>{c.updated} <time datetime={p.date}>{formatDate(p.date, lang)}</time></span><span>· {readTime(post.slug.en, lang)} {c.read}</span></div>
       <div data-typewrite>
         <h1 data-tw="slow">{p.title}</h1>
         <p class="lead" data-tw>{p.excerpt}</p>
       </div>
-      <div class="byline" data-reveal><svg class="byline__mark" viewBox="0 0 26 32" aria-hidden="true">{fCells.map(([x, y]) => <rect x={x * 6.5} y={y * 6.5} width="6" height="6" rx="1.4" fill="#eef2f8" />)}<rect x={fork.x} y={fork.y} width="6" height="6" rx="1.4" fill="#45E0FF" /></svg>{c.by}</div>
-      <PostCover slug={post.slug.en} hue={p.hue} label={p.category} big />
-      <div class="article__body">
-        {body.map((b) => b.widget ? (
-          <div data-reveal><PostWidget lang={lang} type={art.widget} /></div>
-        ) : (
-          <>
-            {b.h && <h2>{b.h}</h2>}
-            {b.p && <p>{b.p}</p>}
-          </>
-        ))}
+      <div class="byline" data-reveal>
+        <svg class="byline__mark" viewBox="0 0 26 32" aria-hidden="true">{fCells.map(([x, y]) => <rect x={x * 6.5} y={y * 6.5} width="6" height="6" rx="1.4" fill="#eef2f8" />)}<rect x={fork.x} y={fork.y} width="6" height="6" rx="1.4" fill="#45E0FF" /></svg>
+        <span><b>{c.by}</b><small>{c.byRole}</small></span>
       </div>
+      <PostCover slug={post.slug.en} hue={p.hue} label={p.category} big />
+    </header>
 
-      <a href={href("case", lang, proj.slug)} class="artcta" data-reveal style={`--pa:${proj.accent}`}>
-        <div class="artcta__shot">
-          {proj.images[0].kind === "desktop"
-            ? <img src={base + proj.images[0].src} srcset={srcset2x(proj.images[0].src)} alt={proj.images[0].alt} width="1280" height="800" loading="lazy" />
-            : <img src={base + proj.images[0].src} srcset={srcset2x(proj.images[0].src)} alt={proj.images[0].alt} width="600" height="1298" loading="lazy" class="is-phone" />}
+    <div class="blogpost__grid wrap">
+      <aside class="toc" aria-label={c.toc}>
+        <div class="toc__in">
+          <small class="toc__h">{c.toc}</small>
+          <ol>{toc.map((t) => <li><a href={`#${t.id}`} data-toc={t.id}>{t.text}</a></li>)}</ol>
+          <i class="toc__prog"><b></b></i>
+          <div class="toc__actions">
+            <button type="button" data-copy-link data-copied={c.copied}>{c.share}</button>
+            <a href="#main">{c.top} ↑</a>
+          </div>
         </div>
-        <div class="artcta__body">
-          <small>{c.seen}</small>
-          <b>{proj.name}</b>
-          <span>{proj.category}</span>
-          <span class="btn btn--primary btn--sm">{c.see} <span class="arrow">→</span></span>
-        </div>
-      </a>
+      </aside>
+
+      <div class="article__body blogpost__body" data-article>
+        {body.map((b) => {
+          if ("h" in b) return <h2 id={slugifyHeading(b.h)}>{b.h}</h2>;
+          if ("p" in b) return <p>{b.p}</p>;
+          if ("ul" in b) return <ul class="blog-list">{b.ul.map((li) => <li>{li}</li>)}</ul>;
+          figN++;
+          return (
+            <figure class="blogfig">
+              {b.fig === "interactive" ? <PostWidget lang={lang} type={art.widget} /> : <PostDiagram lang={lang} type={art.diagram} />}
+              <figcaption><b>{c.fig} {figN}.</b> {b.cap}</figcaption>
+            </figure>
+          );
+        })}
+
+        <a href={href("case", lang, proj.slug)} class="artcta" data-reveal style={`--pa:${proj.accent}`}>
+          <div class="artcta__shot">
+            {proj.images[0].kind === "desktop" ? (
+              <div class="ndframe"><div class="ndframe__bar"><i></i><i></i><i></i></div><img src={base + proj.images[0].src} srcset={srcset2x(proj.images[0].src)} alt={proj.images[0].alt} width="1280" height="800" loading="lazy" /></div>
+            ) : (
+              <div class="ndphones">{proj.images.slice(0, 2).map((im: any) => <img src={base + im.src} srcset={srcset2x(im.src)} alt={im.alt} width="600" height="1298" loading="lazy" />)}</div>
+            )}
+          </div>
+          <div class="artcta__body">
+            <small>{c.seen}</small>
+            <b>{proj.name}</b>
+            <span>{proj.category}</span>
+            <span class="btn btn--primary btn--sm">{c.see} <span class="arrow">→</span></span>
+          </div>
+        </a>
+      </div>
     </div>
   </article>
-  <section class="section" style="padding-top: 0;">
+
+  <section class="section">
     <div class="wrap">
       <div class="section-head"><h2 class="h2" data-split>{c.more}</h2></div>
       <div class="posts">{related.map((r, i) => <PostCard post={r} lang={lang} delay={i * 90} />)}</div>

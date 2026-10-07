@@ -30,7 +30,9 @@ export const steps = [
   { title: { en: "Growth", es: "Crecimiento" }, c: "#4BE3A0", text: { en: "We launch, measure and optimize, growing your brand month after month.", es: "Lanzamos, medimos y optimizamos. Posicionamos tu marca y la hacemos crecer mes a mes." }, icon: '<polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline>' },
 ];
 
-export type Testimonial = { q: L; n: L; r: L; seed: number; colors: string[]; real?: boolean; project?: string; sha: string };
+import type { Face } from "../lib/avatar";
+
+export type Testimonial = { q: L; n: L; r: L; seed: number; colors: string[]; face: Face; tag: L; real?: boolean; project?: string; sha: string };
 
 export const testimonials: Testimonial[] = [
   {
@@ -44,6 +46,7 @@ export const testimonials: Testimonial[] = [
     colors: ["#E9E2D0", "#864C24", "#51091B"],
     real: true,
     project: "simply-andy",
+    face: { hair: "long", skin: "#E6B48F", hairColor: "#2B1A14", shirt: "#864C24", bg: "#E9E2D0", glasses: true }, tag: { en: "Brand system + web", es: "Sistema de marca + web" },
     sha: "a17f3c9",
   },
   {
@@ -52,6 +55,7 @@ export const testimonials: Testimonial[] = [
     r: { en: "Skincare brand · E-commerce", es: "Marca de skincare · E-commerce" },
     seed: 3,
     colors: ["#45E0FF", "#9B6BFF", "#E8E4F0"],
+    face: { hair: "bun", skin: "#F3D2B8", hairColor: "#C27A3A", shirt: "#9B6BFF", bg: "#2A2350" }, tag: { en: "E-commerce", es: "E-commerce" },
     sha: "4be21d0",
   },
   {
@@ -60,6 +64,7 @@ export const testimonials: Testimonial[] = [
     r: { en: "Specialty coffee chain · App", es: "Cadena de café de especialidad · App" },
     seed: 11,
     colors: ["#9B6BFF", "#3B6BFF", "#F2D3B3"],
+    face: { hair: "curly", skin: "#8D5B3C", hairColor: "#1B1310", shirt: "#45E0FF", bg: "#12303A" }, tag: { en: "Mobile app", es: "App móvil" },
     sha: "9c0a7e2",
   },
   {
@@ -68,6 +73,7 @@ export const testimonials: Testimonial[] = [
     r: { en: "Dental clinic · Web + SEO", es: "Clínica dental · Web + SEO" },
     seed: 5,
     colors: ["#3B6BFF", "#45E0FF", "#D9E6FF"],
+    face: { hair: "short", skin: "#D9A47C", hairColor: "#5B3A24", shirt: "#3B6BFF", bg: "#1A2547", glasses: true }, tag: { en: "Web + SEO", es: "Web + SEO" },
     sha: "e31b58f",
   },
   {
@@ -76,6 +82,7 @@ export const testimonials: Testimonial[] = [
     r: { en: "Fintech startup · Brand system", es: "Startup fintech · Sistema de marca" },
     seed: 13,
     colors: ["#4BE3A0", "#45E0FF", "#DFF7EC"],
+    face: { hair: "bald", skin: "#B97B54", hairColor: "#2E1E16", shirt: "#4BE3A0", bg: "#123327", beard: true }, tag: { en: "Design system", es: "Design system" },
     sha: "06d9f44",
   },
   {
@@ -84,6 +91,7 @@ export const testimonials: Testimonial[] = [
     r: { en: "B2B SaaS · Web platform", es: "SaaS B2B · Plataforma web" },
     seed: 2,
     colors: ["#B58CFF", "#45E0FF", "#ECE3FF"],
+    face: { hair: "short", skin: "#F1C9A5", hairColor: "#E7C66A", shirt: "#B58CFF", bg: "#2C2247" }, tag: { en: "Web platform", es: "Plataforma web" },
     sha: "7f88b31",
   },
 ];

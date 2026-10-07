@@ -53,23 +53,25 @@ if (h1 && !reduced) {
     // command line types in parallel
     if (heroCmd) (async () => { for (let i = 1; i <= full.length; i++) { heroCmd.textContent = full.slice(0, i); await wait(40); } })();
     // line 1: typed with a block caret
-    for (const s of l1s) { s.classList.add("is-on", "is-cur"); await wait(120); s.classList.remove("is-cur"); }
+    for (const s of l1s) { s.classList.add("is-on", "is-cur"); await wait(85); s.classList.remove("is-cur"); }
     // line 2: written as code first…
-    for (let i = 1; i <= code.length; i++) { l2.textContent = code.slice(0, i); await wait(76); }
-    await wait(880);
+    for (let i = 1; i <= code.length; i++) { l2.textContent = code.slice(0, i); await wait(52); }
+    await wait(520);
     // …then compiled letter by letter into the headline
     l2.classList.remove("is-code");
     const l2s = letters(l2, t2);
-    const W = l2.getBoundingClientRect().width;
+    // size every letter's gradient to the whole line so the colors match the final text exactly
+    const box = l2.getBoundingClientRect();
     l2s.forEach((s, i) => {
+      const r = s.getBoundingClientRect();
       s.style.setProperty("--i", i);
-      s.style.backgroundSize = `${W}px 100%`;
-      s.style.backgroundPosition = `${-s.offsetLeft}px 0`;
+      s.style.backgroundSize = `${box.width}px ${box.height}px`;
+      s.style.backgroundPosition = `${box.left - r.left}px ${box.top - r.top}px`;
       s.classList.add("is-flip");
     });
     h1.classList.remove("is-typing");
     h1.classList.add("is-compiled");
-    await wait(l2s.length * 82 + 1200);
+    await wait(l2s.length * 30 + 560);
     l2.textContent = t2;
     l1.textContent = t1;
   }, noLoader() ? 150 : 2250);
@@ -87,14 +89,14 @@ if (live) {
   const strip = (h) => { const d = document.createElement("div"); d.innerHTML = h; return d.textContent; };
   let visible = false, started = false;
   const setStatus = (ok, txt) => { status.classList.toggle("is-ok", ok); status.lastChild.textContent = txt; };
-  const showStep = (el, n) => $$("[data-step]", el).forEach((s) => s.classList.toggle("is-on", +s.dataset.step <= n));
+  const setRv = (el, v) => { const f = $(".pv-frame", el); if (f) f.style.setProperty("--rv", v); el.classList.toggle("is-built", v >= 1); };
   async function play() {
     for (let k = 0; ; k = (k + 1) % scenes.length) {
       while (!visible) await wait(300);
       const sc = scenes[k];
       tabs.forEach((t, i) => t.classList.toggle("is-on", i === k));
       sceneEls.forEach((el, i) => el.classList.toggle("is-on", i === k));
-      showStep(sceneEls[k], -1);
+      setRv(sceneEls[k], 0);
       code.innerHTML = "";
       setStatus(false, i18n.compiling);
       const t0 = performance.now();
@@ -112,11 +114,11 @@ if (live) {
         }
         ln.innerHTML = sc.code[li];
         ln.classList.remove("is-cur");
-        showStep(sceneEls[k], sc.steps[li]);
+        setRv(sceneEls[k], sc.reveal[li]);
         await wait(reduced ? 0 : 150);
       }
       setStatus(true, `${i18n.compiled} ${((performance.now() - t0) / 9000).toFixed(2)}s · ${i18n.hot}`);
-      await wait(reduced ? 6000 : 2600);
+      await wait(reduced ? 6000 : 3400);
     }
   }
   new IntersectionObserver(([e]) => {
@@ -371,3 +373,19 @@ $$("[data-cfg]").forEach((cfg) => {
     for (const r of rows) { await wait(reduced ? 0 : 380); set(r, true); }
   }, { threshold: 0.4 }).observe(cfg);
 });
+
+/* ───────── Testimonials wall: columns drift at different speeds ───────── */
+const trev = $("[data-trev]");
+if (trev && !reduced) {
+  const cols = $$("[data-speed]", trev);
+  let raf = 0;
+  const upd = () => {
+    raf = 0;
+    const r = trev.getBoundingClientRect();
+    if (r.bottom < 0 || r.top > innerHeight) return;
+    const mid = r.top + r.height / 2 - innerHeight / 2;
+    cols.forEach((c) => (c.style.transform = `translateY(${(mid * parseFloat(c.dataset.speed)).toFixed(1)}px)`));
+  };
+  addEventListener("scroll", () => { if (!raf) raf = requestAnimationFrame(upd); }, { passive: true });
+  upd();
+}

@@ -23,9 +23,10 @@ const T = {
   },
   stack: {
     file: "stack.config.ts",
+    layers: es ? ["Interfaz", "Lógica", "Datos", "Publicación"] : ["Interface", "Logic", "Data", "Ships to"],
     types: es
-      ? [["landing", "Landing o sitio", ["Astro", "Tailwind", "Vercel", "Headless CMS"]], ["app", "App móvil", ["React Native", "TypeScript", "Supabase", "App Store Connect"]], ["saas", "Plataforma SaaS", ["Next.js", "TypeScript", "Supabase", "Stripe"]], ["shop", "E-commerce", ["Astro", "Shopify", "Vercel", "GA4"]]]
-      : [["landing", "Landing or site", ["Astro", "Tailwind", "Vercel", "Headless CMS"]], ["app", "Mobile app", ["React Native", "TypeScript", "Supabase", "App Store Connect"]], ["saas", "SaaS platform", ["Next.js", "TypeScript", "Supabase", "Stripe"]], ["shop", "E-commerce", ["Astro", "Shopify", "Vercel", "GA4"]]],
+      ? [["landing", "Landing o sitio", ["Astro + Tailwind", "Formularios y webhooks", "CMS headless", "Vercel"]], ["app", "App móvil", ["React Native + TypeScript", "Supabase Edge Functions", "Supabase · Postgres", "App Store · Google Play"]], ["saas", "Plataforma SaaS", ["Next.js + TypeScript", "API routes · Stripe", "Supabase · Postgres + Auth", "Vercel"]], ["shop", "E-commerce", ["Astro storefront", "Shopify Storefront API", "Shopify", "Vercel"]]]
+      : [["landing", "Landing or site", ["Astro + Tailwind", "Forms & webhooks", "Headless CMS", "Vercel"]], ["app", "Mobile app", ["React Native + TypeScript", "Supabase Edge Functions", "Supabase · Postgres", "App Store · Google Play"]], ["saas", "SaaS platform", ["Next.js + TypeScript", "API routes · Stripe", "Supabase · Postgres + Auth", "Vercel"]], ["shop", "E-commerce", ["Astro storefront", "Shopify Storefront API", "Shopify", "Vercel"]]],
   },
   funnel: {
     file: "funnel.ts", visits: es ? "Visitas al mes" : "Monthly visits", lead: es ? "Dejan sus datos" : "Leave their details", close: es ? "Compran" : "Buy",
@@ -39,7 +40,7 @@ const T = {
 ---
 
 <div class={`pw pw--${type}`} data-pw={type} data-lang={lang}>
-  <div class="pw__bar"><span class="window__dots"><i></i><i></i><i></i></span><span class="pw__file">{T.file}</span><span class="pw__live"><i></i>live</span></div>
+  <div class="pw__bar"><span class="pw__tag"><i></i>{es ? "Figura interactiva" : "Interactive figure"}</span><span class="pw__file">{T.file}</span></div>
   <div class="pw__body">
     {type === "scope" && (
       <>
@@ -79,11 +80,15 @@ const T = {
       </div>
     )}
     {type === "stack" && (
-      <div class="pw-stack">
+      <div class="pw-stack" data-stacks={JSON.stringify(Object.fromEntries(T.types.map(([k, , st]: any) => [k, st])))}>
         <div class="pw-stack__types" role="group">
           {T.types.map(([k, n]: any, i: number) => <button type="button" class={i === 0 ? "is-on" : undefined} data-type={k} aria-pressed={i === 0 ? "true" : "false"}>{n}</button>)}
         </div>
-        <pre class="pw-stack__code" data-stacks={JSON.stringify(Object.fromEntries(T.types.map(([k, , s]: any) => [k, s])))}></pre>
+        <div class="pw-arch">
+          {T.layers.map((l: string, i: number) => (
+            <div class="pw-arch__row" style={`--i:${i}`}><span class="pw-arch__l">{l}</span><b class="pw-arch__v" data-layer={i}>{T.types[0][2][i]}</b></div>
+          ))}
+        </div>
       </div>
     )}
     {type === "funnel" && (
