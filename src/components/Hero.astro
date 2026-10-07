@@ -41,6 +41,7 @@ const scenes = [
       `  &lt;/<span class="t">Screen</span>&gt;;`,
     ],
     reveal: [0.16, 0.3, 0.46, 0.62, 0.76, 0.9, 1],
+    spots: [null, [6, 26, 70, 7, "<Screen>"], [19, 45, 27, 14, "<SleepRing>"], [19, 58.3, 62, 5.5, "<Button>"], [37, 22, 26, 4, "<LiveActivity>"], [18, 66, 64, 27, "<Tiles>"], null],
   },
   {
     file: "english-buddy/Home.tsx", slug: "your-english-buddy",
@@ -54,6 +55,7 @@ const scenes = [
       `  &lt;/<span class="t">Page</span>&gt;;`,
     ],
     reveal: [0.04, 0.1, 0.16, 0.3, 0.52, 0.8, 1],
+    spots: [null, [0, 9, 100, 91, "<Page>"], [1, 0.5, 98, 8.5, "<Nav>"], [9, 17.5, 19, 6, "<Badge>"], [9, 24, 39, 17, "<Hero>"], [9, 59.5, 25, 8, "<Cta>"], null],
   },
   {
     file: "simply-andy/brand.css", slug: "simply-andy",
@@ -67,6 +69,7 @@ const scenes = [
       `<span class="t">.hero</span> { <span class="k">background</span>: <span class="f">var</span>(<span class="v">--cuero</span>); }`,
     ],
     reveal: [0.08, 0.2, 0.36, 0.5, 0.7, 0.84, 1],
+    spots: [null, [9, 1, 82, 8, "--eggshell"], [3, 20, 50, 58, "--cuero"], [10, 80.5, 15.5, 7, "--indigo"], [10, 25, 41, 27, "--head"], null, [62, 12, 32, 85, ".hero"]],
   },
 ];
 const shots = ["projects/lyapp-hoy.webp", "projects/your-english-buddy.webp", "projects/simply-andy-portfolio.webp"];
@@ -109,7 +112,7 @@ const shots = ["projects/lyapp-hoy.webp", "projects/your-english-buddy.webp", "p
       <div class="live window" data-live data-scenes={JSON.stringify(scenes)} data-i18n={JSON.stringify({ compiling: c.compiling, compiled: c.compiled, hot: c.hot })} aria-hidden="true">
         <div class="window__bar">
           <div class="window__dots"><i></i><i></i><i></i></div>
-          <div class="win-tabs" data-live-tabs>{scenes.map((sc, i) => <span class={i === 0 ? "is-on" : undefined}>{sc.file}</span>)}</div>
+          <div class="win-tabs live__tabs" data-live-tabs>{scenes.map((sc, i) => <button type="button" tabindex="-1" class={i === 0 ? "is-on" : undefined} data-tab={i}>{sc.file}<i class="live__tabprog"></i></button>)}</div>
           <span class="live__status" data-live-status><i></i>{c.compiling}</span>
         </div>
         <div class="live__body">
@@ -121,8 +124,9 @@ const shots = ["projects/lyapp-hoy.webp", "projects/your-english-buddy.webp", "p
                   {i > 0 && <div class="pv-frame__bar"><i></i><i></i><i></i><span>{["", "your-english-buddy.app", "simply-andy.ugc"][i]}</span></div>}
                   <div class="pv-frame__view">
                     <div class="pv-blueprint"></div>
-                    <img class="pv-shot" src={base + shots[i]} srcset={srcset2x(shots[i])} alt="" width={i === 0 ? 600 : 1280} height={i === 0 ? 1298 : 800} loading={i === 0 ? "eager" : "lazy"} decoding="async" />
-                    <i class="pv-scan"></i>
+                    <img class="pv-shot" src={base + shots[i]} srcset={srcset2x(shots[i])} alt="" width={i === 0 ? 600 : 1280} height={i === 0 ? 1298 : 800} loading="eager" decoding="async" />
+                    <div class="pv-spots">{sc.spots.map((sp: any, li: number) => sp && <span class="pv-spot" data-line={li} style={`left:${sp[0]}%;top:${sp[1]}%;width:${sp[2]}%;height:${sp[3]}%`}><em>{sp[4]}</em></span>)}</div>
+                    <i class="pv-flash"></i>
                   </div>
                 </div>
                 <a class="pv-proj" href={href("case", lang, sc.slug)} tabindex="-1">

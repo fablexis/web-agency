@@ -77,53 +77,81 @@ if (h1 && !reduced) {
   }, noLoader() ? 150 : 2250);
 } else if (heroCmd) heroCmd.textContent = heroCmd.dataset.text;
 
-/* ───────── Hero: live coding playground ───────── */
+/* ───────── Hero: live coding playground (real products, line → region) ───────── */
 const live = $("[data-live]");
 if (live) {
   const scenes = JSON.parse(live.dataset.scenes);
   const i18n = JSON.parse(live.dataset.i18n);
   const code = $("[data-live-code]", live);
   const status = $("[data-live-status]", live);
-  const tabs = $$("[data-live-tabs] span", live);
+  const tabs = $$("[data-live-tabs] [data-tab]", live);
   const sceneEls = $$(".live__scene", live);
+  const preview = $("[data-live-preview]", live);
   const strip = (h) => { const d = document.createElement("div"); d.innerHTML = h; return d.textContent; };
-  let visible = false, started = false;
+  const HOLD = 2600;
+  let visible = false, started = false, token = 0, cur = 0, hover = false;
   const setStatus = (ok, txt) => { status.classList.toggle("is-ok", ok); status.lastChild.textContent = txt; };
-  const setRv = (el, v) => { const f = $(".pv-frame", el); if (f) f.style.setProperty("--rv", v); el.classList.toggle("is-built", v >= 1); };
-  async function play() {
-    for (let k = 0; ; k = (k + 1) % scenes.length) {
-      while (!visible) await wait(300);
-      const sc = scenes[k];
-      tabs.forEach((t, i) => t.classList.toggle("is-on", i === k));
-      sceneEls.forEach((el, i) => el.classList.toggle("is-on", i === k));
-      setRv(sceneEls[k], 0);
-      code.innerHTML = "";
-      setStatus(false, i18n.compiling);
-      const t0 = performance.now();
-      for (let li = 0; li < sc.code.length; li++) {
-        const ln = document.createElement("span");
-        ln.className = "ln is-cur";
-        code.appendChild(ln);
-        const plain = strip(sc.code[li]);
-        if (!reduced) {
-          for (let c = 1; c <= plain.length; c++) {
-            ln.textContent = plain.slice(0, c);
-            ln.insertAdjacentHTML("beforeend", '<i class="cur"></i>');
-            await wait(plain[c - 1] === " " ? 6 : 14 + Math.random() * 16);
-          }
+  const sleep = async (ms, t) => { const end = performance.now() + (reduced ? 0 : ms); while (performance.now() < end) { if (t !== token) return false; await wait(Math.min(40, end - performance.now())); } return t === token; };
+
+  async function run(k, t) {
+    const sc = scenes[k], el = sceneEls[k];
+    cur = k;
+    tabs.forEach((b, i) => { b.classList.toggle("is-on", i === k); b.style.setProperty("--p", "0"); });
+    sceneEls.forEach((s, i) => { s.classList.toggle("is-on", i === k); s.classList.remove("is-built", "is-hot"); });
+    const frame = $(".pv-frame", el), spots = $$(".pv-spot", el);
+    spots.forEach((sp) => sp.classList.remove("is-on", "is-done"));
+    frame.style.setProperty("--rv", "0");
+    code.innerHTML = "";
+    setStatus(false, i18n.compiling);
+    const t0 = performance.now();
+    for (let li = 0; li < sc.code.length; li++) {
+      const ln = document.createElement("span");
+      ln.className = "ln is-cur";
+      code.appendChild(ln);
+      const plain = strip(sc.code[li]);
+      if (!reduced) {
+        // fast "autocomplete" typing: a few characters per frame
+        for (let c = 0; c <= plain.length; c += 3) {
+          if (t !== token) return;
+          ln.textContent = plain.slice(0, c);
+          ln.insertAdjacentHTML("beforeend", '<i class="cur"></i>');
+          await wait(16);
         }
-        ln.innerHTML = sc.code[li];
-        ln.classList.remove("is-cur");
-        setRv(sceneEls[k], sc.reveal[li]);
-        await wait(reduced ? 0 : 150);
       }
-      setStatus(true, `${i18n.compiled} ${((performance.now() - t0) / 9000).toFixed(2)}s · ${i18n.hot}`);
-      await wait(reduced ? 6000 : 3400);
+      ln.innerHTML = sc.code[li];
+      ln.classList.remove("is-cur");
+      ln.classList.add("is-flash");
+      frame.style.setProperty("--rv", sc.reveal[li]);
+      const sp = spots.find((x) => +x.dataset.line === li);
+      if (sp) { spots.forEach((x) => x.classList.remove("is-on")); sp.classList.add("is-on", "is-done"); ln.classList.add("has-spot"); }
+      if (!(await sleep(sp ? 210 : 70, t))) return;
     }
+    el.classList.add("is-built", "is-hot");
+    spots.forEach((x) => x.classList.remove("is-on"));
+    setStatus(true, `${i18n.compiled} ${((performance.now() - t0) / 1000).toFixed(2)}s · ${i18n.hot}`);
+    // hold, with tab progress; pause while hovered
+    let held = 0;
+    while (held < HOLD) {
+      if (t !== token) return;
+      await wait(40);
+      if (!hover && visible) held += 40;
+      tabs[k].style.setProperty("--p", String(held / HOLD));
+    }
+    if (t === token) go((k + 1) % scenes.length);
   }
+  const go = (k) => { token++; run(k, token); };
+  tabs.forEach((b, i) => b.addEventListener("click", () => go(i)));
+  preview.addEventListener("pointermove", (e) => {
+    hover = true;
+    const r = preview.getBoundingClientRect();
+    const x = (e.clientX - r.left) / r.width - 0.5, y = (e.clientY - r.top) / r.height - 0.5;
+    preview.style.setProperty("--rx", `${(-y * 8).toFixed(2)}deg`);
+    preview.style.setProperty("--ry", `${(x * 10).toFixed(2)}deg`);
+  });
+  preview.addEventListener("pointerleave", () => { hover = false; preview.style.setProperty("--rx", "0deg"); preview.style.setProperty("--ry", "0deg"); });
   new IntersectionObserver(([e]) => {
     visible = e.isIntersecting;
-    if (visible && !started) { started = true; setTimeout(play, noLoader() ? 500 : 3150); }
+    if (visible && !started) { started = true; setTimeout(() => go(0), noLoader() ? 300 : 2600); }
   }, { threshold: 0.2 }).observe(live);
 }
 
