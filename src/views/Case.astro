@@ -7,7 +7,6 @@ import LyappScrolly from "../components/LyappScrolly.astro";
 import { site, testimonials } from "../data/site";
 import { projects, serviceNames } from "../data/projects";
 import { href, route, loc, base, type Lang, srcset2x } from "../i18n";
-import { faceSvg } from "../lib/avatar";
 
 interface Props { lang: Lang; slug: string }
 const { lang, slug } = Astro.props;
@@ -17,7 +16,7 @@ const p = loc(raw, lang) as any;
 const idx = projects.findIndex((x) => x.slug === slug);
 const next = loc(projects[(idx + 1) % projects.length], lang) as any;
 const qt = testimonials.find((t) => t.project === slug);
-const quote = qt ? { ...loc(qt, lang), av: faceSvg(qt.face, 64) } : null;
+const quote = qt ? { ...loc(qt, lang), photo: qt.photo } : null;
 const pageUrl = new URL(route("case", lang, slug), site.url).href;
 const c = {
   en: { case: "Case", crumb: "deploys/", client: "Client", modules: "Modules", year: "Year", stack: "Stack", challenge: "// the challenge", challengeT: "Where we started", try: "// try it", did: "// what we built", didT: "What we shipped", impact: "// impact", impactT: "What changed", next: "// next deploy", building: "building next deploy…", ready: "ready · open ↵", more: "More screenshots", demo: "Interactive demo" },
@@ -133,7 +132,7 @@ const fonts = raw.effect === "phone" ? "&family=Playfair+Display:wght@500;600" :
         <div class="wrap">
           <figure class="tlog__q is-active tlog__q--solo" data-reveal>
             <blockquote><p>“{quote.q}”</p></blockquote>
-            <figcaption><span class="tlog__av" set:html={quote.av} /><span class="tlog__who"><b>{quote.n}</b><small>{quote.r}</small></span></figcaption>
+            <figcaption>{quote.photo && <img class="trev__photo" src={base + quote.photo} srcset={`${base}${quote.photo} 1x, ${base}${quote.photo.replace(".webp", "@2x.webp")} 2x`} alt={quote.n} width="64" height="64" loading="lazy" />}<span class="tlog__who"><b>{quote.n}</b><small>{quote.r}</small></span></figcaption>
           </figure>
         </div>
       </section>

@@ -28,51 +28,11 @@ const c = {
   },
 }[lang];
 
-const scenes = [
-  {
-    file: "lyapp/Today.tsx", slug: "lyapp",
-    code: [
-      `<span class="k">export default function</span> <span class="f">Today</span>() {`,
-      `  <span class="k">return</span> &lt;<span class="t">Screen</span> title=<span class="s">"Lua · 14 months"</span>&gt;`,
-      `    &lt;<span class="t">SleepRing</span> hours={<span class="n">12.5</span>} range=<span class="s">"11–14h"</span> /&gt;`,
-      `    &lt;<span class="t">Button</span> title=<span class="s">"Start sleep timer"</span> onPress={<span class="f">timer.start</span>} /&gt;`,
-      `    &lt;<span class="t">LiveActivity</span> island=<span class="s">"sleep"</span> /&gt;`,
-      `    &lt;<span class="t">Tiles</span> items={[<span class="s">"feed"</span>, <span class="s">"calendar"</span>]} /&gt;`,
-      `  &lt;/<span class="t">Screen</span>&gt;;`,
-    ],
-    reveal: [0.16, 0.3, 0.46, 0.62, 0.76, 0.9, 1],
-    spots: [null, [6, 26, 70, 7, "<Screen>"], [19, 45, 27, 14, "<SleepRing>"], [19, 58.3, 62, 5.5, "<Button>"], [37, 22, 26, 4, "<LiveActivity>"], [18, 66, 64, 27, "<Tiles>"], null],
-  },
-  {
-    file: "english-buddy/Home.tsx", slug: "your-english-buddy",
-    code: [
-      `<span class="k">export default function</span> <span class="f">Home</span>() {`,
-      `  <span class="k">return</span> &lt;<span class="t">Page</span> lang=<span class="s">"es"</span>&gt;`,
-      `    &lt;<span class="t">Nav</span> cta=<span class="s">"Contacto"</span> /&gt;`,
-      `    &lt;<span class="t">Badge</span>&gt;Clase diagnóstica personalizada&lt;/<span class="t">Badge</span>&gt;`,
-      `    &lt;<span class="t">Hero</span> title=<span class="s">"Bienvenido a Your English Buddy"</span> /&gt;`,
-      `    &lt;<span class="t">Cta</span> href=<span class="s">"/diagnostico"</span>&gt;Empieza mi viaje&lt;/<span class="t">Cta</span>&gt;`,
-      `  &lt;/<span class="t">Page</span>&gt;;`,
-    ],
-    reveal: [0.04, 0.1, 0.16, 0.3, 0.52, 0.8, 1],
-    spots: [null, [0, 9, 100, 91, "<Page>"], [1, 0.5, 98, 8.5, "<Nav>"], [9, 17.5, 19, 6, "<Badge>"], [9, 24, 39, 17, "<Hero>"], [9, 59.5, 25, 8, "<Cta>"], null],
-  },
-  {
-    file: "simply-andy/brand.css", slug: "simply-andy",
-    code: [
-      `<span class="t">:root</span> {`,
-      `  <span class="v">--eggshell</span>: <span class="n">#E9E2D0</span>;`,
-      `  <span class="v">--cuero</span>: <span class="n">#864C24</span>;`,
-      `  <span class="v">--indigo</span>: <span class="n">#1F2C44</span>;`,
-      `  <span class="v">--head</span>: <span class="s">"Big Shoulders"</span>;`,
-      `}`,
-      `<span class="t">.hero</span> { <span class="k">background</span>: <span class="f">var</span>(<span class="v">--cuero</span>); }`,
-    ],
-    reveal: [0.08, 0.2, 0.36, 0.5, 0.7, 0.84, 1],
-    spots: [null, [9, 1, 82, 8, "--eggshell"], [3, 20, 50, 58, "--cuero"], [10, 80.5, 15.5, 7, "--indigo"], [10, 25, 41, 27, "--head"], null, [62, 12, 32, 85, ".hero"]],
-  },
+const deck = [
+  { slug: "lyapp", kind: "phone", name: "Lyapp", tag: "Lyapp", accent: "#E8805A", status: c.proj[0][1], cmd: "deploy lyapp", shots: ["projects/lyapp-hoy.webp", "projects/lyapp-resumen.webp", "projects/lyapp-coach.webp"] },
+  { slug: "your-english-buddy", kind: "web", name: "Your English Buddy", tag: "EnglishBuddy", accent: "#3DDC84", status: c.proj[1][1], cmd: "deploy english-buddy", url: "fabio-english-academy.vercel.app", page: "projects/your-english-buddy-page.webp", h: 1799 },
+  { slug: "simply-andy", kind: "web", name: "Simply Andy", tag: "SimplyAndy", accent: "#C9824F", status: c.proj[2][1], cmd: "deploy simply-andy", url: "simply-andy.ugc", page: "projects/simply-andy-page.webp", h: 1150 },
 ];
-const shots = ["projects/lyapp-hoy.webp", "projects/your-english-buddy.webp", "projects/simply-andy-portfolio.webp"];
 ---
 
 <header class="hero2" id="top">
@@ -101,43 +61,32 @@ const shots = ["projects/lyapp-hoy.webp", "projects/your-english-buddy.webp", "p
     </div>
   </div>
 
-  <div class="stage" data-reveal style="--d:450ms">
-    <div class="stage__glow"></div>
-    {c.chips.map(([a, b], i) => (
-      <div class={`float-chip chip-${"abc"[i]}`} data-parallax="0">
-        <div><span class={`float-chip__ic ${["ic-green", "ic-cyan", "ic-violet"][i]}`}>{["✓", "↑", "★"][i]}</span><span>{a}<small>{b}</small></span></div>
-      </div>
-    ))}
-    <div class="stage__tilt" id="hero-tilt">
-      <div class="live window" data-live data-scenes={JSON.stringify(scenes)} data-i18n={JSON.stringify({ compiling: c.compiling, compiled: c.compiled, hot: c.hot })} aria-hidden="true">
-        <div class="window__bar">
-          <div class="window__dots"><i></i><i></i><i></i></div>
-          <div class="win-tabs live__tabs" data-live-tabs>{scenes.map((sc, i) => <button type="button" tabindex="-1" class={i === 0 ? "is-on" : undefined} data-tab={i}>{sc.file}<i class="live__tabprog"></i></button>)}</div>
-          <span class="live__status" data-live-status><i></i>{c.compiling}</span>
-        </div>
-        <div class="live__body">
-          <pre class="live__code" data-live-code></pre>
-          <div class="live__preview" data-live-preview>
-            {scenes.map((sc, i) => (
-              <div class={`live__scene${i === 0 ? " is-on" : ""}`} data-scene={i}>
-                <div class={`pv-frame ${i === 0 ? "pv-frame--phone" : "pv-frame--web"}`} style="--rv:0">
-                  {i > 0 && <div class="pv-frame__bar"><i></i><i></i><i></i><span>{["", "your-english-buddy.app", "simply-andy.ugc"][i]}</span></div>}
-                  <div class="pv-frame__view">
-                    <div class="pv-blueprint"></div>
-                    <img class="pv-shot" src={base + shots[i]} srcset={srcset2x(shots[i])} alt="" width={i === 0 ? 600 : 1280} height={i === 0 ? 1298 : 800} loading="eager" decoding="async" />
-                    <div class="pv-spots">{sc.spots.map((sp: any, li: number) => sp && <span class="pv-spot" data-line={li} style={`left:${sp[0]}%;top:${sp[1]}%;width:${sp[2]}%;height:${sp[3]}%`}><em>{sp[4]}</em></span>)}</div>
-                    <i class="pv-flash"></i>
-                  </div>
-                </div>
-                <a class="pv-proj" href={href("case", lang, sc.slug)} tabindex="-1">
-                  <span class="pv-proj__dot"></span><b>{c.proj[i][0]}</b><small>{c.proj[i][1]}</small><em>{c.proj[i][2]} →</em>
-                </a>
+  <div class="showcase" data-showcase data-reveal style="--d:450ms">
+    <div class="showcase__glow"></div>
+    <div class="showcase__stage">
+      {deck.map((d, i) => (
+        <article class={`sc-card sc-card--${d.kind}`} data-card={i} data-pos={i} style={`--acc:${d.accent}`}>
+          <a class="sc-card__link" href={href("case", lang, d.slug)} tabindex="-1" aria-label={d.name}></a>
+          <span class="sc-tag"><span class="tk tk--p">&lt;</span>{d.tag}<span class="tk tk--p"> /&gt;</span></span>
+          {d.kind === "phone" ? (
+            <div class="sc-phone">
+              <i class="sc-phone__island"></i>
+              <div class="sc-phone__screens">
+                {d.shots.map((src: string, k: number) => <img class={k === 0 ? "is-on" : undefined} src={base + src} srcset={srcset2x(src)} alt="" width="600" height="1298" loading="eager" decoding="async" />)}
               </div>
-            ))}
-            <div class="live__wipe" data-live-wipe></div>
-          </div>
-        </div>
-      </div>
+            </div>
+          ) : (
+            <div class="sc-browser">
+              <div class="sc-browser__bar"><i></i><i></i><i></i><span>{d.url}</span></div>
+              <div class="sc-browser__view"><img class="sc-scroll" src={base + d.page} srcset={srcset2x(d.page)} alt="" width="640" height={d.h} loading="eager" decoding="async" style={`--h:${d.h}`} /></div>
+            </div>
+          )}
+          <footer class="sc-meta"><span class="sc-dot"></span><b>{d.name}</b><small>{d.status}</small></footer>
+        </article>
+      ))}
+    </div>
+    <div class="showcase__rail" role="tablist" aria-label={lang === "es" ? "Proyectos" : "Projects"}>
+      {deck.map((d, i) => <button type="button" role="tab" data-go={i} aria-selected={i === 0 ? "true" : "false"} class={i === 0 ? "is-on" : undefined}><span>{d.cmd}</span><i></i></button>)}
     </div>
   </div>
 </header>

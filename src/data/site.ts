@@ -32,7 +32,7 @@ export const steps = [
 
 import type { Face } from "../lib/avatar";
 
-export type Testimonial = { q: L; n: L; r: L; seed: number; colors: string[]; face: Face; tag: L; real?: boolean; project?: string; sha: string };
+export type Testimonial = { q: L; n: L; r: L; seed: number; colors: string[]; face: Face; tag: L; icon?: string; photo?: string; real?: boolean; project?: string; sha: string };
 
 export const testimonials: Testimonial[] = [
   {
@@ -47,6 +47,7 @@ export const testimonials: Testimonial[] = [
     real: true,
     project: "simply-andy",
     face: { hair: "long", skin: "#E6B48F", hairColor: "#2B1A14", shirt: "#864C24", bg: "#E9E2D0", glasses: true }, tag: { en: "Brand system + web", es: "Sistema de marca + web" },
+    photo: "team/andreina-luna.webp",
     sha: "a17f3c9",
   },
   {
@@ -56,6 +57,7 @@ export const testimonials: Testimonial[] = [
     seed: 3,
     colors: ["#45E0FF", "#9B6BFF", "#E8E4F0"],
     face: { hair: "bun", skin: "#F3D2B8", hairColor: "#C27A3A", shirt: "#9B6BFF", bg: "#2A2350" }, tag: { en: "E-commerce", es: "E-commerce" },
+    icon: "bag",
     sha: "4be21d0",
   },
   {
@@ -65,6 +67,7 @@ export const testimonials: Testimonial[] = [
     seed: 11,
     colors: ["#9B6BFF", "#3B6BFF", "#F2D3B3"],
     face: { hair: "curly", skin: "#8D5B3C", hairColor: "#1B1310", shirt: "#45E0FF", bg: "#12303A" }, tag: { en: "Mobile app", es: "App móvil" },
+    icon: "coffee",
     sha: "9c0a7e2",
   },
   {
@@ -74,6 +77,7 @@ export const testimonials: Testimonial[] = [
     seed: 5,
     colors: ["#3B6BFF", "#45E0FF", "#D9E6FF"],
     face: { hair: "short", skin: "#D9A47C", hairColor: "#5B3A24", shirt: "#3B6BFF", bg: "#1A2547", glasses: true }, tag: { en: "Web + SEO", es: "Web + SEO" },
+    icon: "tooth",
     sha: "e31b58f",
   },
   {
@@ -83,6 +87,7 @@ export const testimonials: Testimonial[] = [
     seed: 13,
     colors: ["#4BE3A0", "#45E0FF", "#DFF7EC"],
     face: { hair: "bald", skin: "#B97B54", hairColor: "#2E1E16", shirt: "#4BE3A0", bg: "#123327", beard: true }, tag: { en: "Design system", es: "Design system" },
+    icon: "card",
     sha: "06d9f44",
   },
   {
@@ -92,6 +97,7 @@ export const testimonials: Testimonial[] = [
     seed: 2,
     colors: ["#B58CFF", "#45E0FF", "#ECE3FF"],
     face: { hair: "short", skin: "#F1C9A5", hairColor: "#E7C66A", shirt: "#B58CFF", bg: "#2C2247" }, tag: { en: "Web platform", es: "Plataforma web" },
+    icon: "layers",
     sha: "7f88b31",
   },
 ];
