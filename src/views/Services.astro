@@ -2,6 +2,7 @@
 import Base from "../layouts/Base.astro";
 import PageHero from "../components/PageHero.astro";
 import ProcessTabs from "../components/ProcessTabs.astro";
+import ModuleApp from "../components/ModuleApp.astro";
 import Faq from "../components/Faq.astro";
 import Cta from "../components/Cta.astro";
 import { site, faqs } from "../data/site";
@@ -61,30 +62,7 @@ const schema = [
                 <p class="lead">{s.lead}</p>
               </header>
 
-              <div class="svc-sec__grid">
-                <div class="card svc-sec__inc" data-reveal data-spotlight>
-                  <h3>{c.includes}</h3>
-                  <ul class="checks">{s.includes.map((x: string) => <li>{x}</li>)}</ul>
-                </div>
-                <div class="card svc-sec__viz" data-reveal data-spotlight style="--d:80ms" aria-hidden="true">
-                  {s.viz === "code" && <div class="code" data-code></div>}
-                  {s.viz === "phone" && <div class="mini-phone mini-phone--big"><i></i><i></i><i></i><i></i><i></i></div>}
-                  {s.viz === "ranks" && (
-                    <div class="ranks" data-ranks>
-                      <div class="rank"><b>1</b>competitor-a.com</div>
-                      <div class="rank"><b>2</b>competitor-b.com</div>
-                      <div class="rank"><b>3</b>directory.com</div>
-                      <div class="rank is-you"><b>4</b>your-brand.com</div>
-                    </div>
-                  )}
-                  {s.viz === "palette" && (
-                    <div class="swatches" data-swatches>
-                      {brandSwatches.map((sw) => <i style={`--sw:${sw}`} data-hex={sw}></i>)}
-                      <code class="swatches__token">--brand-accent: <b>#45E0FF</b>;</code>
-                    </div>
-                  )}
-                </div>
-              </div>
+              <ModuleApp lang={lang} s={s} />
 
               <div class="svc-sec__meta" data-reveal>
                 <div><small>{c.forWho}</small><p>{s.forWho}</p></div>

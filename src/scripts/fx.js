@@ -251,129 +251,71 @@ if (fplay) {
   if (reduced) fplay.classList.add("is-in");
 }
 
-/* ───────── Team photos: assembled from falling tetrominoes ───────── */
-const SHAPES = {
-  I: [[0, 0], [1, 0], [2, 0], [3, 0]], O: [[0, 0], [1, 0], [0, 1], [1, 1]], T: [[0, 0], [1, 0], [2, 0], [1, 1]],
-  L: [[0, 0], [0, 1], [0, 2], [1, 2]], J: [[1, 0], [1, 1], [1, 2], [0, 2]], S: [[1, 0], [2, 0], [0, 1], [1, 1]], Z: [[0, 0], [1, 0], [1, 1], [2, 1]],
-};
-const norm = (cells) => { const mx = Math.min(...cells.map((c) => c[0])), my = Math.min(...cells.map((c) => c[1])); return cells.map(([x, y]) => [x - mx, y - my]); };
-const rotations = (cells) => { const out = []; let c = cells; for (let i = 0; i < 4; i++) { c = norm(c.map(([x, y]) => [-y, x])); const k = JSON.stringify([...c].sort()); if (!out.some((o) => o.k === k)) out.push({ k, c }); } return out.map((o) => o.c); };
-const PIECES = Object.values(SHAPES).flatMap(rotations);
-const TINTS = ["#45E0FF", "#9B6BFF", "#3B6BFF", "#4BE3A0", "#B58CFF", "#7fe7ff"];
-
-$$("[data-tetris]").forEach((fig, figIndex) => {
-  const img = $("img", fig), canvas = $("canvas", fig), card = fig.closest(".dev") || fig;
+/* ───────── Team cards: code types itself while the photo compiles ───────── */
+$$(".dev").forEach((card, cardIndex) => {
+  const code = $("[data-type-code]", card), fig = $("[data-compile-photo]", card);
+  if (!code || !fig) return;
+  const img = $("img", fig), canvas = $("canvas", fig), status = $("[data-photo-status]", fig);
   const ctx = canvas.getContext("2d");
-  let W = 0, H = 0, cs = 0, cols = 8, rows = 0, pieces = [], t0 = 0, raf = 0, built = false, started = false, hoverPiece = null, xray = 0, xrayTarget = 0;
-  let map = null; // image cover mapping
-  const rng = (seed => () => (seed = (seed * 16807) % 2147483647) / 2147483647)(9 + figIndex * 7);
+  const lang = document.documentElement.lang;
+  const file = status.textContent.split(" ")[0];
+  const L = lang === "es" ? { comp: "compilando", done: "compilado en" } : { comp: "compiling", done: "compiled in" };
+  const LEVELS = [5, 9, 16, 28, 48, 90];
 
-  const layout = () => {
+  // collect every text node so nested spans/headings type in order
+  const nodes = [];
+  const walk = (n) => n.childNodes.forEach((c) => (c.nodeType === 3 ? c.textContent.length && nodes.push({ n: c, t: c.textContent }) : walk(c)));
+  walk(code);
+  const total = nodes.reduce((a, x) => a + x.t.length, 0);
+  const caret = document.createElement("i");
+  caret.className = "dev__caret";
+
+  const pixel = (cols) => {
     const r = fig.getBoundingClientRect(), dpr = Math.min(2, devicePixelRatio || 1);
-    W = canvas.width = Math.round(r.width * dpr); H = canvas.height = Math.round(r.height * dpr);
-    cols = r.width < 360 ? 7 : 8; cs = W / cols; rows = Math.ceil(H / cs);
-    const s = Math.max(W / img.naturalWidth, H / img.naturalHeight);
-    map = { s, ox: (W - img.naturalWidth * s) / 2, oy: (H - img.naturalHeight * s) * 0.18 };
-    // tile the grid bottom-up with tetrominoes (dominoes/monominoes only as filler)
-    const grid = Array.from({ length: rows }, () => Array(cols).fill(-1));
-    pieces = [];
-    const fits = (cells, ax, ay) => cells.every(([x, y]) => { const gx = ax + x, gy = ay + y; return gx >= 0 && gx < cols && gy >= 0 && gy < rows && grid[gy][gx] < 0; });
-    for (let y = rows - 1; y >= 0; y--) for (let x = 0; x < cols; x++) {
-      if (grid[y][x] >= 0) continue;
-      const opts = [...PIECES].sort(() => rng() - 0.5);
-      let placed = null;
-      for (const shape of opts) {
-        for (const [cx, cy] of shape) { const ax = x - cx, ay = y - cy; if (fits(shape, ax, ay)) { placed = shape.map(([a, b]) => [ax + a, ay + b]); break; } }
-        if (placed) break;
-      }
-      if (!placed) for (const sh of [[[0, 0], [1, 0]], [[0, 0], [0, 1]], [[0, -1], [0, 0]], [[0, 0]]]) if (fits(sh, x, y)) { placed = sh.map(([a, b]) => [x + a, y + b]); break; }
-      const id = pieces.length;
-      placed.forEach(([gx, gy]) => (grid[gy][gx] = id));
-      const top = Math.min(...placed.map((c) => c[1]));
-      pieces.push({ cells: placed, top, tint: TINTS[Math.floor(rng() * TINTS.length)], landed: 0, dist: top + 2 + Math.max(...placed.map((c) => c[1])) - top + Math.floor(rng() * 2) });
-    }
-    // drop order: lowest pieces first, like a real stack
-    pieces.sort((a, b) => Math.max(...b.cells.map((c) => c[1])) - Math.max(...a.cells.map((c) => c[1])) || a.cells[0][0] - b.cells[0][0]);
-    pieces.forEach((p, i) => (p.delay = i * 80));
+    canvas.width = Math.round(r.width * dpr); canvas.height = Math.round(r.height * dpr);
+    const rows = Math.max(1, Math.round(cols * canvas.height / canvas.width));
+    const off = document.createElement("canvas"); off.width = cols; off.height = rows;
+    const o = off.getContext("2d");
+    const s = Math.max(cols / img.naturalWidth, rows / img.naturalHeight);
+    const dw = img.naturalWidth * s, dh = img.naturalHeight * s;
+    o.drawImage(img, (cols - dw) / 2, (rows - dh) * 0.18, dw, dh);
+    ctx.imageSmoothingEnabled = false;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(off, 0, 0, canvas.width, canvas.height);
   };
 
-  const block = (gx, gy, dy, tint, tintA, lift = 0) => {
-    const g = Math.max(1, cs * 0.035), x = gx * cs, y = gy * cs + dy - lift;
-    const sx = (x - map.ox) / map.s, sy = (gy * cs - map.oy) / map.s, sw = cs / map.s;
-    ctx.drawImage(img, sx, sy, sw, sw, x + g, y + g, cs - 2 * g, cs - 2 * g);
-    if (tintA > 0.01) { ctx.globalAlpha = tintA; ctx.fillStyle = tint; ctx.fillRect(x + g, y + g, cs - 2 * g, cs - 2 * g); ctx.globalAlpha = 1; }
-    // bevel: light top/left, dark bottom/right
-    const b = Math.max(1.5, cs * 0.06);
-    ctx.fillStyle = "rgba(255,255,255,.16)"; ctx.fillRect(x + g, y + g, cs - 2 * g, b); ctx.fillRect(x + g, y + g, b, cs - 2 * g);
-    ctx.fillStyle = "rgba(0,0,0,.28)"; ctx.fillRect(x + g, y + cs - g - b, cs - 2 * g, b); ctx.fillRect(x + cs - g - b, y + g, b, cs - 2 * g);
-  };
-
-  const draw = (now) => {
-    ctx.clearRect(0, 0, W, H);
-    const t = now - t0;
-    const rowFill = new Array(rows).fill(0);
-    let allDone = true;
-    for (const p of pieces) {
-      const local = t - p.delay;
-      if (local < 0 && !built) { allDone = false; continue; }
-      const STEP = 34; // ms per row: stepped, like a real Tetris drop
-      const fallen = built ? p.dist : Math.min(p.dist, Math.floor(local / STEP));
-      const dy = -(p.dist - fallen) * cs;
-      if (fallen >= p.dist && !p.landed) p.landed = now;
-      const since = p.landed ? now - p.landed : -1;
-      let tintA = built ? 0 : since < 0 ? 0.55 : Math.max(0, 0.55 - since / 700);
-      if (since >= 0 && since < 120 && !built) tintA = 0.9 - since / 300; // impact flash
-      if (!built && (since < 0 || tintA > 0)) allDone = false;
-      const isHover = hoverPiece === p;
-      if (built) tintA = xray * (isHover ? 0.45 : 0.2);
-      for (const [gx, gy] of p.cells) {
-        block(gx, gy, dy, p.tint, tintA, isHover ? xray * cs * 0.12 : 0);
-        if (since >= 0) rowFill[gy]++;
-      }
-      if (built && xray > 0.01) { // x-ray outlines of each piece
-        ctx.globalAlpha = xray * (isHover ? 1 : 0.55); ctx.strokeStyle = p.tint; ctx.lineWidth = Math.max(1.5, cs * 0.04);
-        for (const [gx, gy] of p.cells) ctx.strokeRect(gx * cs + 2, gy * cs + 2 - (isHover ? xray * cs * 0.12 : 0), cs - 4, cs - 4);
-        ctx.globalAlpha = 1;
+  const run = async () => {
+    if (reduced) return;
+    fig.classList.add("is-compiling");
+    nodes.forEach((x) => (x.n.textContent = ""));
+    let typed = 0, level = -1;
+    const t0 = performance.now();
+    pixel(LEVELS[0]);
+    for (const x of nodes) {
+      x.n.parentNode.insertBefore(caret, x.n.nextSibling);
+      for (let i = 1; i <= x.t.length; i++) {
+        x.n.textContent = x.t.slice(0, i);
+        typed++;
+        const lv = Math.min(LEVELS.length - 1, Math.floor((typed / total) * LEVELS.length));
+        if (lv !== level) {
+          level = lv; pixel(LEVELS[lv]);
+          status.textContent = `${L.comp} ${file} · ${lv + 1}/${LEVELS.length}`;
+        }
+        const ch = x.t[i - 1];
+        if (ch !== " ") await wait(ch === "," || ch === "." ? 40 : 12);
       }
     }
-    // line clear flash when a row completes
-    if (!built) rowFill.forEach((n, r) => {
-      if (n === cols) {
-        const p0 = pieces.filter((p) => p.cells.some((c) => c[1] === r)).reduce((m, p) => Math.max(m, p.landed || 0), 0);
-        const a = 1 - (now - p0) / 380;
-        if (a > 0) { ctx.globalAlpha = a * 0.55; ctx.fillStyle = "#eef2f8"; ctx.fillRect(0, r * cs, W, cs); ctx.globalAlpha = 1; }
-      }
-    });
-    return allDone;
+    caret.remove();
+    fig.classList.remove("is-compiling");
+    fig.classList.add("is-built");
+    status.textContent = `${L.done} ${((performance.now() - t0) / 1000).toFixed(1)}s · 880×1172`;
   };
 
-  const loop = (now) => {
-    xray += (xrayTarget - xray) * 0.14;
-    const done = draw(now);
-    if (!built && done) { built = true; fig.classList.add("is-built"); }
-    raf = !built || Math.abs(xrayTarget - xray) > 0.01 || xrayTarget > 0 ? requestAnimationFrame(loop) : 0;
-  };
-  const kick = () => { if (!raf) raf = requestAnimationFrame(loop); };
-  const start = () => {
-    if (started) return; started = true;
-    layout(); t0 = performance.now();
-    if (reduced) { built = true; fig.classList.add("is-built"); return; }
-    kick();
-  };
-  fig.classList.add("is-tetris");
-  const ready = () => new IntersectionObserver(([e], io) => { if (e.isIntersecting) { io.disconnect(); setTimeout(start, 200 + figIndex * 250); } }, { threshold: 0.3 }).observe(fig);
+  // hide text until the card is reached, then type; keeps the text in the HTML for SEO
+  if (!reduced) code.classList.add("is-pending");
+  const start = () => { code.classList.remove("is-pending"); run(); };
+  const ready = () => new IntersectionObserver(([e], io) => { if (e.isIntersecting) { io.disconnect(); setTimeout(start, 150 + cardIndex * 350); } }, { threshold: 0.3 }).observe(card);
   img.complete && img.naturalWidth ? ready() : img.addEventListener("load", ready, { once: true });
-  if (!reduced) {
-    fig.addEventListener("pointermove", (e) => {
-      if (!built) return;
-      const r = fig.getBoundingClientRect(), dpr = W / r.width;
-      const gx = Math.floor(((e.clientX - r.left) * dpr) / cs), gy = Math.floor(((e.clientY - r.top) * dpr) / cs);
-      hoverPiece = pieces.find((p) => p.cells.some((c) => c[0] === gx && c[1] === gy)) || null;
-      xrayTarget = 1; fig.classList.add("is-xray"); kick();
-    });
-    fig.addEventListener("pointerleave", () => { xrayTarget = 0; hoverPiece = null; fig.classList.remove("is-xray"); kick(); });
-  }
-  addEventListener("resize", () => { if (started) { layout(); if (built) draw(performance.now()); } }, { passive: true });
 });
 
 /* ───────── Hero: floating code ornaments drift with the pointer ───────── */
@@ -392,3 +334,40 @@ if (floatLayer && !reduced && matchMedia("(pointer: fine)").matches) {
     if (!raf) raf = requestAnimationFrame(loop);
   }, { passive: true });
 }
+
+/* ───────── Module apps: includes tick off like tasks ───────── */
+$$("[data-mapp]").forEach((app) => {
+  const items = $$("[data-mapp-item]", app), n = $("[data-mapp-n]", app), pct = $("[data-mapp-pct]", app), ring = $("[data-mapp-ring]", app);
+  const update = () => {
+    const done = items.filter((i) => i.classList.contains("is-done")).length;
+    n.textContent = done;
+    const p = Math.round((done / items.length) * 100);
+    pct.textContent = `${p}%`;
+    ring.style.strokeDashoffset = String(264 - (264 * p) / 100);
+  };
+  const set = (it, on) => { it.classList.toggle("is-done", on); it.setAttribute("aria-pressed", String(on)); update(); };
+  items.forEach((it) => it.addEventListener("click", () => { set(it, !it.classList.contains("is-done")); it.classList.remove("is-flash"); void it.offsetWidth; it.classList.add("is-flash"); }));
+  new IntersectionObserver(async ([e], io) => {
+    if (!e.isIntersecting) return;
+    io.disconnect();
+    for (const it of items) { await wait(reduced ? 0 : 320); set(it, true); }
+  }, { threshold: 0.4 }).observe(app);
+});
+
+/* ───────── Case git log + About config: rows switch on in sequence ───────── */
+$$("[data-clog]").forEach((log) => {
+  const rows = $$(".clog__row", log), n = $("[data-clog-n]", log);
+  new IntersectionObserver(async ([e], io) => {
+    if (!e.isIntersecting) return; io.disconnect();
+    for (const [i, r] of rows.entries()) { await wait(reduced ? 0 : 260); r.classList.add("is-on"); n.textContent = i + 1; }
+  }, { threshold: 0.25 }).observe(log);
+});
+$$("[data-cfg]").forEach((cfg) => {
+  const rows = $$("[data-cfg-row]", cfg);
+  const set = (r, on) => { r.classList.toggle("is-on", on); r.setAttribute("aria-pressed", String(on)); $("[data-cfg-val]", r).textContent = String(on); };
+  rows.forEach((r) => r.addEventListener("click", () => set(r, !r.classList.contains("is-on"))));
+  new IntersectionObserver(async ([e], io) => {
+    if (!e.isIntersecting) return; io.disconnect();
+    for (const r of rows) { await wait(reduced ? 0 : 380); set(r, true); }
+  }, { threshold: 0.4 }).observe(cfg);
+});

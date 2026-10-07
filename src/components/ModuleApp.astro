@@ -1,0 +1,56 @@
+---
+import type { Lang } from "../i18n";
+
+interface Props { lang: Lang; s: any }
+const { lang, s } = Astro.props;
+const brandSwatches = ["#45E0FF", "#9B6BFF", "#3B6BFF", "#4BE3A0", "#E9E2D0", "#864C24", "#E8805A", "#185C60"];
+const V = {
+  apps: { en: { app: "Sprint board", sub: "your-app · v1.0", done: "shipped", status: "ready for review", pre: "Preview" }, es: { app: "Tablero de sprint", sub: "tu-app · v1.0", done: "listo", status: "listo para revisión", pre: "Vista previa" } },
+  web: { en: { app: "Deploys", sub: "your-brand.com", done: "deployed", status: "live", pre: "Preview" }, es: { app: "Deploys", sub: "tu-marca.com", done: "desplegado", status: "en vivo", pre: "Vista previa" } },
+  seo: { en: { app: "SEO audit", sub: "your-brand.com", done: "passed", status: "score", pre: "Ranking" }, es: { app: "Auditoría SEO", sub: "tu-marca.com", done: "aprobado", status: "puntaje", pre: "Posición" } },
+  branding: { en: { app: "Brand kit", sub: "your-brand / layers", done: "approved", status: "approved", pre: "Tokens" }, es: { app: "Brand kit", sub: "tu-marca / capas", done: "aprobado", status: "aprobado", pre: "Tokens" } },
+}[s.id as "apps"][lang];
+const icons: Record<string, string> = { apps: "▢", web: "◇", seo: "◎", branding: "◆" };
+---
+
+<div class={`mapp mapp--${s.id} tone-${s.tone}`} data-mapp data-reveal>
+  <div class="mapp__bar">
+    <span class="window__dots"><i></i><i></i><i></i></span>
+    <span class="mapp__title"><b>{V.app}</b><small>{V.sub}</small></span>
+    <span class="mapp__count"><b data-mapp-n>0</b>/{s.includes.length} {V.done}</span>
+  </div>
+  <div class="mapp__body">
+    <ul class="mapp__list" role="list">
+      {s.includes.map((x: string, i: number) => (
+        <li>
+          <button type="button" class="mapp__item" data-mapp-item aria-pressed="false" style={`--i:${i}`}>
+            <span class="mapp__check" aria-hidden="true"></span>
+            <span class="mapp__txt">{x}</span>
+            <span class="mapp__tag" aria-hidden="true">{icons[s.id]} {s.id === "seo" ? `${92 + (i % 4) * 2}` : `#${String(i + 1).padStart(2, "0")}`}</span>
+          </button>
+        </li>
+      ))}
+    </ul>
+    <div class="mapp__side" aria-hidden="true">
+      <div class="mapp__ring"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="42"></circle><circle cx="50" cy="50" r="42" data-mapp-ring></circle></svg><b data-mapp-pct>0%</b><small>{V.status}</small></div>
+      <div class="mapp__viz">
+        {s.viz === "code" && <div class="code" data-code></div>}
+        {s.viz === "phone" && <div class="mini-phone"><i></i><i></i><i></i><i></i><i></i></div>}
+        {s.viz === "ranks" && (
+          <div class="ranks" data-ranks>
+            <div class="rank"><b>1</b>competitor-a.com</div>
+            <div class="rank"><b>2</b>competitor-b.com</div>
+            <div class="rank"><b>3</b>directory.com</div>
+            <div class="rank is-you"><b>4</b>your-brand.com</div>
+          </div>
+        )}
+        {s.viz === "palette" && (
+          <div class="swatches" data-swatches>
+            {brandSwatches.map((sw) => <i style={`--sw:${sw}`} data-hex={sw}></i>)}
+            <code class="swatches__token">--brand-accent: <b>#45E0FF</b>;</code>
+          </div>
+        )}
+      </div>
+    </div>
+  </div>
+</div>

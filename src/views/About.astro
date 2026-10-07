@@ -53,12 +53,12 @@ const schema = [{ "@type": "AboutPage", name: c.title, url: new URL(route("about
                 <span class="dev__blame">git blame · {f.sha}</span>
               </div>
               <div class="dev__body">
-                <figure class="dev__photo" data-tetris>
+                <figure class="dev__photo" data-compile-photo>
                   <img src={base + f.photo} alt={`${c.photo} ${f.name}, ${f.jobTitle} — Forklia`} width="880" height="1172" loading="lazy" decoding="async" draggable="false" />
                   <canvas aria-hidden="true"></canvas>
-                  <figcaption aria-hidden="true">{id}.webp · 880×1172</figcaption>
+                  <figcaption aria-hidden="true"><i class="dev__dot"></i><span data-photo-status>{id}.webp · 880×1172</span></figcaption>
                 </figure>
-                <div class="dev__code">
+                <div class="dev__code" data-type-code>
                   <div class="dl"><span class="k">export const</span> <span class="v">{id}</span> = {"{"}</div>
                   <div class="dl dl--in"><span class="p">name</span>: <span class="s">"</span><h2 class="dev__name">{f.name}</h2><span class="s">"</span>,</div>
                   <div class="dl dl--in"><span class="p">role</span>: <span class="s">"{f.jobTitle}"</span>,</div>
@@ -80,7 +80,24 @@ const schema = [{ "@type": "AboutPage", name: c.title, url: new URL(route("about
   <section class="section" style="padding-top: 0;">
     <div class="wrap">
       <div class="section-head"><div class="eyebrow" data-reveal>{c.how}</div><h2 class="h2" data-split>{c.howT}</h2></div>
-      <div class="values">{c.values.map(([t, d], i) => <div class="card value" data-reveal data-spotlight style={`--d:${i * 80}ms`}><b>0{i + 1}</b><h3>{t}</h3><p>{d}</p></div>)}</div>
+      <div class="cfg" data-cfg data-reveal>
+        <div class="mapp__bar"><span class="window__dots"><i></i><i></i><i></i></span><span class="mapp__title"><b>forklia.config.ts</b><small>// principles</small></span></div>
+        <div class="cfg__body">
+          <div class="cfg__ln"><span class="k">export default</span> {"{"}</div>
+          {c.values.map(([t, d], i) => {
+            const key = ["detail", "transparency", "businessFirst", "longTerm"][i];
+            return (
+              <button type="button" class="cfg__row" data-cfg-row aria-pressed="false" style={`--i:${i}`}>
+                <span class="cfg__key">{key}</span><span class="cfg__colon">:</span>
+                <span class="cfg__switch" aria-hidden="true"><i></i></span>
+                <span class="cfg__val" data-cfg-val>false</span><span class="cfg__colon">,</span>
+                <span class="cfg__doc"><b>{t}</b><small>// {d}</small></span>
+              </button>
+            );
+          })}
+          <div class="cfg__ln">{"};"}</div>
+        </div>
+      </div>
     </div>
   </section>
   <Cta lang={lang} title={c.ctaT} text={c.ctaText} />

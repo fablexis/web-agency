@@ -13,8 +13,8 @@ const all = lang === "en" ? "All" : "Todos";
 const categories = [all, ...new Set(posts.map((p) => p.category[lang]))];
 const [featured, ...rest] = posts;
 const c = {
-  en: { title: "iterating++: guides on apps, web, SEO and brand | Forklia", desc: "Forklia's changelog of lessons: what we learn building apps, websites, SEO strategies and brand systems. Practical guides, no hype.", h1: 'The changelog of <span class="grad-text">what we learn</span>', lead: "Lessons from building digital products, minus the hype. Sample content while we publish the first notes.", filter: "Filter by category", ctaT: 'Got a project <span class="grad-text">in mind</span>?' },
-  es: { title: "iterando++: guías de apps, webs, SEO y marca | Forklia", desc: "La bitácora de Forklia: lo que aprendemos construyendo apps, sitios web, estrategias SEO y sistemas de marca. Guías prácticas, sin humo.", h1: 'El changelog de <span class="grad-text">lo que aprendemos</span>', lead: "Lo que aprendemos construyendo productos digitales, contado sin humo. Contenido de ejemplo mientras publicamos las primeras notas.", filter: "Filtrar por categoría", ctaT: '¿Tienes un proyecto <span class="grad-text">en mente</span>?' },
+  en: { title: "iterating++: guides on apps, web, SEO and brand | Forklia", desc: "Forklia's changelog of lessons: what we learn building apps, websites, SEO strategies and brand systems. Practical guides, no hype.", h1: 'The changelog of <span class="grad-text">what we learn</span>', lead: "Short notes from building apps, websites and brands. Each one has something to play with.", filter: "Filter by category", ctaT: 'Got a project <span class="grad-text">in mind</span>?' },
+  es: { title: "iterando++: guías de apps, webs, SEO y marca | Forklia", desc: "La bitácora de Forklia: lo que aprendemos construyendo apps, sitios web, estrategias SEO y sistemas de marca. Guías prácticas, sin humo.", h1: 'El changelog de <span class="grad-text">lo que aprendemos</span>', lead: "Notas cortas de lo que aprendemos construyendo apps, webs y marcas. Cada una trae algo para probar.", filter: "Filtrar por categoría", ctaT: '¿Tienes un proyecto <span class="grad-text">en mente</span>?' },
 }[lang];
 const crumb = lang === "en" ? "iterating++" : "iterando++";
 ---
@@ -26,11 +26,13 @@ const crumb = lang === "en" ? "iterating++" : "iterando++";
       <div class="filters" role="group" aria-label={c.filter} data-filters data-reveal>
         {categories.map((cat, i) => <button type="button" class={i === 0 ? "is-on" : ""} data-filter={i === 0 ? "Todos" : cat} aria-pressed={i === 0 ? "true" : "false"}>{cat}</button>)}
       </div>
-      <div class="posts">
-        <PostCard post={featured} lang={lang} feature />
-        {rest.map((p, i) => <PostCard post={p} lang={lang} delay={(i % 3) * 90} />)}
+      <div class="posts" data-typewrite>
+        <PostCard post={featured} lang={lang} feature typed />
+        {rest.map((p, i) => <PostCard post={p} lang={lang} delay={(i % 3) * 90} typed />)}
       </div>
     </div>
   </section>
   <Cta lang={lang} title={c.ctaT} />
 </Base>
+
+<script src="../scripts/blog.js"></script>

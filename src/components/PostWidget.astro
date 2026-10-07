@@ -1,0 +1,112 @@
+---
+import type { Lang } from "../i18n";
+interface Props { lang: Lang; type: string }
+const { lang, type } = Astro.props;
+const es = lang === "es";
+const T = {
+  scope: {
+    file: "scope.ts", launch: es ? "Lanzamiento" : "Launch", later: es ? "Después" : "Later",
+    hint: es ? "Toca una funcionalidad para moverla" : "Tap a feature to move it",
+    weeks: es ? "semanas estimadas" : "estimated weeks",
+    items: es
+      ? [["Registrar sueño", 1.5, 1], ["Registrar tomas", 1.5, 1], ["Resumen semanal", 1, 1], ["Cuentas de usuario", 1.5, 0], ["Sincronizar en la nube", 2, 0], ["Panel de administración", 2, 0], ["Modo oscuro", 0.5, 0], ["Recordatorios", 1, 1]]
+      : [["Log sleep", 1.5, 1], ["Log feeds", 1.5, 1], ["Weekly summary", 1, 1], ["User accounts", 1.5, 0], ["Cloud sync", 2, 0], ["Admin panel", 2, 0], ["Dark mode", 0.5, 0], ["Reminders", 1, 1]],
+  },
+  vitals: {
+    file: "vitals.json", good: es ? "bueno" : "good", ni: es ? "mejorable" : "needs improvement", poor: es ? "pobre" : "poor",
+    verdict: es ? ["Pasa Core Web Vitals", "No pasa Core Web Vitals"] : ["Passes Core Web Vitals", "Fails Core Web Vitals"],
+  },
+  feedback: {
+    file: "button.tsx", a: es ? "Sin respuesta" : "No feedback", b: es ? "Con respuesta" : "With feedback",
+    btn: es ? "Pagar" : "Pay now", working: es ? "Procesando…" : "Processing…", done: es ? "Pagado ✓" : "Paid ✓",
+    taps: es ? "toques" : "taps", orders: es ? "pedidos creados" : "orders created",
+  },
+  stack: {
+    file: "stack.config.ts",
+    types: es
+      ? [["landing", "Landing o sitio", ["Astro", "Tailwind", "Vercel", "Headless CMS"]], ["app", "App móvil", ["React Native", "TypeScript", "Supabase", "App Store Connect"]], ["saas", "Plataforma SaaS", ["Next.js", "TypeScript", "Supabase", "Stripe"]], ["shop", "E-commerce", ["Astro", "Shopify", "Vercel", "GA4"]]]
+      : [["landing", "Landing or site", ["Astro", "Tailwind", "Vercel", "Headless CMS"]], ["app", "Mobile app", ["React Native", "TypeScript", "Supabase", "App Store Connect"]], ["saas", "SaaS platform", ["Next.js", "TypeScript", "Supabase", "Stripe"]], ["shop", "E-commerce", ["Astro", "Shopify", "Vercel", "GA4"]]],
+  },
+  funnel: {
+    file: "funnel.ts", visits: es ? "Visitas al mes" : "Monthly visits", lead: es ? "Dejan sus datos" : "Leave their details", close: es ? "Compran" : "Buy",
+    leads: es ? "contactos" : "leads", customers: es ? "clientes" : "customers",
+  },
+  timer: {
+    file: "LiveActivity.swift", start: es ? "▶ Iniciar temporizador" : "▶ Start sleep timer", stop: es ? "■ Detener" : "■ Stop", lock: es ? "Bloquear pantalla" : "Lock screen",
+    unlock: es ? "Desbloquear" : "Unlock", nap: es ? "Siesta en curso" : "Nap in progress", idle: es ? "Sin temporizador activo" : "No timer running",
+  },
+}[type as "scope"] as any;
+---
+
+<div class={`pw pw--${type}`} data-pw={type} data-lang={lang}>
+  <div class="pw__bar"><span class="window__dots"><i></i><i></i><i></i></span><span class="pw__file">{T.file}</span><span class="pw__live"><i></i>live</span></div>
+  <div class="pw__body">
+    {type === "scope" && (
+      <>
+        <div class="pw-scope">
+          <div class="pw-scope__col" data-col="1"><b>{T.launch}</b></div>
+          <div class="pw-scope__col" data-col="0"><b>{T.later}</b></div>
+        </div>
+        <div class="pw-scope__items" hidden>
+          {T.items.map(([n, w, on]: any) => <button type="button" class="pw-chip" data-w={w} data-on={on}>{n}</button>)}
+        </div>
+        <div class="pw-scope__foot"><span class="pw__hint">{T.hint}</span><span><b data-weeks>0</b> {T.weeks}</span></div>
+        <i class="pw-meter"><b data-meter></b></i>
+      </>
+    )}
+    {type === "vitals" && (
+      <>
+        {[["lcp", "LCP", "s", 0.5, 6, 0.1, 2.4, 2.5, 4], ["inp", "INP", "ms", 50, 800, 10, 180, 200, 500], ["cls", "CLS", "", 0, 0.5, 0.01, 0.08, 0.1, 0.25]].map(([k, n, u, min, max, step, v, g, p]) => (
+          <label class="pw-vital" data-good={g} data-poor={p}>
+            <span class="pw-vital__n">{n}</span>
+            <input type="range" min={min} max={max} step={step} value={v} aria-label={n as string} />
+            <output><b>{v}</b>{u}</output>
+            <em data-status></em>
+          </label>
+        ))}
+        <div class="pw-verdict" data-verdict data-ok={T.verdict[0]} data-bad={T.verdict[1]} data-good={T.good} data-ni={T.ni} data-poor={T.poor}></div>
+      </>
+    )}
+    {type === "feedback" && (
+      <div class="pw-fb">
+        {["a", "b"].map((k) => (
+          <div class="pw-fb__col" data-variant={k}>
+            <small>{k === "a" ? T.a : T.b}</small>
+            <button type="button" class="pw-fb__btn" data-label={T.btn} data-working={T.working} data-done={T.done}>{T.btn}</button>
+            <span class="pw-fb__stat"><b data-taps>0</b> {T.taps} · <b data-orders>0</b> {T.orders}</span>
+          </div>
+        ))}
+      </div>
+    )}
+    {type === "stack" && (
+      <div class="pw-stack">
+        <div class="pw-stack__types" role="group">
+          {T.types.map(([k, n]: any, i: number) => <button type="button" class={i === 0 ? "is-on" : undefined} data-type={k} aria-pressed={i === 0 ? "true" : "false"}>{n}</button>)}
+        </div>
+        <pre class="pw-stack__code" data-stacks={JSON.stringify(Object.fromEntries(T.types.map(([k, , s]: any) => [k, s])))}></pre>
+      </div>
+    )}
+    {type === "funnel" && (
+      <div class="pw-funnel">
+        {[["v", T.visits, 100, 20000, 100, 2000, ""], ["l", T.lead, 0.5, 15, 0.5, 4, "%"], ["c", T.close, 1, 60, 1, 25, "%"]].map(([k, n, min, max, step, v, u]) => (
+          <label class="pw-vital"><span class="pw-vital__n">{n}</span><input type="range" data-k={k} min={min} max={max} step={step} value={v} aria-label={n as string} /><output><b>{v}</b>{u}</output></label>
+        ))}
+        <div class="pw-funnel__bars"><div><i data-bar="v"></i><span><b data-out="v">2000</b></span></div><div><i data-bar="l"></i><span><b data-out="l">80</b> {T.leads}</span></div><div><i data-bar="c"></i><span><b data-out="c">20</b> {T.customers}</span></div></div>
+      </div>
+    )}
+    {type === "timer" && (
+      <div class="pw-timer">
+        <div class="pw-phone" data-phone>
+          <div class="pw-island"><i></i><b data-t>0:00</b></div>
+          <div class="pw-screen">
+            <small data-state data-idle={T.idle} data-run={T.nap}>{T.idle}</small>
+            <b class="pw-big" data-t>0:00</b>
+            <button type="button" class="pw-start" data-start={T.start} data-stop={T.stop}>{T.start}</button>
+          </div>
+          <div class="pw-lock"><b data-clock>9:41</b><div class="pw-la"><i></i><span>{T.nap}</span><b data-t>0:00</b></div></div>
+        </div>
+        <button type="button" class="btn btn--ghost btn--sm" data-lockbtn data-lock={T.lock} data-unlock={T.unlock}>{T.lock}</button>
+      </div>
+    )}
+  </div>
+</div>

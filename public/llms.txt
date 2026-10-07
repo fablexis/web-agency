@@ -4,7 +4,7 @@
 
 ## Modules (services)
 
-- [Mobile apps](https://fablexis.github.io/web-agency/services/#apps): native iOS and cross-platform apps, from discovery to App Store and Google Play.
+- [Mobile apps](https://fablexis.github.io/web-agency/services/#apps): React Native apps for iOS and Android, from discovery to App Store and Google Play.
 - [Web development](https://fablexis.github.io/web-agency/services/#web): landing pages, company sites, e-commerce and custom platforms.
 - [SEO & GEO](https://fablexis.github.io/web-agency/services/#seo): technical SEO, content, structured data and optimization for AI answer engines.
 - [Brand systems](https://fablexis.github.io/web-agency/services/#branding): logo, palette, type and interactive brand kits with an email signature generator.
@@ -12,8 +12,17 @@
 ## Deploys (projects)
 
 - [Lyapp](https://fablexis.github.io/web-agency/work/lyapp/): iOS app to track a baby's sleep, feeding and health in their first year. Live on the App Store.
-- [Simply Andy](https://fablexis.github.io/web-agency/work/simply-andy/): identity, bilingual portfolio and interactive brand kit for a UGC creator.
+- [Simply Andy](https://fablexis.github.io/web-agency/work/simply-andy/): identity, bilingual portfolio with technical SEO, and an interactive brand kit for a UGC creator.
 - [Your English Buddy](https://fablexis.github.io/web-agency/work/your-english-buddy/): website for an academy teaching practical English to Spanish speakers.
+
+## iterating++ (blog)
+
+- [How to launch an MVP in 30 days without cutting corners](https://fablexis.github.io/web-agency/blog/launch-an-mvp-in-30-days/)
+- [Technical SEO in 2026: what actually moves the needle](https://fablexis.github.io/web-agency/blog/technical-seo-in-2026/)
+- [Micro-interactions that sell](https://fablexis.github.io/web-agency/blog/micro-interactions-that-sell/)
+- [The modern stack we recommend to startups](https://fablexis.github.io/web-agency/blog/modern-stack-for-startups/)
+- [From visits to customers: anatomy of a funnel that converts](https://fablexis.github.io/web-agency/blog/from-visits-to-customers/)
+- [Apps that feel alive: states, feedback and rhythm](https://fablexis.github.io/web-agency/blog/apps-that-feel-alive/)
 
 ## Contact
 

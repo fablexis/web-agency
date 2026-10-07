@@ -1,40 +1,68 @@
 ---
 import Base from "../layouts/Base.astro";
 import PostCard from "../components/PostCard.astro";
+import PostCover from "../components/PostCover.astro";
+import PostWidget from "../components/PostWidget.astro";
 import Cta from "../components/Cta.astro";
 import { site, posts, formatDate, type Post } from "../data/site";
-import { href, route, loc, type Lang } from "../i18n";
+import { articles, readTime } from "../data/articles";
+import { fCells, fork } from "../lib/logo";
+import { projects } from "../data/projects";
+import { href, route, loc, base, srcset2x, type Lang } from "../i18n";
 
 interface Props { lang: Lang; post: Post }
 const { lang, post } = Astro.props;
 const other: Lang = lang === "en" ? "es" : "en";
 const p = loc(post, lang) as any;
+const art = articles[post.slug.en];
+const body = art.body[lang];
+const proj = loc(projects.find((x) => x.slug === art.project)!, lang) as any;
 const related = posts.filter((x) => x !== post).slice(0, 3);
 const c = {
-  en: { back: "← Back to iterating++", read: "read", by: "By", cover: "Cover image · placeholder", intro: "This is a sample article. The real content will go here once it's published: an introduction that frames the problem and why it matters for your business.", section: "Content section", end: "Wrap-up", more: "Keep reading", crumb: "iterating++" },
-  es: { back: "← Volver a iterando++", read: "de lectura", by: "Por", cover: "Imagen de portada · placeholder", intro: "Este es un artículo de ejemplo. Aquí irá el contenido real cuando se publique: una introducción que plantee el problema y por qué importa para tu negocio.", section: "Sección de contenido", end: "Conclusión", more: "Sigue leyendo", crumb: "iterando++" },
+  en: { back: "← iterating++", read: "read", by: "Forklia Team", crumb: "iterating++", more: "Keep reading", seen: "Built by Forklia", see: "See the project", start: "Start a project like this" },
+  es: { back: "← iterando++", read: "de lectura", by: "Equipo de Forklia", crumb: "iterando++", more: "Sigue leyendo", seen: "Hecho por Forklia", see: "Ver el proyecto", start: "Iniciar un proyecto así" },
 }[lang];
+const url = new URL(route("post", lang, p.slug), site.url).href;
+const words = body.map((b) => `${b.h ?? ""} ${b.p ?? ""}`).join(" ").split(/\s+/).length;
 ---
 
-<Base lang={lang} alt={route("post", other, post.slug[other])} title={`${p.title} | Forklia`} description={p.excerpt} type="article" noindex={post.placeholder}
+<Base lang={lang} alt={route("post", other, post.slug[other])} title={`${p.title} | Forklia`} description={p.excerpt} type="article"
   breadcrumbs={[{ name: c.crumb, path: route("blog", lang) }, { name: p.title, path: route("post", lang, p.slug) }]}
-  schema={[{ "@type": "BlogPosting", headline: p.title, description: p.excerpt, datePublished: p.date, author: { "@type": "Person", name: p.author }, publisher: { "@id": new URL("#organization", site.url).href }, inLanguage: lang }]}>
+  schema={[{ "@type": "BlogPosting", "@id": `${url}#post`, headline: p.title, description: p.excerpt, datePublished: p.date, dateModified: p.date, wordCount: words, url, mainEntityOfPage: url, author: { "@type": "Organization", name: c.by, url: site.url }, publisher: { "@id": new URL("#organization", site.url).href }, inLanguage: lang, about: proj.name }]}>
   <article class="section">
     <div class="wrap article">
       <a href={href("blog", lang)} class="back" data-reveal>{c.back}</a>
-      <div class="post__meta" style="margin-top: 28px;" data-reveal><span class="cat">{p.category}</span><span>{formatDate(p.date, lang)}</span><span>· {p.readTime} {c.read}</span></div>
-      <h1 data-split>{p.title}</h1>
-      <p class="lead" data-reveal>{p.excerpt}</p>
-      <div class="post__meta" style="margin-top: 22px;" data-reveal>{c.by} {p.author}</div>
-      <div class="post__cover" style={`--h:${p.hue}; aspect-ratio: 16/8;`} data-reveal><div class="post__shape"></div><span>{c.cover}</span></div>
-      <div class="article__body" data-reveal>
-        <p>{c.intro}</p>
-        <div class="ph-line" style="width: 96%"></div><div class="ph-line" style="width: 88%"></div><div class="ph-line" style="width: 92%"></div>
-        <h2>{c.section}</h2>
-        <div class="ph-line" style="width: 94%"></div><div class="ph-line" style="width: 80%"></div><div class="ph-line" style="width: 90%"></div><div class="ph-line" style="width: 60%"></div>
-        <h2>{c.end}</h2>
-        <div class="ph-line" style="width: 86%"></div><div class="ph-line" style="width: 70%"></div>
+      <div class="post__meta" style="margin-top: 28px;" data-reveal><span class="cat">{p.category}</span><span>{formatDate(p.date, lang)}</span><span>· {readTime(post.slug.en, lang)} {c.read}</span></div>
+      <div data-typewrite>
+        <h1 data-tw="slow">{p.title}</h1>
+        <p class="lead" data-tw>{p.excerpt}</p>
       </div>
+      <div class="byline" data-reveal><svg class="byline__mark" viewBox="0 0 26 32" aria-hidden="true">{fCells.map(([x, y]) => <rect x={x * 6.5} y={y * 6.5} width="6" height="6" rx="1.4" fill="#eef2f8" />)}<rect x={fork.x} y={fork.y} width="6" height="6" rx="1.4" fill="#45E0FF" /></svg>{c.by}</div>
+      <PostCover slug={post.slug.en} hue={p.hue} label={p.category} big />
+      <div class="article__body">
+        {body.map((b) => b.widget ? (
+          <div data-reveal><PostWidget lang={lang} type={art.widget} /></div>
+        ) : (
+          <>
+            {b.h && <h2>{b.h}</h2>}
+            {b.p && <p>{b.p}</p>}
+          </>
+        ))}
+      </div>
+
+      <a href={href("case", lang, proj.slug)} class="artcta" data-reveal style={`--pa:${proj.accent}`}>
+        <div class="artcta__shot">
+          {proj.images[0].kind === "desktop"
+            ? <img src={base + proj.images[0].src} srcset={srcset2x(proj.images[0].src)} alt={proj.images[0].alt} width="1280" height="800" loading="lazy" />
+            : <img src={base + proj.images[0].src} srcset={srcset2x(proj.images[0].src)} alt={proj.images[0].alt} width="600" height="1298" loading="lazy" class="is-phone" />}
+        </div>
+        <div class="artcta__body">
+          <small>{c.seen}</small>
+          <b>{proj.name}</b>
+          <span>{proj.category}</span>
+          <span class="btn btn--primary btn--sm">{c.see} <span class="arrow">→</span></span>
+        </div>
+      </a>
     </div>
   </article>
   <section class="section" style="padding-top: 0;">
@@ -45,3 +73,5 @@ const c = {
   </section>
   <Cta lang={lang} />
 </Base>
+
+<script src="../scripts/blog.js"></script>

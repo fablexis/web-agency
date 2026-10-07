@@ -1,24 +1,27 @@
 ---
 import { formatDate, type Post } from "../data/site";
 import { ui, href, loc, type Lang } from "../i18n";
+import PostCover from "./PostCover.astro";
+import { readTime } from "../data/articles";
 
 interface Props {
   post: Post;
   lang: Lang;
   delay?: number;
   feature?: boolean;
+  typed?: boolean;
 }
-const { post, lang, delay = 0, feature = false } = Astro.props;
+const { post, lang, delay = 0, feature = false, typed = false } = Astro.props;
 const p = loc(post, lang);
 const t = ui[lang];
 ---
 
-<a href={href("post", lang, p.slug)} class={`card post${feature ? " post--feature" : ""}`} data-reveal data-spotlight data-cat={p.category} style={`--d:${delay}ms; --h:${p.hue}`}>
-  <div class="post__cover"><div class="post__shape"></div><span>{p.category} · {t.placeholderImg}</span></div>
+<a href={href("post", lang, p.slug)} class={`card post${feature ? " post--feature" : ""}`} data-reveal data-spotlight data-cat={p.category} data-tw-group={typed ? "" : undefined} style={`--d:${delay}ms; --h:${p.hue}`}>
+  <PostCover slug={post.slug.en} hue={p.hue} label={p.category} />
   <div class="post__body">
-    <div class="post__meta"><span class="cat">{p.category}</span><span>{formatDate(p.date, lang)}</span><span>· {p.readTime}</span></div>
-    <h3>{p.title}</h3>
-    <p>{p.excerpt}</p>
+    <div class="post__meta"><span class="cat">{p.category}</span><span>{formatDate(p.date, lang)}</span><span>· {readTime(post.slug.en, lang)}</span></div>
+    <h3 data-tw={typed ? "slow" : undefined}>{p.title}</h3>
+    <p data-tw={typed ? "" : undefined}>{p.excerpt}</p>
     <div class="post__more">{t.readPost} <span>→</span></div>
   </div>
 </a>

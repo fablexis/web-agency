@@ -33,7 +33,7 @@ const list: Project[] = [
     repo: "simply-andy",
     client: { en: "Andreina Luna · UGC Creator", es: "Andreina Luna · UGC Creator" },
     category: { en: "Personal brand · Web · Brand system", es: "Marca personal · Web · Sistema de marca" },
-    services: ["branding", "web"],
+    services: ["branding", "web", "seo"],
     status: testEnv,
     live: false,
     year: "2026",
@@ -51,6 +51,7 @@ const list: Project[] = [
       { title: { en: "Type system", es: "Sistema tipográfico" }, text: { en: "Big Shoulders for headlines and Manrope for reading, with defined hierarchies for web and social.", es: "Big Shoulders para titulares y Manrope para lectura, con jerarquías definidas para web y redes." } },
       { title: { en: "Bilingual portfolio", es: "Portafolio bilingüe" }, text: { en: "A one-page site in Spanish and English with reels, brands, her story and a direct path to contact.", es: "Un sitio de una página en español e inglés con reels, marcas, su historia y un camino directo al contacto." } },
       { title: { en: "Interactive brand kit", es: "Brand kit interactivo" }, text: { en: "Eleven sections with a palette playground, a logo switcher per background, rules, common mistakes and in-context examples.", es: "Once secciones con playground de paleta, selector de logo según fondo, reglas, errores comunes y ejemplos en acción." } },
+      { title: { en: "SEO & bilingual indexing", es: "SEO e indexación bilingüe" }, text: { en: "Clean semantic markup, metadata, sitemap and robots.txt so brands searching for Spanish-language UGC can find her portfolio.", es: "Marcado semántico, metadatos, sitemap y robots.txt para que las marcas que buscan UGC en español encuentren su portafolio." } },
       { title: { en: "Email signature generator", es: "Generador de firma de correo" }, text: { en: "Andreina picks approved colors, edits her details and exports a signature ready for Gmail or as HTML.", es: "Andreina elige colores aprobados, edita sus datos y exporta su firma lista para Gmail o en HTML." } },
     ],
     impact: [

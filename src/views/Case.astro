@@ -86,14 +86,21 @@ const fonts = raw.effect === "phone" ? "&family=Playfair+Display:wght@500;600" :
     <section class="section" style="padding-top: 0;">
       <div class="wrap">
         <div class="section-head"><div class="eyebrow eyebrow--violet" data-reveal>{c.did}</div><h2 class="h2" data-split>{c.didT}</h2></div>
-        <div class="did">
-          {p.whatWeDid.map((w: any, i: number) => (
-            <div class="card did__item" data-reveal data-spotlight style={`--d:${(i % 3) * 80}ms`}>
-              <span class="did__file">{`${String(i + 1).padStart(2, "0")}.${slugify(w.title)}`}</span>
-              <h3>{w.title}</h3>
-              <p>{w.text}</p>
-            </div>
-          ))}
+        <div class="clog" data-clog data-reveal>
+          <div class="mapp__bar"><span class="window__dots"><i></i><i></i><i></i></span><span class="mapp__title"><b>git log</b><small>{p.repo} · main</small></span><span class="mapp__count"><b data-clog-n>0</b>/{p.whatWeDid.length} commits</span></div>
+          <ol class="clog__list">
+            {p.whatWeDid.map((w: any, i: number) => (
+              <li class="clog__row" style={`--i:${i}`}>
+                <span class="clog__node" aria-hidden="true"></span>
+                <code class="clog__sha">{(parseInt(p.repo.length * 977 + i * 7919, 10) * 2654435761 % 4294967296).toString(16).padStart(8, "0").slice(0, 7)}</code>
+                <div class="clog__msg">
+                  <h3><span class="clog__type">feat:</span> {w.title}</h3>
+                  <p>{w.text}</p>
+                </div>
+                <span class="clog__tag">{String(i + 1).padStart(2, "0")}.{slugify(w.title)}</span>
+              </li>
+            ))}
+          </ol>
         </div>
       </div>
     </section>

@@ -89,15 +89,69 @@ export const testimonials: Testimonial[] = [
 ];
 
 export const faqs = [
-  { q: { en: "Do you work with clients in any country?", es: "¿Trabajan con clientes de cualquier país?" }, a: { en: "Yes. We're a 100% remote studio and work with brands anywhere in the world, in English or Spanish. Wherever you are, we schedule around your time zone and guarantee a few overlapping hours every day.", es: "Sí. Somos un estudio 100% remoto y trabajamos con marcas de cualquier país, en español o en inglés. No importa dónde estés: adaptamos reuniones a tu zona horaria y aseguramos al menos unas horas de solapamiento diario." } },
-  { q: { en: "How do we communicate across time zones?", es: "¿Cómo nos comunicamos si estamos en zonas horarias distintas?" }, a: { en: "A weekly check-in call, a direct channel (Slack, WhatsApp or whatever you prefer) and written updates with every delivery. We reply within 24 business hours.", es: "Una llamada semanal de seguimiento, un canal directo (Slack, WhatsApp o el que prefieras) y actualizaciones por escrito en cada entrega. Respondemos en menos de 24 horas hábiles." } },
-  { q: { en: "What currency do you quote in, and how do I pay from abroad?", es: "¿En qué moneda cotizan y cómo se paga desde otro país?" }, a: { en: "We quote in US dollars and accept international payments by bank transfer, card or platforms like Wise or PayPal. We work with a deposit and clear milestone payments.", es: "Cotizamos en dólares estadounidenses y aceptamos pagos internacionales por transferencia, tarjeta o plataformas como Wise o PayPal. Trabajamos con un anticipo y pagos por hitos claros." } },
-  { q: { en: "How long does a typical project take?", es: "¿Cuánto tarda un proyecto típico?" }, a: { en: "A high-impact landing page takes 2–3 weeks; a company site or e-commerce, 4–8; a brand system, 3–5; a mobile app or custom platform, 8–16 weeks. You get a detailed timeline with the proposal.", es: "Una landing de alto impacto toma de 2 a 3 semanas; un sitio corporativo o e-commerce, de 4 a 8; un sistema de marca, de 3 a 5; una app móvil o plataforma a medida, de 8 a 16 semanas. Te damos un calendario detallado desde la propuesta." } },
-  { q: { en: "How is the budget defined?", es: "¿Cómo se define el presupuesto?" }, a: { en: "After a free discovery call we send a proposal with scope, deliverables and a fixed price in under 48 hours. No fine print, no surprise fees.", es: "Después de una llamada de descubrimiento gratuita te enviamos una propuesta con alcance, entregables y precio cerrado en menos de 48 horas. Sin letra pequeña ni cobros sorpresa." } },
-  { q: { en: "Do I need everything figured out to start?", es: "¿Necesito tener todo definido para empezar?" }, a: { en: "No. Many projects start with an idea and a need. Discovery exists exactly to turn it into a concrete plan with you.", es: "No. Muchos proyectos empiezan con una idea y una necesidad. La fase de descubrimiento existe justamente para convertirla en un plan concreto contigo." } },
-  { q: { en: "Do I own the code, designs and accounts?", es: "¿El código, los diseños y las cuentas son míos?" }, a: { en: "Yes. When the project closes we hand over the repository, design files, domains and every access. Nothing stays tied to us.", es: "Sí. Al cerrar el proyecto te transferimos el repositorio, los archivos de diseño, los dominios y todos los accesos. Nada queda atado a nosotros." } },
-  { q: { en: "Do you sign NDAs?", es: "¿Firman acuerdos de confidencialidad?" }, a: { en: "Yes, we sign an NDA before hearing the details of your idea if you need it.", es: "Sí, firmamos un NDA antes de conocer los detalles de tu idea si lo necesitas." } },
-  { q: { en: "What happens after launch?", es: "¿Qué pasa después del lanzamiento?" }, a: { en: "We offer monthly evolution plans: ongoing SEO, conversion improvements, new features and technical support with guaranteed response times.", es: "Ofrecemos planes mensuales de evolución: SEO continuo, mejoras de conversión, nuevas funcionalidades y soporte técnico con tiempos de respuesta garantizados." } },
+  {
+    q: { en: "Do you work with clients outside your country?", es: "¿Trabajan con clientes fuera de su país?" },
+    a: {
+      en: "Yes. We're fully remote and work with brands anywhere, in English or Spanish. We plan meetings around your time zone and keep a few overlapping hours every working day.",
+      es: "Sí. Somos un estudio 100% remoto y trabajamos con marcas de cualquier país, en español o en inglés. Planificamos las reuniones según tu zona horaria y mantenemos unas horas en común cada día hábil.",
+    },
+  },
+  {
+    q: { en: "How long does a project take?", es: "¿Cuánto tarda un proyecto?" },
+    a: {
+      en: "It depends on what we're building and what you need from it. A focused landing page can go live in a couple of weeks; an app or a custom platform takes a few months. After the discovery call we give you a timeline built around your scope and your deadlines, not a generic estimate.",
+      es: "Depende de lo que vamos a construir y de lo que necesitas lograr con ello. Una landing enfocada puede estar en línea en un par de semanas; una app o una plataforma a medida toma algunos meses. Después de la llamada de descubrimiento te damos un calendario hecho a la medida de tu alcance y tus fechas, no un estimado genérico.",
+    },
+  },
+  {
+    q: { en: "What currency do you quote in?", es: "¿En qué moneda cotizan?" },
+    a: {
+      en: "We quote in US dollars. Clients in Colombia and Argentina can also pay in Colombian pesos (COP) or Argentine pesos (ARS), converted at the US dollar exchange rate on the day of each payment.",
+      es: "Cotizamos en dólares estadounidenses (USD). Si estás en Colombia o Argentina también puedes pagar en pesos colombianos (COP) o pesos argentinos (ARS), convertidos según la cotización del dólar en tu país el día de cada pago.",
+    },
+  },
+  {
+    q: { en: "How do payments work?", es: "¿Cómo funcionan los pagos?" },
+    a: {
+      en: "A deposit to book the start date, then payments tied to milestones you can see and approve. We accept bank transfers, cards and platforms like Wise or PayPal.",
+      es: "Un anticipo para reservar la fecha de inicio y luego pagos ligados a entregas que puedes ver y aprobar. Aceptamos transferencias, tarjetas y plataformas como Wise o PayPal.",
+    },
+  },
+  {
+    q: { en: "How is the price defined?", es: "¿Cómo se define el precio?" },
+    a: {
+      en: "After a free 30-minute call we send a proposal with scope, deliverables, timeline and a fixed price in under 48 hours. If the scope changes later, we quote the change before doing it.",
+      es: "Después de una llamada gratuita de 30 minutos te enviamos en menos de 48 horas una propuesta con alcance, entregables, calendario y precio cerrado. Si el alcance cambia después, cotizamos el cambio antes de hacerlo.",
+    },
+  },
+  {
+    q: { en: "I only have an idea. Is that enough?", es: "Solo tengo una idea. ¿Es suficiente?" },
+    a: {
+      en: "Yes. Most projects start that way. Discovery is where we turn the idea into a concrete plan with you: who it's for, what the first version needs, and what can wait.",
+      es: "Sí, la mayoría de los proyectos empieza así. En el descubrimiento convertimos la idea en un plan concreto contigo: para quién es, qué necesita la primera versión y qué puede esperar.",
+    },
+  },
+  {
+    q: { en: "How will I follow the progress?", es: "¿Cómo voy a seguir el avance?" },
+    a: {
+      en: "A short weekly call, a direct channel (Slack, WhatsApp or whatever you use) and a staging link that updates with every delivery, so you can try the work as it grows.",
+      es: "Una llamada corta cada semana, un canal directo (Slack, WhatsApp o el que uses) y un enlace de prueba que se actualiza en cada entrega, para que pruebes el trabajo mientras crece.",
+    },
+  },
+  {
+    q: { en: "Who owns the code, designs and accounts?", es: "¿De quién son el código, los diseños y las cuentas?" },
+    a: {
+      en: "You do. At handover you get the repository, design files, domains and every access. Nothing stays tied to us. We sign an NDA before you share details if you need one.",
+      es: "Tuyos. Al entregar recibes el repositorio, los archivos de diseño, los dominios y todos los accesos. Nada queda atado a nosotros. Si lo necesitas, firmamos un NDA antes de que nos cuentes los detalles.",
+    },
+  },
+  {
+    q: { en: "What happens after launch?", es: "¿Qué pasa después del lanzamiento?" },
+    a: {
+      en: "You can keep us on a monthly plan for SEO, improvements, new features and support with agreed response times, or take it in-house. Either way we document everything so your team isn't left guessing.",
+      es: "Puedes seguir con nosotros en un plan mensual de SEO, mejoras, nuevas funciones y soporte con tiempos de respuesta acordados, o llevarlo a tu equipo. En ambos casos documentamos todo para que nadie tenga que adivinar.",
+    },
+  },
 ];
 
 export const founders = [
@@ -144,12 +198,12 @@ export type Post = {
 };
 
 export const posts: Post[] = [
-  { slug: { en: "launch-an-mvp-in-30-days", es: "como-lanzar-un-mvp-en-30-dias" }, title: { en: "How to launch an MVP in 30 days without cutting corners", es: "Cómo lanzar un MVP en 30 días sin sacrificar calidad" }, excerpt: { en: "The framework we use to go from idea to production with clear scope and zero surprises.", es: "El framework que usamos para pasar de idea a producto en producción, con alcance claro y cero sorpresas." }, category: { en: "Product", es: "Producto" }, date: "2026-09-18", readTime: "6 min", author: "Fabian Pernía", hue: 190, placeholder: true },
-  { slug: { en: "technical-seo-in-2026", es: "seo-tecnico-en-2026" }, title: { en: "Technical SEO in 2026: what actually moves the needle", es: "SEO técnico en 2026: lo que realmente mueve la aguja" }, excerpt: { en: "Core Web Vitals, content for answer engines and information architecture, minus the hype.", es: "Core Web Vitals, contenido para motores de respuesta y arquitectura de información explicados sin humo." }, category: { en: "SEO", es: "SEO" }, date: "2026-09-04", readTime: "8 min", author: "Fabio Pernía", hue: 262, placeholder: true },
-  { slug: { en: "micro-interactions-that-sell", es: "microinteracciones-que-venden" }, title: { en: "Micro-interactions that sell: designing with intent", es: "Microinteracciones que venden: diseño con intención" }, excerpt: { en: "Small motion details that build trust, retention and conversion.", es: "Pequeños detalles de movimiento que aumentan la confianza, la retención y la conversión." }, category: { en: "Design", es: "Diseño" }, date: "2026-08-21", readTime: "5 min", author: "Fabio Pernía", hue: 225, placeholder: true },
-  { slug: { en: "modern-stack-for-startups", es: "stack-moderno-para-startups" }, title: { en: "The modern stack we recommend to startups", es: "El stack moderno que recomendamos a startups" }, excerpt: { en: "What we pick, why, and when it makes sense to break the rule.", es: "Qué elegimos, por qué, y cuándo tiene sentido romper la regla." }, category: { en: "Engineering", es: "Ingeniería" }, date: "2026-08-07", readTime: "7 min", author: "Fabian Pernía", hue: 170, placeholder: true },
-  { slug: { en: "from-visits-to-customers", es: "de-visitas-a-clientes" }, title: { en: "From visits to customers: anatomy of a funnel that converts", es: "De visitas a clientes: anatomía de un embudo que convierte" }, excerpt: { en: "How to align brand, content and product so every visit has a clear next step.", es: "Cómo alinear marca, contenido y producto para que cada visita tenga un siguiente paso claro." }, category: { en: "Growth", es: "Growth" }, date: "2026-07-24", readTime: "6 min", author: "Fabio Pernía", hue: 280, placeholder: true },
-  { slug: { en: "apps-that-feel-alive", es: "apps-que-se-sienten-vivas" }, title: { en: "Apps that feel alive: states, feedback and rhythm", es: "Apps que se sienten vivas: estados, feedback y ritmo" }, excerpt: { en: "Motion principles for mobile interfaces people enjoy using every day.", es: "Principios de motion para interfaces móviles que la gente disfruta usar todos los días." }, category: { en: "Mobile", es: "Mobile" }, date: "2026-07-10", readTime: "5 min", author: "Fabian Pernía", hue: 205, placeholder: true },
+  { slug: { en: "launch-an-mvp-in-30-days", es: "como-lanzar-un-mvp-en-30-dias" }, title: { en: "How to launch an MVP in 30 days without cutting corners", es: "Cómo lanzar un MVP en 30 días sin sacrificar calidad" }, excerpt: { en: "The framework we use to go from idea to production with clear scope and zero surprises.", es: "El framework que usamos para pasar de idea a producto en producción, con alcance claro y cero sorpresas." }, category: { en: "Product", es: "Producto" }, date: "2026-09-18", readTime: "6 min", author: "Forklia", hue: 190 },
+  { slug: { en: "technical-seo-in-2026", es: "seo-tecnico-en-2026" }, title: { en: "Technical SEO in 2026: what actually moves the needle", es: "SEO técnico en 2026: lo que realmente mueve la aguja" }, excerpt: { en: "Core Web Vitals, content for answer engines and information architecture, minus the hype.", es: "Core Web Vitals, contenido para motores de respuesta y arquitectura de información explicados sin humo." }, category: { en: "SEO", es: "SEO" }, date: "2026-09-04", readTime: "8 min", author: "Forklia", hue: 262 },
+  { slug: { en: "micro-interactions-that-sell", es: "microinteracciones-que-venden" }, title: { en: "Micro-interactions that sell: designing with intent", es: "Microinteracciones que venden: diseño con intención" }, excerpt: { en: "Small motion details that build trust, retention and conversion.", es: "Pequeños detalles de movimiento que aumentan la confianza, la retención y la conversión." }, category: { en: "Design", es: "Diseño" }, date: "2026-08-21", readTime: "5 min", author: "Forklia", hue: 225 },
+  { slug: { en: "modern-stack-for-startups", es: "stack-moderno-para-startups" }, title: { en: "The modern stack we recommend to startups", es: "El stack moderno que recomendamos a startups" }, excerpt: { en: "What we pick, why, and when it makes sense to break the rule.", es: "Qué elegimos, por qué, y cuándo tiene sentido romper la regla." }, category: { en: "Engineering", es: "Ingeniería" }, date: "2026-08-07", readTime: "7 min", author: "Forklia", hue: 170 },
+  { slug: { en: "from-visits-to-customers", es: "de-visitas-a-clientes" }, title: { en: "From visits to customers: anatomy of a funnel that converts", es: "De visitas a clientes: anatomía de un embudo que convierte" }, excerpt: { en: "How to align brand, content and product so every visit has a clear next step.", es: "Cómo alinear marca, contenido y producto para que cada visita tenga un siguiente paso claro." }, category: { en: "Growth", es: "Growth" }, date: "2026-07-24", readTime: "6 min", author: "Forklia", hue: 280 },
+  { slug: { en: "apps-that-feel-alive", es: "apps-que-se-sienten-vivas" }, title: { en: "Apps that feel alive: states, feedback and rhythm", es: "Apps que se sienten vivas: estados, feedback y ritmo" }, excerpt: { en: "Motion principles for mobile interfaces people enjoy using every day.", es: "Principios de motion para interfaces móviles que la gente disfruta usar todos los días." }, category: { en: "Mobile", es: "Mobile" }, date: "2026-07-10", readTime: "5 min", author: "Forklia", hue: 205 },
 ];
 
 export const formatDate = (iso: string, lang: Lang = "en") =>

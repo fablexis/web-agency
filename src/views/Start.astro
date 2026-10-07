@@ -22,7 +22,7 @@ const c = {
     idea: "idea", ideaH: "what do you want to build?", ideaPh: "Tell us what you want to build, for whom, and what problem it solves…",
     budget: "budget", budgetH: "optional · USD",
     budgets: ["< 3k", "3k – 8k", "8k – 20k", "20k +", "not sure"],
-    run: "▶ Run send()", reset: "Clear",
+    run: "Send my project", runHint: "we reply within 24h · runs send(project)", reset: "Start over",
     build: "building forklia", term: "TERMINAL", watching: "› watching for changes…",
     doneT: "✓ Proposal ready", doneP: "We opened your email app with everything pre-filled. If it didn't open, send it from here:",
     mail: "Open in my email", wa: "Send via WhatsApp", copy: "Copy summary",
@@ -40,7 +40,7 @@ const c = {
     idea: "idea", ideaH: "¿qué quieres construir?", ideaPh: "Cuéntanos qué quieres construir, para quién y qué problema resuelve…",
     budget: "presupuesto", budgetH: "opcional · USD",
     budgets: ["< 3k", "3k – 8k", "8k – 20k", "20k +", "aún no sé"],
-    run: "▶ Ejecutar enviar()", reset: "Limpiar",
+    run: "Enviar mi proyecto", runHint: "respondemos en 24h · ejecuta enviar(project)", reset: "Empezar de nuevo",
     build: "compilando forklia", term: "TERMINAL", watching: "› esperando cambios…",
     doneT: "✓ Propuesta lista", doneP: "Abrimos tu correo con todo prellenado. Si no se abrió, envíala desde aquí:",
     mail: "Abrir en mi correo", wa: "Enviar por WhatsApp", copy: "Copiar resumen",
@@ -106,8 +106,12 @@ const fn = lang === "en" ? "send" : "enviar";
             <div class="cl"></div>
             <div class="cl"><span class="f">{fn}</span>(project);</div>
             <div class="vsc__run">
-              <button type="submit" class="btn btn--primary" data-magnetic>{c.run}</button>
-              <button type="button" class="btn btn--ghost btn--sm" data-reset>{c.reset}</button>
+              <button type="submit" class="btn btn--primary vsc__send" data-magnetic>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 2 11 13"></path><path d="M22 2 15 22l-4-9-9-4 20-7z"></path></svg>
+                {c.run}
+              </button>
+              <button type="button" class="vsc__reset" data-reset>{c.reset}</button>
+              <span class="vsc__runhint">{c.runHint}</span>
             </div>
           </form>
 
