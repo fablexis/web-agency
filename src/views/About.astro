@@ -55,7 +55,7 @@ const schema = [{ "@type": "AboutPage", name: c.title, url: new URL(route("about
               <div class="dev__body">
                 <figure class="dev__photo" data-compile-photo>
                   <img src={base + f.photo} alt={`${c.photo} ${f.name}, ${f.jobTitle} — Forklia`} width="880" height="1172" loading="lazy" decoding="async" draggable="false" />
-                  <canvas aria-hidden="true"></canvas>
+                  <span class="dev__scan" aria-hidden="true"></span>
                   <figcaption aria-hidden="true"><i class="dev__dot"></i><span data-photo-status>{id}.webp · 880×1172</span></figcaption>
                 </figure>
                 <div class="dev__code" data-type-code>

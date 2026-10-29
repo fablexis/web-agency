@@ -246,16 +246,14 @@ if (fplay) {
   if (reduced) fplay.classList.add("is-in");
 }
 
-/* ───────── Team cards: code types itself while the photo compiles ───────── */
+/* ───────── Team cards: code types itself while the photo develops top to bottom ───────── */
 $$(".dev").forEach((card, cardIndex) => {
   const code = $("[data-type-code]", card), fig = $("[data-compile-photo]", card);
   if (!code || !fig) return;
-  const img = $("img", fig), canvas = $("canvas", fig), status = $("[data-photo-status]", fig);
-  const ctx = canvas.getContext("2d");
+  const img = $("img", fig), status = $("[data-photo-status]", fig);
   const lang = document.documentElement.lang;
   const file = status.textContent.split(" ")[0];
   const L = lang === "es" ? { comp: "compilando", done: "compilado en" } : { comp: "compiling", done: "compiled in" };
-  const LEVELS = [5, 9, 16, 28, 48, 90];
 
   // collect every text node so nested spans/headings type in order
   const nodes = [];
@@ -265,49 +263,35 @@ $$(".dev").forEach((card, cardIndex) => {
   const caret = document.createElement("i");
   caret.className = "dev__caret";
 
-  const pixel = (cols) => {
-    const r = fig.getBoundingClientRect(), dpr = Math.min(2, devicePixelRatio || 1);
-    canvas.width = Math.round(r.width * dpr); canvas.height = Math.round(r.height * dpr);
-    const rows = Math.max(1, Math.round(cols * canvas.height / canvas.width));
-    const off = document.createElement("canvas"); off.width = cols; off.height = rows;
-    const o = off.getContext("2d");
-    const s = Math.max(cols / img.naturalWidth, rows / img.naturalHeight);
-    const dw = img.naturalWidth * s, dh = img.naturalHeight * s;
-    o.drawImage(img, (cols - dw) / 2, (rows - dh) * 0.18, dw, dh);
-    ctx.imageSmoothingEnabled = false;
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.drawImage(off, 0, 0, canvas.width, canvas.height);
+  const scan = (p) => {
+    fig.style.setProperty("--scan", p.toFixed(4));
+    status.textContent = `${L.comp} ${file} · ${Math.round(p * 100)}%`;
   };
 
   const run = async () => {
     if (reduced) return;
-    fig.classList.add("is-compiling");
     nodes.forEach((x) => (x.n.textContent = ""));
-    let typed = 0, level = -1;
+    let typed = 0;
     const t0 = performance.now();
-    pixel(LEVELS[0]);
+    scan(0);
     for (const x of nodes) {
       x.n.parentNode.insertBefore(caret, x.n.nextSibling);
       for (let i = 1; i <= x.t.length; i++) {
         x.n.textContent = x.t.slice(0, i);
-        typed++;
-        const lv = Math.min(LEVELS.length - 1, Math.floor((typed / total) * LEVELS.length));
-        if (lv !== level) {
-          level = lv; pixel(LEVELS[lv]);
-          status.textContent = `${L.comp} ${file} · ${lv + 1}/${LEVELS.length}`;
-        }
+        scan(++typed / total);
         const ch = x.t[i - 1];
         if (ch !== " ") await wait(ch === "," || ch === "." ? 40 : 12);
       }
     }
     caret.remove();
+    fig.style.setProperty("--scan", "1");
     fig.classList.remove("is-compiling");
     fig.classList.add("is-built");
     status.textContent = `${L.done} ${((performance.now() - t0) / 1000).toFixed(1)}s · 880×1172`;
   };
 
-  // hide text until the card is reached, then type; keeps the text in the HTML for SEO
-  if (!reduced) code.classList.add("is-pending");
+  // hide text and the undeveloped photo until the card is reached, then type; keeps the text in the HTML for SEO
+  if (!reduced) { code.classList.add("is-pending"); fig.style.setProperty("--scan", "0"); fig.classList.add("is-compiling"); }
   const start = () => { code.classList.remove("is-pending"); run(); };
   const ready = () => new IntersectionObserver(([e], io) => { if (e.isIntersecting) { io.disconnect(); setTimeout(start, 150 + cardIndex * 350); } }, { threshold: 0.3 }).observe(card);
   img.complete && img.naturalWidth ? ready() : img.addEventListener("load", ready, { once: true });
