@@ -77,49 +77,6 @@ if (h1 && !reduced) {
   }, noLoader() ? 150 : 2250);
 } else if (heroCmd) heroCmd.textContent = heroCmd.dataset.text;
 
-/* ───────── Hero: product showcase (3D fan, auto-rotating) ───────── */
-const showcase = $("[data-showcase]");
-if (showcase) {
-  const cards = $$("[data-card]", showcase), rail = $$("[data-go]", showcase);
-  const DWELL = 3200;
-  let front = 0, t = 0, last = performance.now(), hover = false, visible = false, phoneTimer = 0;
-  const layout = () => {
-    cards.forEach((c, i) => {
-      const pos = (i - front + cards.length) % cards.length;
-      c.dataset.pos = pos;
-      c.classList.toggle("is-front", pos === 0);
-      $(".sc-card__link", c).tabIndex = pos === 0 ? 0 : -1;
-    });
-    rail.forEach((r, i) => { r.classList.toggle("is-on", i === front); r.setAttribute("aria-selected", String(i === front)); });
-    // phone: flip through app screens while in front
-    clearInterval(phoneTimer);
-    const shots = $$(".sc-phone__screens img", cards[front]);
-    if (shots.length && !reduced) { let k = 0; phoneTimer = setInterval(() => { shots[k].classList.remove("is-on"); k = (k + 1) % shots.length; shots[k].classList.add("is-on"); }, 1050); }
-  };
-  const go = (i) => { front = (i + cards.length) % cards.length; t = 0; layout(); };
-  cards.forEach((c, i) => c.addEventListener("click", (e) => { if (i !== front) { e.preventDefault(); go(i); } }));
-  rail.forEach((r, i) => r.addEventListener("click", () => go(i)));
-  showcase.addEventListener("pointerenter", () => (hover = true));
-  showcase.addEventListener("pointerleave", () => { hover = false; showcase.style.setProperty("--mx", "0"); showcase.style.setProperty("--my", "0"); });
-  showcase.addEventListener("pointermove", (e) => {
-    const r = showcase.getBoundingClientRect();
-    showcase.style.setProperty("--mx", ((e.clientX - r.left) / r.width - 0.5).toFixed(3));
-    showcase.style.setProperty("--my", ((e.clientY - r.top) / r.height - 0.5).toFixed(3));
-  });
-  new IntersectionObserver(([e]) => (visible = e.isIntersecting), { threshold: 0.2 }).observe(showcase);
-  const tick = (now) => {
-    const dt = now - last; last = now;
-    if (visible && !hover && !reduced) {
-      t += dt;
-      rail[front].style.setProperty("--p", Math.min(1, t / DWELL));
-      if (t >= DWELL) go(front + 1);
-    }
-    requestAnimationFrame(tick);
-  };
-  layout();
-  requestAnimationFrame(tick);
-}
-
 /* ───────── Testimonials: git log ───────── */
 const tlog = $("[data-tlog]");
 if (tlog) {

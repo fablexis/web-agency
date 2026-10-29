@@ -1,5 +1,5 @@
 ---
-import { ui, href, base, srcset2x, type Lang } from "../i18n";
+import { ui, href, type Lang } from "../i18n";
 
 interface Props { lang: Lang }
 const { lang } = Astro.props;
@@ -28,11 +28,40 @@ const c = {
   },
 }[lang];
 
-const deck = [
-  { slug: "lyapp", kind: "phone", name: "Lyapp", tag: "Lyapp", accent: "#E8805A", status: c.proj[0][1], cmd: "deploy lyapp", shots: ["projects/lyapp-hoy.webp", "projects/lyapp-resumen.webp", "projects/lyapp-coach.webp"] },
-  { slug: "your-english-buddy", kind: "web", name: "Your English Buddy", tag: "EnglishBuddy", accent: "#3DDC84", status: c.proj[1][1], cmd: "deploy english-buddy", url: "fabio-english-academy.vercel.app", page: "projects/your-english-buddy-page.webp", h: 1799 },
-  { slug: "simply-andy", kind: "web", name: "Simply Andy", tag: "SimplyAndy", accent: "#C9824F", status: c.proj[2][1], cmd: "deploy simply-andy", url: "simply-andy.ugc", page: "projects/simply-andy-page.webp", h: 1150 },
-];
+const pass = {
+  en: {
+    hint: "Drag",
+    read: "01 spec · 4 sprints",
+    caption: "The same pass builds the site and the app.",
+    aria: "Web and mobile build. Arrow keys move from spec to production.",
+    gates: ["spec", "design", "build", "prod"],
+    url: "app.forklia",
+    web: "Web",
+    ios: "iOS",
+    brief: "Brief",
+    rows: ["4 sprints", "web + ios", "one product"],
+    liveA: "Ideas in.",
+    liveB: "Products out.",
+    today: "Today",
+    stamp: "128 mod · 214",
+  },
+  es: {
+    hint: "Arrastra",
+    read: "01 spec · 4 sprints",
+    caption: "La misma pasada construye el sitio y la app.",
+    aria: "Build web y mobile. Las flechas van de spec a producción.",
+    gates: ["spec", "diseño", "build", "prod"],
+    url: "app.forklia",
+    web: "Web",
+    ios: "iOS",
+    brief: "Brief",
+    rows: ["4 sprints", "web + ios", "un producto"],
+    liveA: "Entra una idea.",
+    liveB: "Sale un producto.",
+    today: "Hoy",
+    stamp: "128 mód · 214",
+  },
+}[lang];
 ---
 
 <header class="hero2" id="top">
@@ -61,32 +90,66 @@ const deck = [
     </div>
   </div>
 
-  <div class="showcase" data-showcase data-reveal style="--d:450ms">
-    <div class="showcase__glow"></div>
-    <div class="showcase__stage">
-      {deck.map((d, i) => (
-        <article class={`sc-card sc-card--${d.kind}`} data-card={i} data-pos={i} style={`--acc:${d.accent}`}>
-          <a class="sc-card__link" href={href("case", lang, d.slug)} tabindex="-1" aria-label={d.name}></a>
-          <span class="sc-tag"><span class="tk tk--p">&lt;</span>{d.tag}<span class="tk tk--p"> /&gt;</span></span>
-          {d.kind === "phone" ? (
-            <div class="sc-phone">
-              <i class="sc-phone__island"></i>
-              <div class="sc-phone__screens">
-                {d.shots.map((src: string, k: number) => <img class={k === 0 ? "is-on" : undefined} src={base + src} srcset={srcset2x(src)} alt="" width="600" height="1298" loading="eager" decoding="async" />)}
-              </div>
+  <div class="pass" data-pass data-reveal style="--d:450ms" tabindex="0" role="slider" aria-label={pass.aria} aria-valuemin="1" aria-valuemax="4" aria-valuenow="1" aria-valuetext={pass.read}>
+    <div class="pass__stage">
+      <div class="pass__devices">
+        <article class="dev dev--web" aria-hidden="true">
+          <span class="dev__name">{pass.web}</span>
+          <div class="dev__bar"><i></i><i></i><i></i><span>{pass.url}</span></div>
+          <div class="dev__screen">
+            <div class="ui ui--spec"><em>{pass.brief}</em>{pass.rows.map((row) => <b>{row}</b>)}</div>
+            <div class="ui ui--wire web-wire">
+              <i class="w-nav"></i><i class="w-title"></i><i class="w-line"></i><i class="w-line w-line--s"></i><i class="w-btn"></i><i class="w-card"></i><i class="w-card"></i><i class="w-card"></i>
             </div>
-          ) : (
-            <div class="sc-browser">
-              <div class="sc-browser__bar"><i></i><i></i><i></i><span>{d.url}</span></div>
-              <div class="sc-browser__view"><img class="sc-scroll" src={base + d.page} srcset={srcset2x(d.page)} alt="" width="640" height={d.h} loading="eager" decoding="async" style={`--h:${d.h}`} /></div>
+            <div class="ui ui--fill web-fill">
+              <i class="w-nav"></i><i class="w-title"></i><i class="w-line"></i><i class="w-line w-line--s"></i><i class="w-btn"></i><i class="w-card"></i><i class="w-card"></i><i class="w-card"></i>
+              <span class="stamp">{pass.stamp}</span>
             </div>
-          )}
-          <footer class="sc-meta"><span class="sc-dot"></span><b>{d.name}</b><small>{d.status}</small></footer>
+            <div class="ui ui--live web-live">
+              <div class="lv-nav"><b>Forklia</b><em></em></div>
+              <strong>{pass.liveA}<br>{pass.liveB}</strong>
+              <small></small>
+              <span class="lv-btn"></span>
+              <div class="lv-cards"><i></i><i></i><i></i></div>
+            </div>
+            <div class="pass__scan"></div>
+          </div>
         </article>
-      ))}
+        <article class="dev dev--phone" aria-hidden="true">
+          <span class="dev__name">{pass.ios}</span>
+          <div class="dev__screen">
+            <i class="dev__island"></i>
+            <div class="ui ui--spec"><em>{pass.brief}</em>{pass.rows.map((row) => <b>{row}</b>)}</div>
+            <div class="ui ui--wire ph-wire">
+              <i class="p-hello"></i><i class="p-card"></i><i class="p-row"></i><i class="p-row"></i><i class="p-tabs"></i>
+            </div>
+            <div class="ui ui--fill ph-fill">
+              <i class="p-hello"></i><i class="p-card"></i><i class="p-row"></i><i class="p-row"></i><i class="p-tabs"></i>
+              <span class="stamp">{pass.stamp}</span>
+            </div>
+            <div class="ui ui--live ph-live">
+              <div class="ph-top"><b>9:41</b><em></em></div>
+              <strong>{pass.today}</strong>
+              <div class="ph-metric"><b>12.5h</b><i></i></div>
+              <div class="ph-rows"><i></i><i></i></div>
+              <div class="ph-tab"><i></i><i></i><i></i></div>
+            </div>
+            <div class="pass__scan"></div>
+          </div>
+        </article>
+      </div>
+      <div class="pass__rail">
+        <i class="pass__track"></i>
+        <i class="pass__thumb"></i>
+        {pass.gates.map((name, i) => <button type="button" data-gate={i} class={i === 0 ? "is-on" : undefined}>{name}</button>)}
+      </div>
     </div>
-    <div class="showcase__rail" role="tablist" aria-label={lang === "es" ? "Proyectos" : "Projects"}>
-      {deck.map((d, i) => <button type="button" role="tab" data-go={i} aria-selected={i === 0 ? "true" : "false"} class={i === 0 ? "is-on" : undefined}><span>{d.cmd}</span><i></i></button>)}
-    </div>
+    <aside class="pass__note">
+      <span class="pass__fig" data-pass-fig>01</span>
+      <b data-pass-read>{pass.read}</b>
+      <small>{pass.hint}</small>
+      <p>{pass.caption}</p>
+    </aside>
   </div>
 </header>
+<script src="../scripts/ship-pass.js"></script>
