@@ -3,7 +3,7 @@ import type { L, Lang } from "../i18n";
 export const site = {
   name: "Forklia",
   legalName: "Forklia Studio",
-  url: "https://fablexis.github.io/web-agency/",
+  url: "https://forklia.com/",
   email: "hola@vertice.studio",
   whatsapp: "https://wa.me/",
   title: {

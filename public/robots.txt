@@ -2,4 +2,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://fablexis.github.io/web-agency/sitemap.xml
+Sitemap: https://forklia.com/sitemap.xml

@@ -1,0 +1,15 @@
+---
+import Base from "../layouts/Base.astro";
+import PageHero from "../components/PageHero.astro";
+import { href } from "../i18n";
+---
+
+<Base lang="en" alt="es/" title="404: page not found | Forklia" description="This page doesn't exist or has moved." noindex>
+  <PageHero lang="en" eyebrow="// 404" crumb="404" title='This route didn&apos;t <span class="grad-text">compile</span>' lead="The page you're looking for doesn't exist or has moved.">
+    <p class="lead" lang="es" data-reveal style="--d:260ms">Esta página no existe o cambió de dirección.</p>
+    <div class="hero__ctas" data-reveal style="--d:320ms">
+      <a href={href("home", "en")} class="btn btn--primary">Go to home <span class="arrow">→</span></a>
+      <a href={href("home", "es")} class="btn btn--ghost" lang="es">Ir al inicio</a>
+    </div>
+  </PageHero>
+</Base>

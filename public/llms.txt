@@ -1,30 +1,30 @@
 # Forklia
 
-> Forklia is a remote digital product studio founded by Fabian Pernía (Full Stack Engineer) and Fabio Pernía (Creative Director & Head of Sales). It designs and codes mobile apps, websites, SEO/GEO strategies and interactive brand systems for clients in any country, in English and Spanish. Spanish version: https://fablexis.github.io/web-agency/es/
+> Forklia is a remote digital product studio founded by Fabián Pernía (Full Stack Engineer) and Fabio Pernía (Creative Director & Head of Sales). It designs and codes mobile apps, websites, SEO/GEO strategies and interactive brand systems for clients in any country, in English and Spanish. Spanish version: https://forklia.com/es/
 
 ## Modules (services)
 
-- [Mobile apps](https://fablexis.github.io/web-agency/services/#apps): React Native apps for iOS and Android, from discovery to App Store and Google Play.
-- [Web development](https://fablexis.github.io/web-agency/services/#web): landing pages, company sites, e-commerce and custom platforms.
-- [SEO & GEO](https://fablexis.github.io/web-agency/services/#seo): technical SEO, content, structured data and optimization for AI answer engines.
-- [Brand systems](https://fablexis.github.io/web-agency/services/#branding): logo, palette, type and interactive brand kits with an email signature generator.
+- [Mobile apps](https://forklia.com/services/#apps): React Native apps for iOS and Android, from discovery to App Store and Google Play.
+- [Web development](https://forklia.com/services/#web): landing pages, company sites, e-commerce and custom platforms.
+- [SEO & GEO](https://forklia.com/services/#seo): technical SEO, content, structured data and optimization for AI answer engines.
+- [Brand systems](https://forklia.com/services/#branding): logo, palette, type and interactive brand kits with an email signature generator.
 
 ## Deploys (projects)
 
-- [Lyapp](https://fablexis.github.io/web-agency/work/lyapp/): iOS app to track a baby's sleep, feeding and health in their first year. Live on the App Store.
-- [Simply Andy](https://fablexis.github.io/web-agency/work/simply-andy/): identity, bilingual portfolio with technical SEO, and an interactive brand kit for a UGC creator.
-- [Your English Buddy](https://fablexis.github.io/web-agency/work/your-english-buddy/): website for an academy teaching practical English to Spanish speakers.
+- [Lyapp](https://forklia.com/work/lyapp/): iOS app to track a baby's sleep, feeding and health in their first year. Live on the App Store.
+- [Simply Andy](https://forklia.com/work/simply-andy/): identity, bilingual portfolio with technical SEO, and an interactive brand kit for a UGC creator.
+- [Your English Buddy](https://forklia.com/work/your-english-buddy/): website for an academy teaching practical English to Spanish speakers.
 
 ## iterating++ (blog)
 
-- [How to launch an MVP in 30 days without cutting corners](https://fablexis.github.io/web-agency/blog/launch-an-mvp-in-30-days/)
-- [Technical SEO in 2026: what actually moves the needle](https://fablexis.github.io/web-agency/blog/technical-seo-in-2026/)
-- [Micro-interactions that sell](https://fablexis.github.io/web-agency/blog/micro-interactions-that-sell/)
-- [The modern stack we recommend to startups](https://fablexis.github.io/web-agency/blog/modern-stack-for-startups/)
-- [From visits to customers: anatomy of a funnel that converts](https://fablexis.github.io/web-agency/blog/from-visits-to-customers/)
-- [Apps that feel alive: states, feedback and rhythm](https://fablexis.github.io/web-agency/blog/apps-that-feel-alive/)
+- [How to launch an MVP in 30 days without cutting corners](https://forklia.com/blog/launch-an-mvp-in-30-days/)
+- [Technical SEO in 2026: what actually moves the needle](https://forklia.com/blog/technical-seo-in-2026/)
+- [Micro-interactions that sell](https://forklia.com/blog/micro-interactions-that-sell/)
+- [The modern stack we recommend to startups](https://forklia.com/blog/modern-stack-for-startups/)
+- [From visits to customers: anatomy of a funnel that converts](https://forklia.com/blog/from-visits-to-customers/)
+- [Apps that feel alive: states, feedback and rhythm](https://forklia.com/blog/apps-that-feel-alive/)
 
 ## Contact
 
-- [Start a project](https://fablexis.github.io/web-agency/start/): proposal with scope, timeline and fixed price in under 48 hours.
-- [FAQ & pricing](https://fablexis.github.io/web-agency/services/#faq)
+- [Start a project](https://forklia.com/start/): proposal with scope, timeline and fixed price in under 48 hours.
+- [FAQ & pricing](https://forklia.com/services/#faq)
