@@ -15,14 +15,14 @@ const c = {
     desc: "Tell us about your project in five fields and get a proposal with scope, timeline and a fixed price in under 48 hours, wherever you are.",
     crumb: "start()", eyebrow: "// start()", h1: 'Let\'s compile your <span class="grad-text">idea</span>',
     lead: "Five fields, one click. We reply within 24 business hours with next steps, in English or Spanish.",
-    top: "// fill in the blanks — only the budget is optional",
-    name: "name", nameH: "how should we call you?", namePh: "Your name",
-    email: "email", emailH: "where we'll reply", emailPh: "you@company.com",
-    modules: "modules", modulesH: "pick one or more",
-    idea: "idea", ideaH: "what do you want to build?", ideaPh: "Tell us what you want to build, for whom, and what problem it solves…",
-    budget: "budget", budgetH: "optional · USD",
+    intro: "Tell us the basics. Everything is required except the budget.",
+    name: "Your name", namePh: "Ana García", nameErr: "Please enter your name.",
+    email: "Email", emailPh: "you@company.com", emailErr: "Enter a valid email so we can reply.",
+    modules: "What do you need?", modulesH: "Pick one or more", modulesErr: "Pick at least one option.",
+    idea: "Your idea", ideaH: "What you want to build, for whom, and what problem it solves.", ideaPh: "e.g. A booking app for my yoga studio so clients can reserve classes from their phone.", ideaErr: "Tell us a bit more (at least 20 characters).",
+    budget: "Budget (USD)", budgetH: "Optional",
     budgets: ["< 3k", "3k – 8k", "8k – 20k", "20k +", "not sure"],
-    run: "Send my project", runHint: "we reply within 24h · runs send(project)", reset: "Start over",
+    run: "Send my project", runHint: "We reply within 24 business hours.", reset: "Start over",
     build: "building forklia", term: "TERMINAL", watching: "› watching for changes…",
     doneT: "✓ Proposal ready", doneP: "We opened your email app with everything pre-filled. If it didn't open, send it from here:",
     mail: "Open in my email", wa: "Send via WhatsApp", copy: "Copy summary",
@@ -33,14 +33,14 @@ const c = {
     desc: "Cuéntanos tu proyecto en cinco campos y recibe una propuesta con alcance, plazos y precio cerrado en menos de 48 horas, estés en el país que estés.",
     crumb: "start()", eyebrow: "// start()", h1: 'Compilemos tu <span class="grad-text">idea</span>',
     lead: "Cinco campos, un clic. Respondemos en menos de 24 horas hábiles con los siguientes pasos, en español o inglés.",
-    top: "// completa los espacios — solo el presupuesto es opcional",
-    name: "nombre", nameH: "¿cómo te llamas?", namePh: "Tu nombre",
-    email: "email", emailH: "donde te responderemos", emailPh: "tu@empresa.com",
-    modules: "módulos", modulesH: "elige uno o más",
-    idea: "idea", ideaH: "¿qué quieres construir?", ideaPh: "Cuéntanos qué quieres construir, para quién y qué problema resuelve…",
-    budget: "presupuesto", budgetH: "opcional · USD",
+    intro: "Cuéntanos lo básico. Todo es obligatorio excepto el presupuesto.",
+    name: "Tu nombre", namePh: "Ana García", nameErr: "Escribe tu nombre.",
+    email: "Email", emailPh: "tu@empresa.com", emailErr: "Escribe un correo válido para poder responderte.",
+    modules: "¿Qué necesitas?", modulesH: "Elige uno o más", modulesErr: "Elige al menos una opción.",
+    idea: "Tu idea", ideaH: "Qué quieres construir, para quién y qué problema resuelve.", ideaPh: "Ej.: Una app de reservas para mi estudio de yoga, para que los clientes agenden clases desde el celular.", ideaErr: "Cuéntanos un poco más (mínimo 20 caracteres).",
+    budget: "Presupuesto (USD)", budgetH: "Opcional",
     budgets: ["< 3k", "3k – 8k", "8k – 20k", "20k +", "aún no sé"],
-    run: "Enviar mi proyecto", runHint: "respondemos en 24h · ejecuta enviar(project)", reset: "Empezar de nuevo",
+    run: "Enviar mi proyecto", runHint: "Respondemos en menos de 24 horas hábiles.", reset: "Empezar de nuevo",
     build: "compilando forklia", term: "TERMINAL", watching: "› esperando cambios…",
     doneT: "✓ Propuesta lista", doneP: "Abrimos tu correo con todo prellenado. Si no se abrió, envíala desde aquí:",
     mail: "Abrir en mi correo", wa: "Enviar por WhatsApp", copy: "Copiar resumen",
@@ -67,51 +67,51 @@ const fn = lang === "en" ? "send" : "enviar";
         </div>
 
         <div class="vsc__body">
-          <form class="vsc__editor" id="quote-form" novalidate>
-            <div class="cl c">{c.top}</div>
-            <div class="cl"><span class="k">const</span>&nbsp;<span class="v">project</span>&nbsp;=&nbsp;{"{"}</div>
+          <form class="qf" id="quote-form" novalidate>
+            <p class="qf__intro">{c.intro}</p>
 
-            <div class="cl cl--in" data-field="name">
-              <label for="f-name"><span class="p">{c.name}</span>:</label>
-              <span class="s">"</span><input id="f-name" name="name" required autocomplete="name" placeholder={c.namePh} /><span class="s">",</span>
-              <span class="hint">// {c.nameH}</span>
+            <div class="qf__row">
+              <div class="qf__field" data-field="name">
+                <label class="qf__label" for="f-name">{c.name}</label>
+                <input id="f-name" name="name" required autocomplete="name" placeholder={c.namePh} aria-describedby="e-name" />
+                <small class="qf__err" id="e-name">{c.nameErr}</small>
+              </div>
+              <div class="qf__field" data-field="email">
+                <label class="qf__label" for="f-email">{c.email}</label>
+                <input id="f-email" name="email" type="email" required autocomplete="email" placeholder={c.emailPh} aria-describedby="e-email" />
+                <small class="qf__err" id="e-email">{c.emailErr}</small>
+              </div>
             </div>
-            <div class="cl cl--in" data-field="email">
-              <label for="f-email"><span class="p">{c.email}</span>:</label>
-              <span class="s">"</span><input id="f-email" name="email" type="email" required autocomplete="email" placeholder={c.emailPh} /><span class="s">",</span>
-              <span class="hint">// {c.emailH}</span>
+
+            <fieldset class="qf__field" data-field="modules" aria-describedby="e-modules">
+              <legend class="qf__label">{c.modules} <small>{c.modulesH}</small></legend>
+              <div class="qf__chips">
+                {mods.map((s) => <label class="chip"><input type="checkbox" name="modules" value={s.id} data-label={s.name} /><span>{s.name}</span></label>)}
+              </div>
+              <small class="qf__err" id="e-modules">{c.modulesErr}</small>
+            </fieldset>
+
+            <div class="qf__field" data-field="idea">
+              <label class="qf__label" for="f-idea">{c.idea}</label>
+              <span class="qf__help" id="h-idea">{c.ideaH}</span>
+              <textarea id="f-idea" name="idea" rows="4" required minlength="20" placeholder={c.ideaPh} aria-describedby="h-idea e-idea"></textarea>
+              <small class="qf__err" id="e-idea">{c.ideaErr}</small>
             </div>
-            <div class="cl cl--in cl--wrap" data-field="modules">
-              <span id="l-mods"><span class="p">{c.modules}</span>: [</span>
-              <span class="chips" role="group" aria-labelledby="l-mods">
-                {mods.map((s) => <label class="chip"><input type="checkbox" name="modules" value={s.id} data-label={s.name} /><span>{s.id}</span></label>)}
-              </span>
-              <span>],</span>
-              <span class="hint">// {c.modulesH}</span>
-            </div>
-            <div class="cl cl--in cl--wrap" data-field="idea">
-              <label for="f-idea"><span class="p">{c.idea}</span>: <span class="s">`</span></label>
-              <span class="hint">// {c.ideaH}</span>
-              <textarea id="f-idea" name="idea" rows="3" required minlength="20" placeholder={c.ideaPh}></textarea>
-              <span class="s">`,</span>
-            </div>
-            <div class="cl cl--in cl--wrap" data-field="budget">
-              <span id="l-budget"><span class="p">{c.budget}</span>:</span>
-              <span class="chips" role="radiogroup" aria-labelledby="l-budget">
-                {c.budgets.map((b) => <label class="chip"><input type="radio" name="budget" value={b} /><span>"{b}"</span></label>)}
-              </span>
-              <span class="hint">// {c.budgetH}</span>
-            </div>
-            <div class="cl">{"};"}</div>
-            <div class="cl"></div>
-            <div class="cl"><span class="f">{fn}</span>(project);</div>
-            <div class="vsc__run">
+
+            <fieldset class="qf__field" data-field="budget">
+              <legend class="qf__label">{c.budget} <small>{c.budgetH}</small></legend>
+              <div class="qf__chips">
+                {c.budgets.map((b) => <label class="chip"><input type="radio" name="budget" value={b} /><span>{b}</span></label>)}
+              </div>
+            </fieldset>
+
+            <div class="qf__actions">
               <button type="submit" class="btn btn--primary vsc__send" data-magnetic>
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 2 11 13"></path><path d="M22 2 15 22l-4-9-9-4 20-7z"></path></svg>
                 {c.run}
               </button>
               <button type="button" class="vsc__reset" data-reset>{c.reset}</button>
-              <span class="vsc__runhint">{c.runHint}</span>
+              <span class="qf__note">{c.runHint}</span>
             </div>
           </form>
 

@@ -56,7 +56,9 @@ if (vsc && form) {
     $("[data-prog-txt]").textContent = `${filled} / 9`;
     $$("[data-field]", form).forEach((row) => {
       const k = row.dataset.field;
-      row.classList.toggle("is-ok", k === "budget" ? !!d.budget : !!c[k]);
+      const ok = k === "budget" ? !!d.budget : !!c[k];
+      row.classList.toggle("is-ok", ok);
+      if (ok) row.classList.remove("is-err");
     });
     try { localStorage.setItem(DRAFT, JSON.stringify(d)); } catch {}
     return { d, c };
@@ -92,6 +94,7 @@ if (vsc && form) {
 
   form.querySelector("[data-reset]").addEventListener("click", () => {
     form.reset();
+    $$("[data-field]", form).forEach((row) => row.classList.remove("is-err"));
     try { localStorage.removeItem(DRAFT); } catch {}
     done.hidden = true;
     forkCell.classList.remove("is-in");
@@ -121,6 +124,7 @@ if (vsc && form) {
     const status = $("[data-status-errors]");
     status.textContent = `⊘ ${errors.length}`;
     status.classList.toggle("is-err", errors.length > 0);
+    $$("[data-field]", form).forEach((row) => row.classList.toggle("is-err", errors.includes(row.dataset.field)));
     if (errors.length) {
       errors.forEach((k) => log(`<span class="err">✗ ${T.err}</span> ${esc(T.msg[k])}`));
       log(`<span class="m">› ${T.fix}</span>`);

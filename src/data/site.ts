@@ -170,7 +170,7 @@ export const faqs = [
 
 export const founders = [
   {
-    name: "Fabian Pernía",
+    name: "Fabián Pernía",
     initials: "Fabian",
     photo: "team/fabian-pernia.webp",
     sha: "f4b1a2e",
@@ -180,7 +180,7 @@ export const founders = [
       en: "Architects every product end to end, from the database to the last micro-interaction. Performance, clean code and systems that scale without drama.",
       es: "Diseña la arquitectura de cada producto de punta a punta: desde la base de datos hasta la última microinteracción. Rendimiento, código limpio y sistemas que escalan sin drama.",
     },
-    skills: { en: ["TypeScript", "React / Next.js", "Node.js", "Cloud & DevOps"], es: ["TypeScript", "React / Next.js", "Node.js", "Cloud & DevOps"] },
+    skills: { en: ["TypeScript", "React / Next.js", "React Native", "Vue.js", "Node.js", "Cloud & DevOps"], es: ["TypeScript", "React / Next.js", "React Native", "Vue.js", "Node.js", "Cloud & DevOps"] },
     accent: "cyan",
   },
   {
