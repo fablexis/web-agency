@@ -3,7 +3,7 @@ import Base from "../layouts/Base.astro";
 import PageHero from "../components/PageHero.astro";
 import PostCard from "../components/PostCard.astro";
 import Cta from "../components/Cta.astro";
-import { posts } from "../data/site";
+import { posts, site } from "../data/site";
 import { route, type Lang } from "../i18n";
 
 interface Props { lang: Lang }
@@ -17,9 +17,23 @@ const c = {
   es: { title: "iterando++: guías de apps, webs, SEO y marca | Forklia", desc: "La bitácora de Forklia: lo que aprendemos construyendo apps, sitios web, estrategias SEO y sistemas de marca. Guías prácticas, sin humo.", h1: 'El changelog de <span class="grad-text">lo que aprendemos</span>', lead: "Notas cortas de lo que aprendemos construyendo apps, webs y marcas. Cada una trae algo para probar.", filter: "Filtrar por categoría", ctaT: '¿Tienes un proyecto <span class="grad-text">en mente</span>?' },
 }[lang];
 const crumb = lang === "en" ? "iterating++" : "iterando++";
+const blogUrl = new URL(route("blog", lang), site.url).href;
+const schema = [{
+  "@type": "Blog",
+  "@id": `${blogUrl}#blog`,
+  name: crumb,
+  url: blogUrl,
+  inLanguage: lang,
+  blogPost: posts.filter((p) => !p.placeholder).map((p) => ({
+    "@type": "BlogPosting",
+    headline: p.title[lang],
+    datePublished: p.date,
+    url: new URL(route("post", lang, p.slug[lang]), site.url).href,
+  })),
+}];
 ---
 
-<Base lang={lang} alt={route("blog", other)} title={c.title} description={c.desc} breadcrumbs={[{ name: crumb, path: route("blog", lang) }]}>
+<Base lang={lang} alt={route("blog", other)} title={c.title} description={c.desc} breadcrumbs={[{ name: crumb, path: route("blog", lang) }]} schema={schema}>
   <PageHero lang={lang} eyebrow={`// ${crumb}`} crumb={crumb} title={c.h1} lead={c.lead} />
   <section class="section" style="padding-top: 0;">
     <div class="wrap">

@@ -1,0 +1,54 @@
+---
+import Base from "../layouts/Base.astro";
+import PageHero from "../components/PageHero.astro";
+import { site } from "../data/site";
+import { route, type Lang } from "../i18n";
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const other: Lang = lang === "en" ? "es" : "en";
+const c = {
+  en: {
+    title: "Privacy | Forklia",
+    desc: "What the quote form stores, what leaves your browser, and how to ask Forklia about it.",
+    crumb: "privacy",
+    h1: 'What happens to <span class="grad-text">what you type</span>',
+    lead: "The quote form never sends your project to a Forklia server. It stays in your browser until you choose to send it.",
+    sections: [
+      ["Does the form upload my project?", "No. Sending opens your own email app, or WhatsApp, with the summary already written. Copying puts that summary on your clipboard. Forklia receives it only if you send the message."],
+      ["Is a draft saved?", "Yes, on your device. The browser keeps the five fields in localStorage so a refresh does not wipe them. Clearing the form, or your browser data for this site, removes that draft. It is not copied to our hosting."],
+      ["What can the host see?", "forklia.com is a static site. A request for a page can show up in Cloudflare and GitHub Pages logs, the same way any visit does. Those logs are not the contents of the form."],
+      ["Do you sell this?", "No. We do not sell, rent or trade what you send us, and we do not run ads or a third-party analytics tracker on this site."],
+      ["How do I ask about it?", `Write to ${site.email}. If you already sent a message, reply on that same thread and say what you want removed.`],
+    ],
+  },
+  es: {
+    title: "Privacidad | Forklia",
+    desc: "Qué guarda el formulario de cotización, qué sale de tu navegador y cómo preguntarle a Forklia.",
+    crumb: "privacidad",
+    h1: 'Qué pasa con <span class="grad-text">lo que escribes</span>',
+    lead: "El formulario de cotización no envía tu proyecto a un servidor de Forklia. Se queda en tu navegador hasta que decides mandarlo.",
+    sections: [
+      ["¿El formulario sube mi proyecto?", "No. Enviar abre tu propia app de correo, o WhatsApp, con el resumen ya escrito. Copiar deja ese resumen en el portapapeles. Forklia lo recibe solo si tú mandas el mensaje."],
+      ["¿Se guarda un borrador?", "Sí, en tu dispositivo. El navegador guarda los cinco campos en localStorage para que un refresco no los borre. Limpiar el formulario, o los datos de este sitio en el navegador, elimina ese borrador. No se copia a nuestro hosting."],
+      ["¿Qué puede ver quien aloja el sitio?", "forklia.com es un sitio estático. Una visita puede aparecer en los registros de Cloudflare y GitHub Pages, como cualquier otra página. Esos registros no son el contenido del formulario."],
+      ["¿Venden estos datos?", "No. No vendemos, alquilamos ni cedemos lo que nos envías, y este sitio no lleva anuncios ni un medidor de analítica de terceros."],
+      ["¿Cómo pregunto?", `Escribe a ${site.email}. Si ya mandaste un mensaje, responde en ese mismo hilo y di qué quieres que quitemos.`],
+    ],
+  },
+}[lang];
+---
+
+<Base lang={lang} alt={route("privacy", other)} title={c.title} description={c.desc} breadcrumbs={[{ name: c.crumb, path: route("privacy", lang) }]}>
+  <PageHero lang={lang} eyebrow="// privacy" crumb={c.crumb} title={c.h1} lead={c.lead} />
+  <section class="section" style="padding-top: 0;">
+    <div class="wrap legal">
+      {c.sections.map(([q, a]) => (
+        <div>
+          <h2>{q}</h2>
+          <p>{a}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+</Base>

@@ -1,5 +1,5 @@
 ---
-import { site } from "../data/site";
+import { waLink } from "../data/site";
 import { ui, href, type Lang } from "../i18n";
 
 interface Props {
@@ -21,7 +21,7 @@ const text = Astro.props.text ?? t.ctaText;
         <p>{text}</p>
         <div class="hero__ctas">
           <a href={href("start", lang)} class="btn btn--primary" data-magnetic>{t.ctaPrimary} <span class="arrow">→</span></a>
-          <a href={site.whatsapp} class="btn btn--ghost" data-magnetic>{t.ctaWhatsapp}</a>
+          <a href={waLink(lang)} class="btn btn--ghost" data-magnetic>{t.ctaWhatsapp}</a>
         </div>
         <div class="cta__note"><span class="dot dot--green"></span>{t.ctaNote}</div>
       </div>

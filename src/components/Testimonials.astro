@@ -6,8 +6,8 @@ import Icon from "./Icon.astro";
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 const all = testimonials.map((t) => ({ ...loc(t, lang), photo: t.photo, icon: t.icon, tint: t.face.shirt }));
-const feat = all.find((t) => t.real)!;
-const rest = all.filter((t) => !t.real);
+const feat = all.find((t) => t.real) ?? all[0];
+const rest = all.filter((t) => t !== feat && t.real);
 const c = {
   en: { cmd: "gh pr reviews --state approved", approved: "approved", verified: "verified client", see: "See her project" },
   es: { cmd: "gh pr reviews --state approved", approved: "aprobó", verified: "cliente verificado", see: "Ver su proyecto" },
@@ -15,7 +15,7 @@ const c = {
 const cols = [rest.filter((_, i) => i % 2 === 0), rest.filter((_, i) => i % 2 === 1)];
 ---
 
-<div class="trev">
+<div class:list={["trev", { "trev--solo": rest.length === 0 }]}>
   <figure class="trev__feat" data-reveal>
     <div class="trev__feathead">
       <img class="trev__photo" src={base + feat.photo} srcset={`${base}${feat.photo} 1x, ${base}${feat.photo!.replace(".webp", "@2x.webp")} 2x`} alt={feat.n} width="64" height="64" loading="lazy" />
@@ -26,23 +26,25 @@ const cols = [rest.filter((_, i) => i % 2 === 0), rest.filter((_, i) => i % 2 ==
     <figcaption><code>{feat.sha}</code><span>{feat.tag}</span>{feat.project && <a class="link-arrow" href={href("case", lang, feat.project)}>{c.see} <span>→</span></a>}</figcaption>
   </figure>
 
-  <div class="trev__wall" data-trev>
-    <div class="trev__cmd"><span class="tk tk--p">$</span> {c.cmd}</div>
-    <div class="trev__cols">
-      {cols.map((col, ci) => (
-        <div class="trev__col" data-speed={ci ? "0.06" : "-0.04"}>
-          {col.map((t, i) => (
-            <figure class="trev__card" data-reveal style={`--d:${(ci + i * 2) * 90}ms; --f:${(ci * 2 + i) * 1.3}s; --tint:${t.tint}`}>
-              <header>
-                <span class="trev__ic"><Icon name={t.icon!} size={20} /></span>
-                <span class="trev__who"><b>{t.n}</b><small>{t.r}</small></span>
-              </header>
-              <blockquote><p>“{t.q}”</p></blockquote>
-              <footer><span><em class="trev__pill">✓ {c.approved}</em> <code>{t.sha}</code></span><span class="trev__tag">+ {t.tag}</span></footer>
-            </figure>
-          ))}
-        </div>
-      ))}
+  {rest.length > 0 && (
+    <div class="trev__wall" data-trev>
+      <div class="trev__cmd"><span class="tk tk--p">$</span> {c.cmd}</div>
+      <div class="trev__cols">
+        {cols.map((col, ci) => (
+          <div class="trev__col" data-speed={ci ? "0.06" : "-0.04"}>
+            {col.map((t, i) => (
+              <figure class="trev__card" data-reveal style={`--d:${(ci + i * 2) * 90}ms; --f:${(ci * 2 + i) * 1.3}s; --tint:${t.tint}`}>
+                <header>
+                  <span class="trev__ic"><Icon name={t.icon!} size={20} /></span>
+                  <span class="trev__who"><b>{t.n}</b><small>{t.r}</small></span>
+                </header>
+                <blockquote><p>“{t.q}”</p></blockquote>
+                <footer><span><em class="trev__pill">✓ {c.approved}</em> <code>{t.sha}</code></span><span class="trev__tag">+ {t.tag}</span></footer>
+              </figure>
+            ))}
+          </div>
+        ))}
+      </div>
     </div>
-  </div>
+  )}
 </div>

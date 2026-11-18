@@ -16,6 +16,7 @@ const c = {
     crumb: "start()", eyebrow: "// start()", h1: 'Let\'s compile your <span class="grad-text">idea</span>',
     lead: "Five fields, one click. We reply within 24 business hours with next steps, in English or Spanish.",
     intro: "Tell us the basics. Everything is required except the budget.",
+    privacy: "How we handle what you type.",
     name: "Your name", namePh: "Ana García", nameErr: "Please enter your name.",
     email: "Email", emailPh: "you@company.com", emailErr: "Enter a valid email so we can reply.",
     modules: "What do you need?", modulesH: "Pick one or more", modulesErr: "Pick at least one option.",
@@ -34,6 +35,7 @@ const c = {
     crumb: "start()", eyebrow: "// start()", h1: 'Compilemos tu <span class="grad-text">idea</span>',
     lead: "Cinco campos, un clic. Respondemos en menos de 24 horas hábiles con los siguientes pasos, en español o inglés.",
     intro: "Cuéntanos lo básico. Todo es obligatorio excepto el presupuesto.",
+    privacy: "Cómo tratamos lo que escribes.",
     name: "Tu nombre", namePh: "Ana García", nameErr: "Escribe tu nombre.",
     email: "Email", emailPh: "tu@empresa.com", emailErr: "Escribe un correo válido para poder responderte.",
     modules: "¿Qué necesitas?", modulesH: "Elige uno o más", modulesErr: "Elige al menos una opción.",
@@ -68,7 +70,7 @@ const fn = lang === "en" ? "send" : "enviar";
 
         <div class="vsc__body">
           <form class="qf" id="quote-form" novalidate>
-            <p class="qf__intro">{c.intro}</p>
+            <p class="qf__intro">{c.intro} <a href={href("privacy", lang)}>{c.privacy}</a></p>
 
             <div class="qf__row">
               <div class="qf__field" data-field="name">

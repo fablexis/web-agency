@@ -28,3 +28,4 @@
 
 - [Start a project](https://forklia.com/start/): proposal with scope, timeline and fixed price in under 48 hours.
 - [FAQ & pricing](https://forklia.com/services/#faq)
+- [Privacy](https://forklia.com/privacy/): the quote form stays in the browser until the visitor sends it.

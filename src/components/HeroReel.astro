@@ -1,0 +1,164 @@
+---
+// Hero reel: the three real products laid out flat on one "world" that a scripted
+// camera flies across (wide → close-up → wide), while each UI plays a short story.
+// Choreography lives in src/scripts/reel.js.
+import { href, base, srcset2x, type Lang } from "../i18n";
+
+interface Props { lang: Lang; proj: string[][] }
+const { lang, proj } = Astro.props;
+
+const L = {
+  en: {
+    hello: "Good afternoon", baby: "Lua · 14 months", sleepToday: "SLEEP · TODAY", night: "NIGHT", naps: "NAPS",
+    typical: "typical 11–14 h", next: "Next sleep ~6:52 PM", start: "▶ Start sleep timer", tiles: [["Feed", "20 min ago"], ["Calendar", "9-month check"]],
+    summary: "Summary", back: "‹ Home", week: "Week of Sep 12–18", daily: "DAILY TOTAL", avg: "avg", inRange: "✓ In range",
+    norm: "VS. 14-MONTH NORM", normP: "Babies at 14 months typically sleep", normB: "11–14 hours", normE: "Lua is in that range.",
+    days: ["Sat", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri"],
+    cap1: ["This", "changed", "my", "routine"], cap2: ["Real", "products.", "No", "script."], mark1: 1, mark2: [2, 3],
+    desc: "Real routines, real products. No script.", follow: "Follow", following: "Following",
+    projects: "Projects",
+  },
+  es: {
+    hello: "Buenas tardes", baby: "Lua · 14 meses", sleepToday: "SUEÑO · HOY", night: "NOCHE", naps: "SIESTAS",
+    typical: "típico 11–14 h", next: "Próximo sueño ~6:52 PM", start: "▶ Iniciar temporizador", tiles: [["Tomas", "hace 20 min"], ["Calendario", "Control 9 meses"]],
+    summary: "Resumen", back: "‹ Inicio", week: "Semana del 12 al 18 sep", daily: "TOTAL DIARIO", avg: "prom.", inRange: "✓ En rango",
+    norm: "VS. NORMA A LOS 14 MESES", normP: "Los bebés de 14 meses suelen dormir", normB: "11–14 h", normE: "Lua está en rango.",
+    days: ["Sáb", "Dom", "Lun", "Mar", "Mié", "Jue", "Vie"],
+    cap1: ["Esto", "cambió", "mi", "rutina"], cap2: ["Productos", "reales.", "Sin", "guion."], mark1: 1, mark2: [2, 3],
+    desc: "Rutinas reales, productos reales. Sin guion.", follow: "Seguir", following: "Siguiendo",
+    projects: "Proyectos",
+  },
+}[lang];
+
+const hours = [13.5, 12.8, 15.0, 14.4, 13.7, 13.1, 12.5];
+
+const devs = [
+  { slug: "lyapp", tag: "Lyapp", accent: "#E8805A", cmd: "deploy lyapp", status: proj[0][1] },
+  { slug: "your-english-buddy", tag: "EnglishBuddy", accent: "#3DDC84", cmd: "deploy english-buddy", status: proj[1][1] },
+  { slug: "simply-andy", tag: "SimplyAndy", accent: "#C9824F", cmd: "deploy simply-andy", status: proj[2][1] },
+];
+const names = ["Lyapp", "Your English Buddy", "Simply Andy"];
+const url = "fabio-english-academy.vercel.app";
+const page = "projects/your-english-buddy-page.webp";
+
+// Wireframe of the English Buddy page, in its own 640px-wide coordinates.
+// [x, y, w, h, kind]   kind: b = block, p = pill, i = image, t = text line
+const wire: [number, number, number, number, string][] = [
+  [16, 10, 130, 16, "b"], [412, 14, 150, 9, "t"], [568, 8, 56, 20, "p"],
+  [26, 85, 128, 15, "p"], [26, 114, 176, 26, "b"], [26, 144, 264, 30, "b"],
+  [26, 186, 242, 7, "t"], [26, 200, 236, 7, "t"], [26, 214, 240, 7, "t"], [26, 228, 236, 7, "t"], [26, 242, 120, 7, "t"],
+  [26, 272, 97, 26, "p"], [132, 272, 67, 26, "p"],
+  [430, 76, 180, 260, "i"], [345, 78, 115, 34, "b"], [536, 271, 93, 34, "b"],
+  [130, 386, 380, 26, "b"], [175, 420, 292, 7, "t"], [172, 433, 296, 7, "t"], [176, 446, 290, 7, "t"],
+  [26, 482, 297, 220, "i"], [334, 482, 135, 220, "i"], [479, 482, 135, 220, "i"],
+];
+
+const heart = "M12 21s-7.5-4.6-9.6-9.2C.9 8.4 3 4.5 6.7 4.5c2.1 0 3.6 1.2 4.3 2.6h2c.7-1.4 2.2-2.6 4.3-2.6 3.7 0 5.8 3.9 4.3 7.3C19.5 16.4 12 21 12 21z";
+---
+
+<div class="reel" data-reel data-reveal style="--d:450ms">
+  <div class="reel__glow" aria-hidden="true"></div>
+
+  <div class="reel__view" aria-hidden="true">
+    <div class="reel__world" data-world>
+
+      {/* ── Lyapp · iOS ── */}
+      <article class="rd rd--ly" data-dev="0" style={`--acc:${devs[0].accent}`}>
+        <span class="rd-tag"><span class="tk tk--p">&lt;</span>{devs[0].tag}<span class="tk tk--p"> /&gt;</span></span>
+        <div class="rd-phone phone--ly" data-ly>
+          <div class="phone__screen">
+            <div class="phone__notch"><span class="island-timer"><i></i><b data-rtimer>0:00</b></span></div>
+            <div class="phone__status"><span>5:55</span><span>●●● 100%</span></div>
+
+            <div class="screen ly is-active" data-lyscreen="0">
+              <div class="ly-hello"><span class="ly-av">L</span><span><small>{L.hello}</small><b>{L.baby}</b></span></div>
+              <div class="ly-card ly-sleep">
+                <div class="ly-ring"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="42" class="tr"></circle><circle cx="50" cy="50" r="42" class="vl"></circle></svg><div><b>12.5h</b><small>{L.typical}</small></div></div>
+                <div class="ly-sleep__meta"><small>{L.sleepToday}</small><div><span><small>{L.night}</small><b class="ly-blue">10h 30m</b></span><span><small>{L.naps}</small><b class="ly-coral">2h</b></span></div><em>{L.next}</em></div>
+                <button class="ly-btn" type="button" tabindex="-1" data-lybtn>{L.start}<span class="rd-tap"></span></button>
+              </div>
+              <div class="ly-tiles">
+                <div><span class="ly-ic ly-ic--peach">●</span><b>{L.tiles[0][0]}</b><small class="ly-coral">{L.tiles[0][1]}</small></div>
+                <div><span class="ly-ic ly-ic--blue">◷</span><b>{L.tiles[1][0]}</b><small class="ly-blue">{L.tiles[1][1]}</small></div>
+              </div>
+            </div>
+
+            <div class="screen ly" data-lyscreen="1">
+              <small class="ly-back">{L.back}</small>
+              <h6 class="ly-title">{L.summary}</h6>
+              <small class="ly-sub">{L.week}</small>
+              <div class="ly-card ly-week" data-lyweek>
+                <div class="ly-week__top"><span><small>{L.daily}</small><b data-lyavg>13.6h</b> <small>{L.avg}</small></span><em>{L.inRange}</em></div>
+                <div class="ly-bars">
+                  <span class="ly-band"></span>
+                  {L.days.map((d, i) => <i style={`--h:${(hours[i] / 16) * 100}%;--i:${i}`} class={i === 6 ? "is-today" : undefined}><small>{hours[i]}</small><em>{d}</em></i>)}
+                </div>
+              </div>
+              <div class="ly-card ly-norm"><small>{L.norm}</small><div class="ly-norm__bar"><i></i><b></b></div><p>{L.normP} <b>{L.normB}</b>. {L.normE}</p></div>
+            </div>
+
+            <div class="tabbar tabbar--ly"><i class="is-on" data-lytab="0"><span class="rd-tap"></span></i><i data-lytab="1"><span class="rd-tap"></span></i><i></i><i></i></div>
+          </div>
+        </div>
+      </article>
+
+      {/* ── Your English Buddy · website ── */}
+      <article class="rd rd--web" data-dev="1" style={`--acc:${devs[1].accent}`}>
+        <span class="rd-tag"><span class="tk tk--p">&lt;</span>{devs[1].tag}<span class="tk tk--p"> /&gt;</span></span>
+        <div class="rd-web">
+          <div class="rd-web__bar"><i></i><i></i><i></i><span class="rd-web__url"><b data-url data-full={url}>{url}</b><em class="rd-web__caret"></em></span></div>
+          <i class="rd-web__load" data-load></i>
+          <div class="rd-web__view">
+            <div class="rd-web__page" data-page>
+              <img src={base + page} srcset={srcset2x(page)} alt={lang === "es" ? "Sitio de Your English Buddy" : "Your English Buddy website"} width="640" height="1798" loading="eager" decoding="async" />
+              <div class="rd-wire" data-wire>
+                {wire.map(([x, y, w, h, k]) => <i class={`rd-wire__${k}`} style={`left:${x}px;top:${y}px;width:${w}px;height:${h}px`}></i>)}
+              </div>
+              <i class="rd-scan" data-scan></i>
+              <span class="rd-insp" data-insp style="left:18px;top:106px;width:286px;height:74px"><em>&lt;h1&gt;</em><small>286 × 74</small></span>
+              <span class="rd-press" data-press style="left:26px;top:272px;width:97px;height:26px"></span>
+              <span class="rd-lift" data-lift style="left:26px;top:482px;width:297px;height:220px"></span>
+              <svg class="rd-cursor" data-cursor viewBox="0 0 24 24" width="22" height="22"><path d="M4 2l15 9.5-6.6 1.4 3.9 7.4-3 1.6-3.9-7.5L4 19z" /></svg>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      {/* ── Simply Andy · UGC reel ── */}
+      <article class="rd rd--andy" data-dev="2" style={`--acc:${devs[2].accent}`}>
+        <span class="rd-tag"><span class="tk tk--p">&lt;</span>{devs[2].tag}<span class="tk tk--p"> /&gt;</span></span>
+        <div class="rd-phone">
+          <div class="rd-andy" data-andy>
+            <img class="rd-andy__photo" src={`${base}projects/simply-andy-reel.webp`} srcset={srcset2x("projects/simply-andy-reel.webp")} alt={lang === "es" ? "Fotograma del reel de Simply Andy" : "Still from Simply Andy's reel"} width="240" height="310" loading="eager" decoding="async" />
+            <div class="rd-andy__shade"></div>
+            <i class="rd-andy__prog"><b data-prog></b></i>
+            <header class="rd-andy__top"><b>Reels</b><svg viewBox="0 0 24 24" width="16" height="16"><path d="M4 8h3l2-3h6l2 3h3v11H4z" /><circle cx="12" cy="13" r="3.5" /></svg></header>
+            <svg class="rd-andy__burst" data-burst viewBox="0 0 24 24"><path d={heart} /></svg>
+            <ul class="rd-andy__side">
+              <li data-like><svg viewBox="0 0 24 24"><path d={heart} /></svg><small data-likes>1,284</small></li>
+              <li><svg viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z" /></svg><small>86</small></li>
+              <li><svg viewBox="0 0 24 24"><path d="M21 3L3 10.5l7 2.5 2.5 7z" /></svg></li>
+              <li><svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.6" /><circle cx="12" cy="12" r="1.6" /><circle cx="19" cy="12" r="1.6" /></svg></li>
+            </ul>
+            <p class="rd-andy__cap" data-cap data-a={JSON.stringify(L.cap1)} data-b={JSON.stringify(L.cap2)} data-ma={JSON.stringify([L.mark1])} data-mb={JSON.stringify(L.mark2)}></p>
+            <footer class="rd-andy__foot">
+              <div class="rd-andy__who"><img src={`${base}team/andreina-luna.webp`} alt="Andreina Luna" width="22" height="22" /><b>__simplyandy</b><span class="rd-andy__follow" data-follow data-on={L.following}>{L.follow}</span></div>
+              <p>{L.desc}</p>
+              <div class="rd-andy__music"><span>♫</span><div><em>original audio · __simplyandy · original audio · __simplyandy ·</em></div></div>
+            </footer>
+          </div>
+        </div>
+      </article>
+
+    </div>
+  </div>
+
+  <a class="reel__meta" data-reel-meta href={href("case", lang, devs[0].slug)}>
+    {devs.map((d, i) => <span class={`reel__meta-i${i === 0 ? " is-on" : ""}`} data-meta={i} data-href={href("case", lang, d.slug)} style={`--acc:${d.accent}`}><span class="sc-dot"></span><b>{names[i]}</b><small>{d.status}</small></span>)}
+    <span class="reel__meta-arrow">→</span>
+  </a>
+
+  <div class="showcase__rail" role="tablist" aria-label={L.projects}>
+    {devs.map((d, i) => <button type="button" role="tab" data-go={i} aria-selected={i === 0 ? "true" : "false"} class={i === 0 ? "is-on" : undefined}><span>{d.cmd}</span><i></i></button>)}
+  </div>
+</div>

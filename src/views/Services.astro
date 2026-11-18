@@ -58,7 +58,7 @@ const schema = [
             <section class="svc-sec" id={s.id} aria-labelledby={`${s.id}-t`}>
               <header class="svc-sec__head" data-reveal>
                 <span class="svc-sec__file"><span class={`sol__dot ic-${s.tone}`}></span>{s.file}</span>
-                <h2 id={`${s.id}-t`}><small>{s.name}</small>{s.title}</h2>
+                <h2 id={`${s.id}-t`}><span class="sr-only">{s.name} </span><small aria-hidden="true">{s.name}</small>{s.title}</h2>
                 <p class="lead">{s.lead}</p>
               </header>
 

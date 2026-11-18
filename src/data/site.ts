@@ -5,7 +5,11 @@ export const site = {
   legalName: "Forklia Studio",
   url: "https://forklia.com/",
   email: "hola@vertice.studio",
-  whatsapp: "https://wa.me/",
+  whatsapp: "https://wa.me/5491123310113",
+  waText: {
+    en: "Hi Forklia! I found you through your website and I'd like to tell you about a project.",
+    es: "¡Hola, Forklia! Los encontré por su sitio web y me gustaría contarles sobre un proyecto.",
+  } as L,
   title: {
     en: "Forklia — App, web, SEO & brand system studio",
     es: "Forklia — Estudio de apps, webs, SEO y sistemas de marca",
@@ -15,11 +19,13 @@ export const site = {
     es: "Forklia diseña y programa apps móviles, sitios web, estrategias SEO y sistemas de marca interactivos para equipos de cualquier país, en español e inglés.",
   } as L,
   socials: [
-    { label: "LinkedIn", handle: "/company/forklia", href: "https://www.linkedin.com/", icon: "linkedin" },
-    { label: "Instagram", handle: "@forklia", href: "https://www.instagram.com/", icon: "instagram" },
-    { label: "TikTok", handle: "@forklia", href: "https://www.tiktok.com/", icon: "tiktok" },
+    { label: "LinkedIn", handle: "/company/forklia", href: "https://www.linkedin.com/company/forklia", icon: "linkedin" },
+    { label: "Instagram", handle: "@forklia", href: "https://www.instagram.com/forklia/", icon: "instagram" },
+    { label: "TikTok", handle: "@forklia", href: "https://www.tiktok.com/@forklia", icon: "tiktok" },
   ],
 };
+
+export const waLink = (lang: Lang) => `${site.whatsapp}?text=${encodeURIComponent(site.waText[lang])}`;
 
 export const tech = ["React Native", "React", "Next.js", "Astro", "Node.js", "Supabase", "Vercel", "Figma", "Google Search Console", "Schema.org", "OpenAI", "GitHub Actions"];
 
@@ -49,56 +55,6 @@ export const testimonials: Testimonial[] = [
     face: { hair: "long", skin: "#E6B48F", hairColor: "#2B1A14", shirt: "#864C24", bg: "#E9E2D0", glasses: true }, tag: { en: "Brand system + web", es: "Sistema de marca + web" },
     photo: "team/andreina-luna.webp",
     sha: "a17f3c9",
-  },
-  {
-    q: { en: "Our store finally looks as premium as our product, and it loads in a second on mobile.", es: "Nuestra tienda por fin se ve tan premium como nuestro producto, y carga en un segundo desde el celular." },
-    n: { en: "Founder", es: "Fundadora" },
-    r: { en: "Skincare brand · E-commerce", es: "Marca de skincare · E-commerce" },
-    seed: 3,
-    colors: ["#45E0FF", "#9B6BFF", "#E8E4F0"],
-    face: { hair: "bun", skin: "#F3D2B8", hairColor: "#C27A3A", shirt: "#9B6BFF", bg: "#2A2350" }, tag: { en: "E-commerce", es: "E-commerce" },
-    icon: "bag",
-    sha: "4be21d0",
-  },
-  {
-    q: { en: "We went from an app nobody opened to one our customers use every morning to order their coffee.", es: "Pasamos de una app que nadie abría a una que nuestros clientes usan cada mañana para pedir su café." },
-    n: { en: "Head of Product", es: "Head of Product" },
-    r: { en: "Specialty coffee chain · App", es: "Cadena de café de especialidad · App" },
-    seed: 11,
-    colors: ["#9B6BFF", "#3B6BFF", "#F2D3B3"],
-    face: { hair: "curly", skin: "#8D5B3C", hairColor: "#1B1310", shirt: "#45E0FF", bg: "#12303A" }, tag: { en: "Mobile app", es: "App móvil" },
-    icon: "coffee",
-    sha: "9c0a7e2",
-  },
-  {
-    q: { en: "Their technical SEO put us in the top 3 for the searches that actually bring in patients.", es: "El SEO técnico que hicieron nos puso en el top 3 para las búsquedas que de verdad traen pacientes." },
-    n: { en: "Commercial director", es: "Director comercial" },
-    r: { en: "Dental clinic · Web + SEO", es: "Clínica dental · Web + SEO" },
-    seed: 5,
-    colors: ["#3B6BFF", "#45E0FF", "#D9E6FF"],
-    face: { hair: "short", skin: "#D9A47C", hairColor: "#5B3A24", shirt: "#3B6BFF", bg: "#1A2547", glasses: true }, tag: { en: "Web + SEO", es: "Web + SEO" },
-    icon: "tooth",
-    sha: "e31b58f",
-  },
-  {
-    q: { en: "They delivered a design system our in-house team can extend without breaking anything.", es: "Nos entregaron un design system que nuestro equipo interno puede extender sin romper nada." },
-    n: { en: "CTO", es: "CTO" },
-    r: { en: "Fintech startup · Brand system", es: "Startup fintech · Sistema de marca" },
-    seed: 13,
-    colors: ["#4BE3A0", "#45E0FF", "#DFF7EC"],
-    face: { hair: "bald", skin: "#B97B54", hairColor: "#2E1E16", shirt: "#4BE3A0", bg: "#123327", beard: true }, tag: { en: "Design system", es: "Design system" },
-    icon: "card",
-    sha: "06d9f44",
-  },
-  {
-    q: { en: "We worked across three time zones and it never felt like it. Flawless communication.", es: "Trabajamos desde tres zonas horarias distintas y nunca se sintió así. Comunicación impecable." },
-    n: { en: "COO", es: "COO" },
-    r: { en: "B2B SaaS · Web platform", es: "SaaS B2B · Plataforma web" },
-    seed: 2,
-    colors: ["#B58CFF", "#45E0FF", "#ECE3FF"],
-    face: { hair: "short", skin: "#F1C9A5", hairColor: "#E7C66A", shirt: "#B58CFF", bg: "#2C2247" }, tag: { en: "Web platform", es: "Plataforma web" },
-    icon: "layers",
-    sha: "7f88b31",
   },
 ];
 
@@ -174,13 +130,13 @@ export const founders = [
     initials: "Fabian",
     photo: "team/fabian-pernia.webp",
     sha: "f4b1a2e",
-    role: { en: "Co-founder · Full Stack Engineer", es: "Co-founder · Full Stack Engineer" },
+    role: { en: "Co-founder · Senior Full Stack Engineer & AI Solutions Architect", es: "Co-founder · Senior Full Stack Engineer y arquitecto de soluciones con IA" },
     jobTitle: "Full Stack Engineer",
     bio: {
-      en: "Architects every product end to end, from the database to the last micro-interaction. Performance, clean code and systems that scale without drama.",
-      es: "Diseña la arquitectura de cada producto de punta a punta: desde la base de datos hasta la última microinteracción. Rendimiento, código limpio y sistemas que escalan sin drama.",
+      en: "Senior software engineer with 13 years building web and mobile products for remote teams across the US and Latin America. His core stack spans React, React Native, Next.js, Vue, Nuxt and Node.js. Today he works as an AI solutions architect: he orchestrates coding agents with Claude Code, Codex, Kimi and Cursor, builds agent automations with LangGraph and LangChain when a project calls for them, and still owns every line that ships.",
+      es: "Ingeniero de software senior con 13 años construyendo productos web y móviles para equipos remotos en Estados Unidos y Latinoamérica. Su stack principal abarca React, React Native, Next.js, Vue, Nuxt y Node.js. Hoy trabaja como arquitecto de soluciones con IA: orquesta agentes de desarrollo con Claude Code, Codex, Kimi y Cursor, construye automatizaciones con agentes usando LangGraph y LangChain cuando el proyecto lo pide, y sigue respondiendo por cada línea que sale a producción.",
     },
-    skills: { en: ["TypeScript", "React / Next.js", "React Native", "Vue.js", "Node.js", "Cloud & DevOps"], es: ["TypeScript", "React / Next.js", "React Native", "Vue.js", "Node.js", "Cloud & DevOps"] },
+    skills: { en: ["React", "React Native", "Next.js", "Vue", "Nuxt", "Node.js", "Agent orchestration", "Agent automation", "LangGraph / LangChain"], es: ["React", "React Native", "Next.js", "Vue", "Nuxt", "Node.js", "Orquestación de agentes", "Automatización con agentes", "LangGraph / LangChain"] },
     accent: "cyan",
   },
   {
@@ -191,10 +147,10 @@ export const founders = [
     role: { en: "Co-founder · Creative Director & Head of Sales", es: "Co-founder · Creative Director & Head of Sales" },
     jobTitle: "Creative Director & Head of Sales",
     bio: {
-      en: "Defines how every project looks, feels and sells. Turns business goals into memorable brands, experiences that convert and long-term client relationships.",
-      es: "Define cómo se ve, se siente y se vende cada proyecto. Traduce objetivos de negocio en marcas memorables, experiencias que convierten y relaciones de largo plazo con cada cliente.",
+      en: "Designer with more than seven years in UI/UX, shaping websites, campaigns and brand assets for small and medium-sized businesses. He moves from research and creative strategy to polished interfaces in Figma, then bridges design and build with solid HTML, CSS and JavaScript. He pairs SEO-driven content (Ahrefs, Clearscope) with AI tools for ideation, prototyping and automation, so every project looks consistent, is easy to use and gets found.",
+      es: "Diseñador con más de siete años en UI/UX, creando sitios web, campañas y piezas de marca para pequeñas y medianas empresas. Va de la investigación y la estrategia creativa a interfaces pulidas en Figma, y conecta diseño e implementación con una base sólida en HTML, CSS y JavaScript. Combina contenido orientado a SEO (Ahrefs, Clearscope) con herramientas de IA para idear, prototipar y automatizar, para que cada proyecto se vea coherente, sea fácil de usar y aparezca en buscadores.",
     },
-    skills: { en: ["Creative direction", "Branding", "Sales strategy", "Growth"], es: ["Dirección creativa", "Branding", "Estrategia comercial", "Growth"] },
+    skills: { en: ["UI/UX", "Figma", "Research", "Creative strategy", "HTML / CSS / JavaScript", "SEO content", "AI workflows"], es: ["UI/UX", "Figma", "Investigación", "Estrategia creativa", "HTML / CSS / JavaScript", "Contenido SEO", "Flujos con IA"] },
     accent: "violet",
   },
 ];

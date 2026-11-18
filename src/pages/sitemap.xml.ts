@@ -3,10 +3,10 @@ import { site, posts } from "../data/site";
 import { projects } from "../data/projects";
 import { route, type Lang } from "../i18n";
 
-const lastmod = new Date().toISOString().slice(0, 10);
+const updated = "2026-11-08";
 const abs = (p: string) => new URL(p, site.url).href;
 
-type Entry = { en: string; es: string; priority: string };
+type Entry = { en: string; es: string; priority: string; date?: string };
 
 export const GET: APIRoute = () => {
   const pages: Entry[] = [
@@ -16,15 +16,16 @@ export const GET: APIRoute = () => {
     ...projects.map((p) => ({ en: route("case", "en", p.slug), es: route("case", "es", p.slug), priority: "0.8" })),
     { en: route("about", "en"), es: route("about", "es"), priority: "0.7" },
     { en: route("start", "en"), es: route("start", "es"), priority: "0.8" },
+    { en: route("privacy", "en"), es: route("privacy", "es"), priority: "0.3" },
     { en: route("blog", "en"), es: route("blog", "es"), priority: "0.6" },
-    ...posts.filter((p) => !p.placeholder).map((p) => ({ en: route("post", "en", p.slug.en), es: route("post", "es", p.slug.es), priority: "0.6" })),
+    ...posts.filter((p) => !p.placeholder).map((p) => ({ en: route("post", "en", p.slug.en), es: route("post", "es", p.slug.es), priority: "0.6", date: p.date })),
   ];
   const url = (e: Entry, lang: Lang) => `  <url>
     <loc>${abs(e[lang])}</loc>
     <xhtml:link rel="alternate" hreflang="en" href="${abs(e.en)}"/>
     <xhtml:link rel="alternate" hreflang="es" href="${abs(e.es)}"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="${abs(e.en)}"/>
-    <lastmod>${lastmod}</lastmod>
+    <lastmod>${e.date ?? updated}</lastmod>
     <priority>${e.priority}</priority>
   </url>`;
   const body = `<?xml version="1.0" encoding="UTF-8"?>

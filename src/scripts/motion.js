@@ -557,6 +557,30 @@ if (pal) {
   $$("[data-palette-open]").forEach((b) => b.addEventListener("click", open));
 }
 
+/* ───────── Socials "coming soon" modal ───────── */
+const soon = $("#soon");
+if (soon && soon.showModal) {
+  const lines = $$(".ln", soon);
+  const bar = $(".progress i", soon);
+  let timers = [];
+  const open = (link) => {
+    $("[data-soon-net]", soon).textContent = link.dataset.soon;
+    $("[data-soon-handle]", soon).textContent = link.dataset.handle;
+    $("[data-soon-url]", soon).textContent = link.dataset.url;
+    timers.forEach(clearTimeout);
+    lines.forEach((l) => l.classList.toggle("is-on", reduced));
+    bar.style.width = reduced ? "87%" : "0";
+    soon.showModal();
+    document.body.style.overflow = "hidden";
+    if (reduced) return;
+    timers = lines.map((l, i) => setTimeout(() => l.classList.add("is-on"), 150 + i * 260));
+    timers.push(setTimeout(() => { bar.style.width = "87%"; }, 150 + 3 * 260));
+  };
+  soon.addEventListener("close", () => { timers.forEach(clearTimeout); document.body.style.overflow = ""; });
+  soon.addEventListener("click", (e) => { if (e.target === soon || e.target.closest("[data-soon-close]")) soon.close(); });
+  $$("[data-soon]").forEach((a) => a.addEventListener("click", (e) => { e.preventDefault(); open(a); }));
+}
+
 /* ───────── Brand swatches (tetris shuffle) ───────── */
 $$("[data-swatches]").forEach((box) => {
   const token = $(".swatches__token b", box);

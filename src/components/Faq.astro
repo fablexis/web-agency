@@ -20,7 +20,7 @@ const copy = {
   <div class="faq__list">
     {list.map((f, i) => (
       <details data-reveal style={`--d:${i * 50}ms`} open={i === 0}>
-        <summary>{f.q}<i aria-hidden="true"></i></summary>
+        <summary><h3>{f.q}</h3><i aria-hidden="true"></i></summary>
         <div class="faq__a"><div><p>{f.a}</p></div></div>
       </details>
     ))}

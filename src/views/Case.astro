@@ -27,7 +27,8 @@ const work = raw.effect === "phone"
   ? { "@type": "SoftwareApplication", name: p.name, description: p.summary, operatingSystem: "iOS", applicationCategory: "HealthApplication", offers: { "@type": "Offer", price: "0", priceCurrency: "USD" }, url: p.links[0].href, image: new URL(p.images[0].src, site.url).href, inLanguage: ["en", "es"] }
   : { "@type": "WebSite", name: p.name, description: p.summary, url: p.links[0].href };
 const schema = [{ "@type": "CreativeWork", "@id": `${pageUrl}#case`, name: `${c.case} ${p.name}`, headline: `${p.name}: ${p.category}`, description: p.summary, url: pageUrl, image: new URL(p.images[0].src, site.url).href, creator: org, dateCreated: p.year, inLanguage: lang, about: work }];
-const title = `${p.name}: ${p.category.toLowerCase()} | ${c.case} Forklia`;
+const shortCat = p.category.split(" · ").slice(0, 2).join(" · ");
+const title = (`${p.name}: ${shortCat} | Forklia`.length <= 60 ? `${p.name}: ${shortCat} | Forklia` : `${p.name} | Forklia`);
 const desc = p.summary.length > 158 ? p.summary.slice(0, 155).replace(/\s\S*$/, "") + "…" : p.summary;
 const slugify = (s: string) => s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
 const fonts = raw.effect === "phone" ? "&family=Playfair+Display:wght@500;600" : raw.effect === "palette" ? "&family=Archivo:wght@700&family=DM+Mono" : "";
@@ -150,9 +151,9 @@ const fonts = raw.effect === "phone" ? "&family=Playfair+Display:wght@500;600" :
           </div>
           <div class={`nextdeploy__shot nextdeploy__shot--${next.images[0].kind}`} aria-hidden="true">
             {next.images[0].kind === "desktop" ? (
-              <div class="ndframe"><div class="ndframe__bar"><i></i><i></i><i></i><span>{next.links[0].href.replace(/^https?:\/\//, "").replace(/\/$/, "")}</span></div><img src={base + next.images[0].src} srcset={srcset2x(next.images[0].src)} alt="" width="1280" height="800" loading="lazy" /></div>
+              <div class="ndframe"><div class="ndframe__bar"><i></i><i></i><i></i><span>{next.links[0].href.replace(/^https?:\/\//, "").replace(/\/$/, "")}</span></div><img src={base + next.images[0].src} srcset={srcset2x(next.images[0].src)} alt={next.images[0].alt} width="1280" height="800" loading="lazy" /></div>
             ) : (
-              <div class="ndphones">{next.images.slice(0, 2).map((im: any) => <img src={base + im.src} srcset={srcset2x(im.src)} alt="" width="600" height="1298" loading="lazy" />)}</div>
+              <div class="ndphones">{next.images.slice(0, 2).map((im: any) => <img src={base + im.src} srcset={srcset2x(im.src)} alt={im.alt} width="600" height="1298" loading="lazy" />)}</div>
             )}
           </div>
         </a>

@@ -1,0 +1,13 @@
+# Cloudflare Workers static assets. GitHub Pages ignores this file and keeps the noindex HTML fallbacks.
+/nosotros/ /es/nosotros/ 301
+/nosotros /es/nosotros/ 301
+/servicios/ /es/servicios/ 301
+/servicios /es/servicios/ 301
+/proyectos/ /es/proyectos/ 301
+/proyectos /es/proyectos/ 301
+/cotizar/ /es/cotizar/ 301
+/cotizar /es/cotizar/ 301
+/casos/ /es/proyectos/ 301
+/casos /es/proyectos/ 301
+/soluciones/ /es/servicios/ 301
+/soluciones /es/servicios/ 301

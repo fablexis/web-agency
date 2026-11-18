@@ -1,5 +1,5 @@
 ---
-import { site } from "../data/site";
+import { site, waLink } from "../data/site";
 import { projects } from "../data/projects";
 import { services } from "../data/services";
 import { ui, nav, href, route, base, loc, type Lang } from "../i18n";
@@ -47,12 +47,13 @@ const graph: Record<string, unknown>[] = [
     url: site.url,
     logo: { "@type": "ImageObject", url: abs("brand/forklia-logo.png"), width: 512, height: 512 },
     email: site.email,
+    sameAs: site.socials.map((s) => s.href),
     description: site.description.en,
     areaServed: "Worldwide",
     knowsLanguage: ["en", "es"],
     founder: [
-      { "@type": "Person", name: "Fabián Pernía", jobTitle: "Co-founder · Full Stack Engineer" },
-      { "@type": "Person", name: "Fabio Pernía", jobTitle: "Co-founder · Creative Director & Head of Sales" },
+      { "@type": "Person", "@id": abs("about/#fabian"), name: "Fabián Pernía", jobTitle: "Co-founder · Full Stack Engineer", url: abs("about/#fabian") },
+      { "@type": "Person", "@id": abs("about/#fabio"), name: "Fabio Pernía", jobTitle: "Co-founder · Creative Director & Head of Sales", url: abs("about/#fabio") },
     ],
   },
   { "@type": "WebSite", "@id": abs("#website"), url: site.url, name: site.name, inLanguage: ["en", "es"], publisher: { "@id": orgId } },
@@ -82,7 +83,7 @@ const palette = [
   ...services.map((s) => ({ group: G.modules, pop: false, label: loc(s.name, lang), hint: s.file, href: `${href("services", lang)}#${s.id}` })),
   ...projects.map((p) => ({ group: G.deploys, pop: false, label: p.name, hint: loc(p.category, lang), href: href("case", lang, p.slug) })),
   { group: G.actions, pop: false, label: t.copyEmail, hint: site.email, href: `copy:${site.email}` },
-  { group: G.actions, pop: false, label: t.whatsapp, hint: "wa.me", href: site.whatsapp },
+  { group: G.actions, pop: false, label: t.whatsapp, hint: "wa.me", href: waLink(lang) },
   { group: G.actions, pop: false, label: t.switchTo, hint: other.toUpperCase(), href: base + alt },
 ];
 const dropOrder = [[0, 4], [0, 3], [0, 2], [0, 1], [0, 0], [1, 0], [2, 0], [3, 0], [1, 2]];
@@ -197,6 +198,31 @@ const dropOrder = [[0, 4], [0, 3], [0, 2], [0, 1], [0, 0], [1, 0], [2, 0], [3, 0
       </div>
     </div>
 
+    <dialog class="soon" id="soon" aria-labelledby="soon-title">
+      <div class="window">
+        <div class="window__bar">
+          <div class="window__dots" aria-hidden="true"><i></i><i></i><i></i></div>
+          <div class="window__url" data-soon-url></div>
+          <button class="soon__x" type="button" data-soon-close aria-label={t.soon.close}><kbd>esc</kbd></button>
+        </div>
+        <div class="soon__body">
+          <div class="term soon__term" aria-hidden="true">
+            <div class="ln"><span class="p">$</span> forklia open --social <span data-soon-net></span></div>
+            <div class="ln"><span class="m">›</span> {t.soon.connecting} <span class="u" data-soon-handle></span></div>
+            <div class="ln"><span class="m">›</span> {t.soon.building} <b class="soon__pct">87%</b></div>
+            <div class="ln"><div class="progress"><i></i></div></div>
+            <div class="ln soon__next">{t.soon.next}</div>
+          </div>
+          <h2 id="soon-title">{t.soon.title}</h2>
+          <p>{t.soon.text}</p>
+          <div class="soon__actions">
+            <a href={href("start", lang)} class="btn btn--primary btn--sm">{t.soon.cta} <span class="arrow">→</span></a>
+            <button type="button" class="btn btn--ghost btn--sm" data-soon-close>{t.soon.close}</button>
+          </div>
+        </div>
+      </div>
+    </dialog>
+
     <main id="main">
       <slot />
     </main>
@@ -208,7 +234,7 @@ const dropOrder = [[0, 4], [0, 3], [0, 2], [0, 1], [0, 0], [1, 0], [2, 0], [3, 0
             <p class="footer__blurb">{t.footerBlurb}</p>
             <div class="socials" aria-label={t.followUs}>
               {site.socials.map((s) => (
-                <a href={s.href} rel="noopener" target="_blank" aria-label={`${s.label} — ${s.handle}`}>
+                <a href={s.href} rel="noopener" target="_blank" aria-label={`${s.label} — ${s.handle}`} aria-haspopup="dialog" data-soon={s.icon} data-handle={s.handle} data-url={s.href.replace(/^https?:\/\/(www\.)?/, "").replace(/\/$/, "")}>
                   <span class="socials__ic">
                     {s.icon === "linkedin" && <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5ZM3 9.75h4V21H3V9.75Zm6.5 0h3.84v1.54h.05c.53-1 1.84-2.06 3.79-2.06 4.05 0 4.8 2.67 4.8 6.13V21h-4v-5.02c0-1.2-.02-2.74-1.67-2.74-1.67 0-1.93 1.3-1.93 2.65V21h-4V9.75Z"></path></svg>}
                     {s.icon === "instagram" && <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="17.5" cy="6.5" r="1" fill="currentColor"></circle></svg>}
@@ -232,6 +258,7 @@ const dropOrder = [[0, 4], [0, 3], [0, 2], [0, 1], [0, 0], [1, 0], [2, 0], [3, 0
             <ul>
               <li><a href={href("blog", lang)}>{plain("blog")}</a></li>
               <li><a href={`${href("services", lang)}#faq`}>{t.faq}</a></li>
+              <li><a href={href("privacy", lang)}>{t.privacy}</a></li>
               <li><a href={href("start", lang)}>{t.start}</a></li>
             </ul>
           </div>
@@ -239,7 +266,7 @@ const dropOrder = [[0, 4], [0, 3], [0, 2], [0, 1], [0, 0], [1, 0], [2, 0], [3, 0
             <h2 class="footer__h">{t.footerCols.contact}</h2>
             <ul>
               <li><a href={`mailto:${site.email}`}>{site.email}</a></li>
-              <li><a href={site.whatsapp}>WhatsApp</a></li>
+              <li><a href={waLink(lang)}>WhatsApp</a></li>
               <li><a href={base + alt} hreflang={other}>{t.switchTo}</a></li>
             </ul>
           </div>

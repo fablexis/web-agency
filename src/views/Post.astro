@@ -21,17 +21,29 @@ const meta = art.meta[lang];
 const proj = loc(projects.find((x) => x.slug === art.project)!, lang) as any;
 const related = posts.filter((x) => x !== post).slice(0, 3);
 const c = {
-  en: { back: "iterating++", read: "read", by: "Forklia Team", byRole: "Remote product studio", toc: "On this page", more: "Keep reading", seen: "Built by Forklia", see: "See the project", fig: "Figure", share: "Copy link", copied: "Link copied", top: "Back to top", updated: "Published" },
-  es: { back: "iterando++", read: "de lectura", by: "Equipo de Forklia", byRole: "Estudio remoto de producto", toc: "En esta página", more: "Sigue leyendo", seen: "Hecho por Forklia", see: "Ver el proyecto", fig: "Figura", share: "Copiar enlace", copied: "Enlace copiado", top: "Volver arriba", updated: "Publicado" },
+  en: { back: "iterating++", read: "read", by: "Fabián Pernía & Fabio Pernía", byRole: "Founders, Forklia", toc: "On this page", more: "Keep reading", seen: "Built by Forklia", see: "See the project", fig: "Figure", share: "Copy link", copied: "Link copied", top: "Back to top", updated: "Published" },
+  es: { back: "iterando++", read: "de lectura", by: "Fabián Pernía y Fabio Pernía", byRole: "Fundadores de Forklia", toc: "En esta página", more: "Sigue leyendo", seen: "Hecho por Forklia", see: "Ver el proyecto", fig: "Figura", share: "Copiar enlace", copied: "Enlace copiado", top: "Volver arriba", updated: "Publicado" },
 }[lang];
 const url = new URL(route("post", lang, p.slug), site.url).href;
+const orgId = new URL("#organization", site.url).href;
+const caseUrl = new URL(route("case", lang, proj.slug), site.url).href;
+const ogName = lang === "es" ? "og-es.png" : "og.png";
+const authors = [
+  { "@type": "Person", "@id": new URL("about/#fabian", site.url).href, name: "Fabián Pernía", url: new URL("about/#fabian", site.url).href },
+  { "@type": "Person", "@id": new URL("about/#fabio", site.url).href, name: "Fabio Pernía", url: new URL("about/#fabio", site.url).href },
+];
+const howto = art.howto?.[lang];
 const toc = body.filter((b): b is { h: string } => "h" in b).map((b) => ({ id: slugifyHeading(b.h), text: b.h }));
 let figN = 0;
+let answerUsed = false;
 ---
 
-<Base lang={lang} alt={route("post", other, post.slug[other])} title={meta.title} description={meta.desc} type="article" image="og.png"
+<Base lang={lang} alt={route("post", other, post.slug[other])} title={meta.title} description={meta.desc} type="article" image={ogName}
   breadcrumbs={[{ name: c.back, path: route("blog", lang) }, { name: p.title, path: route("post", lang, p.slug) }]}
-  schema={[{ "@type": "BlogPosting", "@id": `${url}#post`, headline: p.title, description: meta.desc, datePublished: p.date, dateModified: p.date, wordCount: wordCount(post.slug.en, lang), url, mainEntityOfPage: url, articleSection: p.category, author: { "@type": "Organization", name: c.by, url: site.url }, publisher: { "@id": new URL("#organization", site.url).href }, inLanguage: lang, about: proj.name }]}>
+  schema={[
+    { "@type": "BlogPosting", "@id": `${url}#post`, headline: p.title, description: meta.desc, datePublished: p.date, dateModified: "2026-11-08", wordCount: wordCount(post.slug.en, lang), url, mainEntityOfPage: url, image: new URL(ogName, site.url).href, articleSection: p.category, author: authors, publisher: { "@id": orgId }, inLanguage: lang, about: { "@type": "Thing", name: p.category }, mentions: { "@type": "CreativeWork", name: proj.name, url: caseUrl } },
+    ...(howto ? [{ "@type": "HowTo", name: p.title, description: meta.desc, step: howto.map((s, i) => ({ "@type": "HowToStep", position: i + 1, name: s.name, text: s.text })) }] : []),
+  ]}>
   <article class="blogpost">
     <header class="blogpost__head wrap">
       <nav class="crumbs" aria-label="Breadcrumb" data-reveal><a href={href("home", lang)}>~</a><span>/</span><a href={href("blog", lang)}>{c.back}</a><span>/</span><span aria-current="page">{p.category}</span></nav>
@@ -42,7 +54,7 @@ let figN = 0;
       </div>
       <div class="byline" data-reveal>
         <svg class="byline__mark" viewBox="0 0 26 32" aria-hidden="true">{fCells.map(([x, y]) => <rect x={x * 6.5} y={y * 6.5} width="6" height="6" rx="1.4" fill="#eef2f8" />)}<rect x={fork.x} y={fork.y} width="6" height="6" rx="1.4" fill="#45E0FF" /></svg>
-        <span><b>{c.by}</b><small>{c.byRole}</small></span>
+        <span><b><a href={href("about", lang)}>{c.by}</a></b><small>{c.byRole}</small></span>
       </div>
       <PostCover slug={post.slug.en} hue={p.hue} label={p.category} big />
     </header>
@@ -63,8 +75,18 @@ let figN = 0;
       <div class="article__body blogpost__body" data-article>
         {body.map((b) => {
           if ("h" in b) return <h2 id={slugifyHeading(b.h)}>{b.h}</h2>;
-          if ("p" in b) return <p>{b.p}</p>;
+          if ("p" in b) {
+            const answer = !answerUsed && (answerUsed = true);
+            return <p class={answer ? "blog-answer" : undefined}>{b.p}</p>;
+          }
           if ("ul" in b) return <ul class="blog-list">{b.ul.map((li) => <li>{li}</li>)}</ul>;
+          if ("table" in b) return (
+            <table class="blogtable">
+              {b.table.caption && <caption>{b.table.caption}</caption>}
+              <thead><tr>{b.table.headers.map((h) => <th scope="col">{h}</th>)}</tr></thead>
+              <tbody>{b.table.rows.map((row) => <tr>{row.map((cell) => <td>{cell}</td>)}</tr>)}</tbody>
+            </table>
+          );
           figN++;
           return (
             <figure class="blogfig">
